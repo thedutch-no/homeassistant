@@ -1610,8 +1610,6 @@
     at: '23:23:23'
   condition: []
   action:
-  - data:
-      addon: a0d7b954_ssh
-      input: /config/nightly_upload_git.sh
-    service: hassio.addon_stdin
+  - service: shell_command.nightly_upload_git
+    data: {}
   mode: single
