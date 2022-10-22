@@ -1,0 +1,1604 @@
+- id: '1658050485325'
+  alias: Washing machine - Power button Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e1812.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_device: 34d59265bb5d1620bf84ca9ce105284b
+      controller_entity: sensor.washing_machine_power_button_action
+      action_button_short:
+      - service: input_boolean.toggle
+        data: {}
+        target:
+          entity_id: input_boolean.wasching_machine_power_on_off
+      helper_last_controller_event: input_text.washing_machine_power_button_helper
+- id: '1658050594883'
+  alias: Tumble Dryer - Power button Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e1812.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_device: d971307e4dfae11de3f643612b76817b
+      controller_entity: sensor.tumble_dryer_power_button_action
+      action_button_short:
+      - service: input_boolean.toggle
+        data: {}
+        target:
+          entity_id: input_boolean.tumble_dryer_power_on_off
+      helper_last_controller_event: input_text.tumble_dryer_power_button_helper
+- id: '1658062645221'
+  alias: Washing machine - Power management
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.wasching_machine_power_on_off
+    id: button
+  - platform: state
+    entity_id:
+    - binary_sensor.washing_machine_door_sensor_contact
+    id: door
+  condition:
+  - condition: device
+    type: is_off
+    device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+    entity_id: switch.tumble_dryer_power_module_relay
+    domain: switch
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: button
+      sequence:
+      - type: toggle
+        device_id: cbf534da6c764a45913dbffa197bb083
+        entity_id: switch.washing_machine_power_module_relay
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: door
+      sequence:
+      - choose:
+        - conditions:
+          - type: is_open
+            condition: device
+            device_id: 7ba1287e14a198dfeb9429c517fb1a77
+            entity_id: binary_sensor.washing_machine_door_sensor_contact
+            domain: binary_sensor
+          sequence:
+          - type: turn_off
+            device_id: cbf534da6c764a45913dbffa197bb083
+            entity_id: switch.washing_machine_power_module_relay
+            domain: switch
+        - conditions:
+          - type: is_not_open
+            condition: device
+            device_id: 7ba1287e14a198dfeb9429c517fb1a77
+            entity_id: binary_sensor.washing_machine_door_sensor_contact
+            domain: binary_sensor
+          sequence:
+          - type: turn_on
+            device_id: cbf534da6c764a45913dbffa197bb083
+            entity_id: switch.washing_machine_power_module_relay
+            domain: switch
+  mode: single
+- id: '1658064335419'
+  alias: Tumble Dryer - Power management
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.tumble_dryer_power_on_off
+    id: button
+  - platform: state
+    entity_id:
+    - binary_sensor.tumble_dryer_door_sensor_contact
+    id: door
+  condition:
+  - condition: device
+    type: is_off
+    device_id: cbf534da6c764a45913dbffa197bb083
+    entity_id: switch.washing_machine_power_module_relay
+    domain: switch
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: button
+      sequence:
+      - type: toggle
+        device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+        entity_id: switch.tumble_dryer_power_module_relay
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: door
+      sequence:
+      - choose:
+        - conditions:
+          - type: is_open
+            condition: device
+            device_id: f7633690361407a72cbc769034a66055
+            entity_id: binary_sensor.tumble_dryer_door_sensor_contact
+            domain: binary_sensor
+          sequence:
+          - type: turn_off
+            device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+            entity_id: switch.tumble_dryer_power_module_relay
+            domain: switch
+        - conditions:
+          - type: is_not_open
+            condition: device
+            device_id: f7633690361407a72cbc769034a66055
+            entity_id: binary_sensor.tumble_dryer_door_sensor_contact
+            domain: binary_sensor
+          sequence:
+          - type: turn_on
+            device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+            entity_id: switch.tumble_dryer_power_module_relay
+            domain: switch
+  mode: single
+- id: '1658064511110'
+  alias: Bedroom - 4 Button remote Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e2001_e2002.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_entity: sensor.bedroom_4_button_remote_action
+      helper_last_controller_event: input_text.bedroom_4_button_remote_helper
+      action_button_left_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_250
+        metadata: {}
+      action_button_right_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_454
+        metadata: {}
+      action_button_up_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_352
+        metadata: {}
+      action_button_down_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_off
+        metadata: {}
+      action_button_up_long:
+      - service: ''
+        data: {}
+- id: '1658067716628'
+  alias: Livingroom - 4 Button remote Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e2001_e2002.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_entity: sensor.livingroom_4_button_remote_action
+      helper_last_controller_event: input_text.bedroom_4_button_remote_helper
+      action_button_left_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_250
+        metadata: {}
+      action_button_right_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_454
+        metadata: {}
+      action_button_up_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_352
+        metadata: {}
+      action_button_down_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_off
+        metadata: {}
+      action_button_up_long:
+      - service: ''
+        data: {}
+- id: '1658067936137'
+  alias: Bedroom - 4 Button remote Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e2001_e2002.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_entity: sensor.bedroom_4_button_remote_action
+      helper_last_controller_event: input_text.bedroom_4_button_remote_helper
+      action_button_left_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_250
+        metadata: {}
+      action_button_right_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_454
+        metadata: {}
+      action_button_up_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_50_352
+        metadata: {}
+      action_button_down_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_off
+        metadata: {}
+      action_button_up_long:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.bedroom_lights_to_on_100_352
+        metadata: {}
+- id: '1658067975601'
+  alias: Livingroom - 4 Button remote Blueprint
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e2001_e2002.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_entity: sensor.livingroom_4_button_remote_action
+      helper_last_controller_event: input_text.livingroom_4_button_remote_helper
+      action_button_left_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.livingroom_lights_to_on_100_250
+        metadata: {}
+      action_button_right_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.livingroom_lights_to_on_100_454
+        metadata: {}
+      action_button_up_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.livingroom_lights_to_on_100_352
+        metadata: {}
+      action_button_down_short:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.livingroom_lights_to_off_3
+        metadata: {}
+- id: '1658564012685'
+  alias: iPad Charging Control
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.charge_ipad
+    id: charge_ipad
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.charge_ipad
+        state: 'on'
+      sequence:
+      - type: turn_on
+        device_id: e8a485a1b9837c7f9c931608217f9586
+        entity_id: switch.sonoff_10013664d8_1
+        domain: switch
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.charge_ipad
+        state: 'off'
+      sequence:
+      - type: turn_off
+        device_id: e8a485a1b9837c7f9c931608217f9586
+        entity_id: switch.sonoff_10013664d8_1
+        domain: switch
+    default: []
+  mode: single
+- id: '1658578160774'
+  alias: Chagrge iPad
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: secrets!ipad_webhook
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.charge_ipad
+  mode: single
+- id: '1658580860745'
+  alias: iPhone 6 Charging Control
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - person.rob
+    to: home
+  condition:
+  - condition: time
+    weekday:
+    - mon
+  action:
+  - type: turn_on
+    device_id: db7b598f3161f4f63ef322452a48c2ae
+    entity_id: switch.sonoff_1001365a80_1
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: db7b598f3161f4f63ef322452a48c2ae
+    entity_id: switch.sonoff_1001365a80_1
+    domain: switch
+  mode: single
+- id: '1658654143967'
+  alias: Waterleak Detected
+  description: Turn off washing machine when waterless is detected
+  trigger:
+  - type: moist
+    platform: device
+    device_id: cf391231520170be5563c5aad99f08db
+    entity_id: binary_sensor.eve_water_guard
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: cbf534da6c764a45913dbffa197bb083
+    entity_id: switch.washing_machine_power_module_relay
+    domain: switch
+  mode: single
+- id: '1659958835456'
+  alias: Washing machine - Done
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: cbf534da6c764a45913dbffa197bb083
+    entity_id: sensor.washing_machine_power_module_power
+    domain: sensor
+    below: 3
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition:
+  - condition: device
+    type: is_on
+    device_id: cbf534da6c764a45913dbffa197bb083
+    entity_id: switch.washing_machine_power_module_relay
+    domain: switch
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_cloud
+  - service: script.flash_livingroom_ceiling_amsterdam
+    data: {}
+  mode: single
+- id: '1659974516452'
+  alias: Tumble Dryer - Done
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+    entity_id: sensor.tumble_dryer_power_module_power
+    domain: sensor
+    below: 20
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition:
+  - condition: device
+    type: is_on
+    device_id: bbdadee4f3fc92ca9f26fd16fb68a009
+    entity_id: switch.tumble_dryer_power_module_relay
+    domain: switch
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_wasdroger_is_klaar_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_cloud
+  - service: script.flash_livingroom_ceiling_amsterdam
+    data: {}
+  mode: single
+- id: '1660236736187'
+  alias: Media player control knob
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e1744.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_entity: sensor.office_symfonisk_action
+      helper_last_controller_event: input_text.office_symfonisk_remote_helper
+      action_click_short:
+      - service: media_player.media_play_pause
+        data: {}
+        target:
+          entity_id:
+          - media_player.mass_livingroom_speaker
+          - media_player.mass_kitchen_speaker
+      action_rotate_left:
+      - service: media_player.volume_down
+        data: {}
+        target:
+          entity_id:
+          - media_player.mass_livingroom_speaker
+      action_rotate_right:
+      - service: media_player.volume_up
+        data: {}
+        target:
+          entity_id:
+          - media_player.mass_livingroom_speaker
+          - media_player.livingroom_sonos_speaker
+      action_click_double: []
+- id: '1661913713702'
+  alias: Leaving Home - weekdays
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.sorumsand
+    event: leave
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - type: turn_on
+    device_id: 6945be442bab645c9f650254bcbf4351
+    entity_id: switch.ventilation
+    domain: switch
+  - service: climate.set_temperature
+    data:
+      hvac_mode: 'off'
+      temperature: 16
+    target:
+      entity_id: climate.livingroom
+  mode: single
+- id: '1661913757000'
+  alias: Entering Home
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.home
+    event: enter
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 6945be442bab645c9f650254bcbf4351
+    entity_id: switch.ventilation
+    domain: switch
+  - type: turn_on
+    device_id: 1c2b97420f0d5182790dbc6363fd4dac
+    entity_id: switch.water_heater
+    domain: switch
+  - service: climate.set_temperature
+    data:
+      temperature: 19
+      hvac_mode: heat
+    target:
+      entity_id: climate.livingroom
+  mode: single
+- id: '1661967233221'
+  alias: Enter or Leave Work zone - weekdays
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.work
+    event: enter
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.work
+    event: leave
+  condition:
+  - condition: time
+    after: '12:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    before: 00:00:00
+  action:
+  - service: climate.set_temperature
+    data:
+      hvac_mode: heat
+      temperature: 19
+    target:
+      entity_id: climate.livingroom
+  - service: climate.set_fan_mode
+    data:
+      fan_mode: powerfull
+    target:
+      entity_id: climate.livingroom
+  mode: single
+- id: '1662243879240'
+  alias: Leaving Home - weekend
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.sorumsand
+    event: leave
+  condition:
+  - condition: time
+    weekday:
+    - sun
+    - sat
+    before: 00:00:00
+  action:
+  - type: turn_on
+    device_id: 6945be442bab645c9f650254bcbf4351
+    entity_id: switch.ventilation
+    domain: switch
+  - type: turn_off
+    device_id: 1c2b97420f0d5182790dbc6363fd4dac
+    entity_id: switch.water_heater
+    domain: switch
+    enabled: false
+  - service: climate.set_temperature
+    data:
+      temperature: 16
+      hvac_mode: 'off'
+    target:
+      entity_id: climate.livingroom
+  mode: single
+- id: '1662878697608'
+  alias: iPhone 11 - Focus mode change
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.robs_iphone_11_focus
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - type: is_on
+        condition: device
+        device_id: e2805a54ef37bd8661ea49a1397ce28b
+        entity_id: binary_sensor.robs_iphone_11_focus
+        domain: binary_sensor
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.focus_mode_sleep
+    default:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.focus_mode_sleep
+  mode: single
+- id: '1663248731397'
+  alias: Change start location detected
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.start_location
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_location
+        state: Furuset
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_furuset'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_location
+        state: Okern
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_okern'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        state: Vestby
+        entity_id: input_select.start_location
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_vestby'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        state: Moss
+        entity_id: input_select.start_location
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_moss'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        state: Valer
+        entity_id: input_select.start_location
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_valer'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_location
+        state: Manual
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:00:00
+        target:
+          entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_location
+        state: Weekend
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:00:00
+        target:
+          entity_id: input_datetime.travel_time_customer
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:00:00
+        target:
+          entity_id: input_datetime.travel_time_work
+    default: []
+  mode: single
+- id: '1663509415956'
+  alias: Motion and On/Off sw - Frontdoor
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.frontdoor_motion_sensor_occupancy
+    id: motion
+  - platform: device
+    domain: mqtt
+    device_id: 6c548e3322378ac6dc46c70504abb3f5
+    type: action
+    subtype: 'on'
+    discovery_id: 0x8cf681fffe50526d action_on
+    id: switch-on
+  - platform: device
+    domain: mqtt
+    device_id: 6c548e3322378ac6dc46c70504abb3f5
+    type: action
+    subtype: 'off'
+    discovery_id: 0x8cf681fffe50526d action_off
+    id: switch-off
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: b6edfa39e6cccfd378d2d8b059d94515
+    entity_id: sensor.frontdoor_motion_sensor_illuminance_lux
+    domain: sensor
+    below: 100
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+        alias: motion trigger
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.frontdoor_motion_sensor_occupancy
+            state: 'on'
+          sequence:
+          - if:
+            - condition: state
+              entity_id: input_boolean.focus_mode_sleep
+              state: 'on'
+            then:
+            - service: light.turn_on
+              data:
+                color_temp: 387
+                brightness_pct: 10
+              target:
+                entity_id: light.frontdoor_ceiling
+            else:
+            - service: light.turn_on
+              data:
+                color_temp: 153
+                brightness_pct: 100
+              target:
+                entity_id: light.frontdoor_ceiling
+          - if:
+            - condition: state
+              entity_id: person.rob
+              state: not_home
+            then:
+            - service: notify.mobile_app_robs_iphone_11
+              data:
+                message: Beweging bij de voordeur
+                title: Motion detected
+                data:
+                  push:
+                    sound:
+                      name: default
+                      critical: 1
+                      volume: 1
+        default:
+        - service: light.turn_off
+          data: {}
+          target:
+            entity_id: light.frontdoor_ceiling
+    - conditions:
+      - condition: trigger
+        id: switch-on
+        alias: switch-on trigger
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 153
+          brightness_pct: 100
+        target:
+          entity_id: light.frontdoor_ceiling
+    - conditions:
+      - condition: trigger
+        id: switch-off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.frontdoor_ceiling
+    default: []
+  mode: single
+- id: '1663512068927'
+  alias: Motion and On/Off sw - Kitchen
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.kitchen_motion_sensor_occupancy
+    id: motion
+  - platform: device
+    domain: mqtt
+    device_id: 9c23bbbefc64f218b524eefa84c05136
+    type: action
+    subtype: 'on'
+    discovery_id: 0xb4e3f9fffe79383b action_on
+    id: switch-on
+  - platform: device
+    domain: mqtt
+    device_id: 9c23bbbefc64f218b524eefa84c05136
+    type: action
+    subtype: 'off'
+    discovery_id: 0xb4e3f9fffe79383b action_off
+    id: switch-off
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: 9380fbe33c2662e0d5c49c28abd182d1
+    entity_id: sensor.kitchen_motion_sensor_illuminance_lux
+    domain: sensor
+    below: 300
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+        alias: motion trigger
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.kitchen_motion_sensor_occupancy
+            state: 'on'
+          sequence:
+          - if:
+            - condition: state
+              entity_id: input_boolean.focus_mode_sleep
+              state: 'on'
+            then:
+            - service: light.turn_on
+              data:
+                color_temp: 387
+                brightness_pct: 10
+              target:
+                entity_id: light.kitchen_countertop
+            else:
+            - service: light.turn_on
+              data:
+                color_temp: 153
+                brightness_pct: 100
+              target:
+                entity_id: light.kitchen_countertop
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.kitchen_motion_sensor_occupancy
+            state: 'off'
+          - condition: state
+            entity_id: input_boolean.overide_kitchen_lights
+            state: 'off'
+          sequence:
+          - service: light.turn_off
+            data: {}
+            target:
+              device_id: 62ea123f40f9f9539cc5585a497c96ab
+        default: []
+    - conditions:
+      - condition: trigger
+        id: switch-on
+        alias: switch-on trigger
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 153
+          brightness_pct: 100
+        target:
+          entity_id: light.kitchen_countertop
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.overide_kitchen_lights
+    - conditions:
+      - condition: trigger
+        id: switch-off
+        alias: Switch-off trigger
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.kitchen_countertop
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.overide_kitchen_lights
+    default: []
+  mode: single
+- id: '1663516142150'
+  alias: Time - Wake Up time
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.wake_up_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  action:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.3
+    target:
+      entity_id: media_player.bedroom_speaker
+  - service: media_player.play_media
+    data:
+      media_content_type: music
+      media_content_id: http://192.168.28.110:8123/local/sounds/EarlyRiser.mp3
+    target:
+      entity_id: media_player.bedroom_google_speaker
+  mode: single
+- id: '1663518275430'
+  alias: Motion and On/Off sw - Hallway
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hallway_motion_sensor_occupancy
+    id: motion
+  - platform: device
+    domain: mqtt
+    device_id: 6e27023210b26c48943753f940005249
+    type: action
+    subtype: 'on'
+    discovery_id: 0xb4e3f9fffeb92588 action_on
+    id: switch-on
+  - platform: device
+    domain: mqtt
+    device_id: 6e27023210b26c48943753f940005249
+    type: action
+    subtype: 'off'
+    discovery_id: 0xb4e3f9fffeb92588 action_off
+    id: switch-off
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: dcb6bbaf69fb2f9282e15831ff53069d
+    entity_id: sensor.hallway_motion_sensor_illuminance_lux
+    domain: sensor
+    below: 100
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+        alias: motion trigger
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.hallway_motion_sensor_occupancy
+            state: 'on'
+          sequence:
+          - if:
+            - condition: state
+              entity_id: input_boolean.focus_mode_sleep
+              state: 'on'
+            then:
+            - service: light.turn_on
+              data:
+                color_temp: 387
+                brightness_pct: 10
+              target:
+                entity_id: light.hallway_ceiling
+            else:
+            - service: light.turn_on
+              data:
+                color_temp: 326
+                brightness_pct: 100
+              target:
+                entity_id: light.hallway_ceiling
+        default:
+        - service: light.turn_off
+          data: {}
+          target:
+            entity_id: light.hallway_ceiling
+    - conditions:
+      - condition: trigger
+        id: switch-on
+        alias: switch-on trigger
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 326
+          brightness_pct: 100
+        target:
+          entity_id: light.hallway_ceiling
+    - conditions:
+      - condition: trigger
+        id: switch-off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.hallway_ceiling
+    default: []
+  mode: single
+- id: '1663689046568'
+  alias: Change start time detected
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.start_time
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_time
+        state: 05:30
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 05:30:00
+        target:
+          entity_id: input_datetime.time_work_start
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_time
+        state: 06:00
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 06:00:00
+        target:
+          entity_id: input_datetime.time_work_start
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_time
+        state: 06:30
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 06:30:00
+        target:
+          entity_id: input_datetime.time_work_start
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_time
+        state: 07:00
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 07:00:00
+        target:
+          entity_id: input_datetime.time_work_start
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_time
+        state: Manual
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:00:00
+        target:
+          entity_id: input_datetime.time_work_start
+  mode: single
+- id: '1663689461832'
+  alias: Time - Bed time
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.bed_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.night_mode
+    state: 'off'
+  - condition: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.bed_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/het_is_tijd_om_naar_bed_te_gaan_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id: media_player.livingroom_sonos_cloud
+    enabled: true
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+    enabled: true
+  - condition: state
+    entity_id: input_boolean.take_a_shower
+    state: 'on'
+  - condition: state
+    entity_id: binary_sensor.bathroom_door_contact
+    state: 'on'
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_badkamerdeur_staat_nog_open_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id: media_player.livingroom_sonos_cloud
+  mode: single
+- id: '1663689955137'
+  alias: Time - Prepare for Bed
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.prepare_for_bed''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.night_mode
+    state: 'off'
+  - condition: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.prepare_for_bed''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/ga_je_klaar_maken_om_naar_bed_te_gaan_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id: media_player.livingroom_sonos_cloud
+  mode: single
+- id: '1663692136457'
+  alias: Motion and On/Off sw - Bathroom
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.bathroom_motion_sensor_occupancy
+    id: motion
+    alias: Motion - Detected/Ended
+  - platform: device
+    domain: mqtt
+    device_id: fbb6e8159553be4d237cfdd1588c8c83
+    type: action
+    subtype: 'on'
+    discovery_id: 0x0c4314fffe9d0bdd action_on
+    id: switch-on
+    alias: Switch - On
+  - platform: device
+    domain: mqtt
+    device_id: fbb6e8159553be4d237cfdd1588c8c83
+    type: action
+    subtype: 'off'
+    discovery_id: 0x0c4314fffe9d0bdd action_off
+    id: switch-off
+    alias: Switch - Off
+  - platform: state
+    entity_id:
+    - binary_sensor.bathroom_door_contact
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: 40fdbc02d377fb49728375b88c2231fc
+    entity_id: sensor.bathroom_motion_sensor_illuminance_lux
+    domain: sensor
+    below: 100
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+        alias: motion trigger
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bathroom_motion_sensor_occupancy
+            state: 'on'
+          sequence:
+          - if:
+            - condition: state
+              state: 'on'
+              entity_id: input_boolean.night_mode
+            then:
+            - service: light.turn_on
+              data:
+                brightness_pct: 10
+              target:
+                entity_id: light.bathroom_dimmer
+            else:
+            - service: light.turn_on
+              data:
+                brightness_pct: 100
+              target:
+                entity_id: light.bathroom_dimmer
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bathroom_motion_sensor_occupancy
+            state: 'off'
+          sequence:
+          - if:
+            - type: is_open
+              condition: device
+              device_id: ec25a77f9a2a4fd1d10c2d989ff56a1f
+              entity_id: binary_sensor.bathroom_door_contact
+              domain: binary_sensor
+            then:
+            - service: light.turn_off
+              data: {}
+              target:
+                entity_id: light.bathroom_dimmer
+        default: []
+    - conditions:
+      - condition: trigger
+        id: switch-on
+        alias: switch-on trigger
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+        target:
+          entity_id: light.bathroom_dimmer
+    - conditions:
+      - condition: trigger
+        id: switch-off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.bathroom_dimmer
+    default: []
+  mode: single
+- id: '1663948844908'
+  alias: Stove - Status and Warnings
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.stove_power
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_off
+        device_id: 16e7395ec0936980f7fbe5050ae487b9
+        entity_id: switch.stove
+        domain: switch
+      sequence:
+      - type: turn_on
+        device_id: 16e7395ec0936980f7fbe5050ae487b9
+        entity_id: switch.stove
+        domain: switch
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: device
+          type: is_on
+          device_id: 16e7395ec0936980f7fbe5050ae487b9
+          entity_id: switch.stove
+          domain: switch
+        - type: is_power
+          condition: device
+          device_id: 16e7395ec0936980f7fbe5050ae487b9
+          entity_id: sensor.stove_power
+          domain: sensor
+          below: 50
+        - condition: state
+          entity_id: input_boolean.stove_baking
+          state: 'off'
+      sequence:
+      - service: media_player.play_media
+        data:
+          media_content_id: http://192.168.28.110:8123/local/sounds/oven_is_op_temperatuur.mp3
+          media_content_type: music
+          announce: true
+          extra:
+            volume: 40
+        target:
+          entity_id: media_player.livingroom_sonos_cloud
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: device
+          type: is_on
+          device_id: 16e7395ec0936980f7fbe5050ae487b9
+          entity_id: switch.stove
+          domain: switch
+        - type: is_power
+          condition: device
+          device_id: 16e7395ec0936980f7fbe5050ae487b9
+          entity_id: sensor.stove_power
+          domain: sensor
+          below: 10
+      sequence:
+      - type: turn_off
+        device_id: 16e7395ec0936980f7fbe5050ae487b9
+        entity_id: switch.stove
+        domain: switch
+  mode: single
+- id: '1663949770225'
+  alias: Stove - Pizza timer
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.stove_pizza
+    to: 'on'
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      entity_id: media_player.bedroom_speaker
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.bedroom_speaker
+      message: De Pizza is klaar
+      language: nl
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - condition: device
+    type: is_on
+    device_id: 16e7395ec0936980f7fbe5050ae487b9
+    entity_id: switch.stove
+    domain: switch
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      entity_id: media_player.bedroom_speaker
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.bedroom_speaker
+      message: De oven staat nog aan
+      language: nl
+  mode: single
+- id: '1664214800860'
+  alias: Time - Prepare to Leave
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.prepare_to_leave''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: template
+    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+      }}'
+    alias: Wake-up time != alarm time
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/het_is_bijna_tijd_om_te_vertrekken_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id: media_player.livingroom_sonos_cloud
+  mode: single
+- id: '1664214890559'
+  alias: Time - Time to Leave
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.time_to_leave''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: template
+    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+      }}'
+    alias: Wake-up time != alarm time
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/het_is_tijd_om_te_vertrekken_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_cloud
+      - media_player.kitchen_sonos_cloud
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.alarm_clock_on
+  mode: single
+- id: '1664298114210'
+  alias: Time - Varmepumpe Off Time
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: climate.livingroom
+      state: 'off'
+  - condition: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+  action:
+  - service: climate.set_temperature
+    data:
+      hvac_mode: heat
+      temperature: 16
+    target:
+      entity_id: climate.livingroom
+  - service: climate.set_fan_mode
+    data:
+      fan_mode: 'quiet '
+    target:
+      entity_id: climate.livingroom
+  mode: single
+- id: '1664386381506'
+  alias: Time - Turn Night mode On
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.night_mode_on_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.night_mode
+  mode: single
+- id: '1664386674506'
+  alias: Time - Turn Night mode Off
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.night_mode_off_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.night_mode
+  mode: single
+- id: '1665941535236'
+  alias: Time - Bathroom heating before shower
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.bathroom_heating_time''))
+      | int  | timestamp_custom(''%H:%M'', true))}}'
+    alias: 'When it is Alarm time '
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.home
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - type: is_not_open
+    condition: device
+    device_id: ec25a77f9a2a4fd1d10c2d989ff56a1f
+    entity_id: binary_sensor.bathroom_door_contact
+    domain: binary_sensor
+  - condition: state
+    entity_id: input_boolean.take_a_shower
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+    entity_id: switch.panel_oven_br_relay
+    domain: switch
+  mode: single
+- id: '1665954362535'
+  alias: Alarm to ON - Trigger automations
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.alarm_clock_on
+    to: 'on'
+  condition: []
+  action:
+  - service: automation.trigger
+    data:
+      skip_condition: false
+    target:
+      entity_id: automation.alarm_varmepumpe_off_time
+    enabled: true
+  - service: automation.trigger
+    data:
+      skip_condition: false
+    target:
+      entity_id: automation.alarm_prepare_for_bed
+  - service: automation.trigger
+    data:
+      skip_condition: false
+    target:
+      entity_id: automation.alarm_tts_tijd_om_naar_bed_te_gaan
+  mode: single
+- id: '1666291130997'
+  alias: Heating - Bathroom
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.bathroom_climate_sensor_temperature
+  condition:
+  - type: is_not_open
+    condition: device
+    device_id: ec25a77f9a2a4fd1d10c2d989ff56a1f
+    entity_id: binary_sensor.bathroom_door_contact
+    domain: binary_sensor
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.take_a_shower
+        state: 'on'
+      sequence:
+      - if:
+        - condition: numeric_state
+          entity_id: sensor.bathroom_climate_sensor_temperature
+          below: 23
+        then:
+        - type: turn_on
+          device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+          entity_id: switch.panel_oven_br_relay
+          domain: switch
+        else:
+        - type: turn_off
+          device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+          entity_id: switch.panel_oven_br_relay
+          domain: switch
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'on'
+      sequence: []
+  mode: single

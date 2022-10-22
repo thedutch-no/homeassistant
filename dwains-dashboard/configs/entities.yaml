@@ -1,0 +1,198 @@
+binary_sensor.washing_machine_door_sensor_contact:
+  sort_order: 1
+binary_sensor.washing_machine_power_button_update_available:
+  sort_order: 2
+binary_sensor.tumble_dryer_power_button_update_available:
+  sort_order: 3
+binary_sensor.eve_water_guard:
+  sort_order: 4
+binary_sensor.refrigerator_firmware_update:
+  sort_order: 5
+binary_sensor.refrigerator_overheating:
+  sort_order: 6
+binary_sensor.refrigerator_overpowering:
+  sort_order: 7
+binary_sensor.refrigerator_overvoltage:
+  sort_order: 8
+binary_sensor.freezer_firmware_update:
+  sort_order: 9
+binary_sensor.freezer_overheating:
+  sort_order: 10
+binary_sensor.freezer_overpowering:
+  sort_order: 11
+binary_sensor.freezer_overvoltage:
+  sort_order: 12
+binary_sensor.water_heater_overheating:
+  sort_order: 13
+binary_sensor.water_heater_overpowering:
+  sort_order: 14
+binary_sensor.kitchen_on_off_switch_update_available:
+  sort_order: 15
+binary_sensor.water_heater_firmware_update:
+  sort_order: 16
+binary_sensor.microwave_firmware_update:
+  sort_order: 17
+binary_sensor.kitchen_countertop_update_available:
+  sort_order: 18
+binary_sensor.stove_power_module_overpowering:
+  sort_order: 19
+button.eve_extend_8de2_identify:
+  sort_order: 20
+button.eve_water_guard_identify:
+  sort_order: 21
+button.refrigerator_ota_update:
+  sort_order: 22
+button.refrigerator_reboot:
+  sort_order: 23
+button.freezer_ota_update:
+  sort_order: 24
+button.freezer_reboot:
+  sort_order: 25
+button.water_heater_ota_update:
+  sort_order: 26
+button.water_heater_reboot:
+  sort_order: 27
+button.stove_power_module_ota_update:
+  sort_order: 28
+button.stove_power_module_reboot:
+  sort_order: 29
+light.kitchen_countertop:
+  sort_order: 30
+media_player.mass_kitchen:
+  sort_order: 31
+number.kitchen_bass:
+  sort_order: 32
+number.kitchen_treble:
+  sort_order: 33
+number.kitchen_crossfade_duration:
+  sort_order: 34
+number.kitchen_announcements_volume_increase_relative:
+  sort_order: 35
+scene.kitchen_lights_to_off:
+  sort_order: 36
+select.kitchen_crossfade_mode:
+  sort_order: 37
+select.kitchen_repeat_mode:
+  sort_order: 38
+select.kitchen_countertop_power_on_behavior:
+  sort_order: 39
+sensor.kitchen_on_off_switch_battery:
+  sort_order: 40
+sensor.kitchen_on_off_switch_action:
+  sort_order: 41
+sensor.kitchen_climate_sensor_battery:
+  sort_order: 42
+sensor.kitchen_climate_sensor_temperature:
+  sort_order: 43
+sensor.kitchen_climate_sensor_humidity:
+  sort_order: 44
+sensor.kitchen_climate_sensor_pressure:
+  sort_order: 45
+sensor.washing_machine_door_sensor_battery:
+  sort_order: 46
+sensor.washing_machine_door_sensor_device_temperature:
+  sort_order: 47
+sensor.washing_machine_door_sensor_power_outage_count:
+  sort_order: 48
+sensor.washing_machine_power_module_last_restart_time:
+  sort_order: 49
+sensor.washing_machine_power_module_mqtt_connect_count:
+  sort_order: 50
+sensor.washing_machine_power_module_restart_reason:
+  sort_order: 51
+sensor.washing_machine_power_module_ssid:
+  sort_order: 52
+sensor.washing_machine_power_module_wifi_connect_count:
+  sort_order: 53
+sensor.washing_machine_power_button_battery:
+  sort_order: 54
+sensor.washing_machine_power_button_action:
+  sort_order: 55
+sensor.tumble_dryer_power_button_battery:
+  sort_order: 56
+sensor.tumble_dryer_power_button_action:
+  sort_order: 57
+sensor.tumble_dryer_power_module_last_restart_time:
+  sort_order: 58
+sensor.tumble_dryer_power_module_mqtt_connect_count:
+  sort_order: 59
+sensor.tumble_dryer_power_module_restart_reason:
+  sort_order: 60
+sensor.tumble_dryer_power_module_ssid:
+  sort_order: 61
+sensor.tumble_dryer_power_module_wifi_connect_count:
+  sort_order: 62
+sensor.refrigerator_energy:
+  sort_order: 63
+sensor.refrigerator_power:
+  sort_order: 64
+sensor.freezer_energy:
+  sort_order: 65
+sensor.freezer_power:
+  sort_order: 66
+sensor.water_heater_energy:
+  sort_order: 67
+sensor.water_heater_power:
+  sort_order: 68
+sensor.microwave_energy:
+  sort_order: 69
+sensor.microwave_power:
+  sort_order: 70
+sensor.tasmota_last_restart_time_3:
+  sort_order: 71
+sensor.tasmota_wifi_connect_count_3:
+  sort_order: 72
+sensor.tasmota_mqtt_connect_count_3:
+  sort_order: 73
+sensor.tasmota_restart_reason_3:
+  sort_order: 74
+sensor.tasmota_ssid_3:
+  sort_order: 75
+sensor.ikea_air_sensor_3_vindriktning_pm2_5:
+  sort_order: 76
+sensor.kitchen_countertop_powersensor:
+  sort_order: 77
+sensor.kitchen_countertop_energysensor:
+  sort_order: 78
+sensor.kitchen_countertop_energysensor_daily:
+  sort_order: 79
+sensor.kitchen_countertop_energysensor_weekly:
+  sort_order: 80
+sensor.kitchen_countertop_energysensor_monthly:
+  sort_order: 81
+sensor.washing_machine_power_module_current:
+  sort_order: 82
+sensor.washing_machine_power_module_energy:
+  sort_order: 83
+sensor.washing_machine_power_module_power:
+  sort_order: 84
+sensor.tumble_dryer_power_module_current:
+  sort_order: 85
+sensor.tumble_dryer_power_module_energy:
+  sort_order: 86
+sensor.tumble_dryer_power_module_power:
+  sort_order: 87
+sensor.stove_energy:
+  sort_order: 88
+sensor.stove_power:
+  sort_order: 89
+switch.kitchen_crossfade:
+  sort_order: 90
+switch.kitchen_loudness:
+  sort_order: 91
+switch.kitchen_shuffle_enabled:
+  sort_order: 92
+switch.refrigerator:
+  sort_order: 93
+switch.freezer:
+  sort_order: 94
+switch.water_heater:
+  sort_order: 95
+switch.microwave:
+  sort_order: 96
+switch.washing_machine_power_module_relay:
+  sort_order: 97
+switch.tumble_dryer_power_module_relay:
+  sort_order: 98
+switch.stove:
+  sort_order: 99

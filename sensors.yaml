@@ -1,0 +1,33 @@
+#
+# System Monitor
+# - https://www.home-assistant.io/integrations/systemmonitor/
+#
+- platform: systemmonitor
+  resources:
+    - type: processor_use      
+    - type: disk_use_percent
+      arg: /config
+    - type: memory_free
+    - type: load_1m
+    - type: load_5m
+    - type: load_15m
+
+- platform: time_date
+  display_options:
+    - 'time'
+    - 'date'
+    - 'date_time'
+    - 'date_time_utc'
+    - 'date_time_iso'
+    - 'time_date'
+    - 'time_utc'
+    - 'beat'
+    
+#
+# Estimated outside illuminance
+# - https://community.home-assistant.io/t/outdoor-illuminance-estimated-from-weather-conditions/52756
+#
+- platform: illuminance
+  name: Estimated Illuminance
+  entity_id: weather.met_no
+

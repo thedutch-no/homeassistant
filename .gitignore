@@ -1,0 +1,38 @@
+# .gitignore file for the config dir.
+# An * ensures that everything will be ignored.
+*.log*
+*.db
+*.db-sha
+*.db-wal
+*.db-shm
+*.conf
+*.json
+*.pyc
+*.gz
+*.js
+*.backup
+
+# You can whitelist files/folders with !, these will not be ignored.
+!*.yaml
+!.gitignore
+!*.md
+!.gitkeep
+!node-red/
+!www/
+
+# Ignore folders.
+.ssh
+.storage
+.cloud
+.google.token
+blueprints
+custom_components
+local_music
+zigbee2mqtt/
+
+# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+id_ed25529*
+create_git_repository.sh
