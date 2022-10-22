@@ -19,7 +19,12 @@ binary_sensor:
       {% else %}
         {{ false }}
       {% endif %}
-
+  
+  #
+  # Bathroom occupancy when any of these are true
+  # - motion detected
+  # - wasp sensor active
+  #
   - name: batheroom_occupied
     device_class: occupancy
     state: >
