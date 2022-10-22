@@ -61,4 +61,4 @@ wasp_sensor:
 
 # Shell commands
 shell_command:
-  nightly_upload_git: /config/nightly_upload_git.sh
+  nightly_upload_git: /bin/bash nightly_upload_git.sh
