@@ -1602,3 +1602,16 @@
         state: 'on'
       sequence: []
   mode: single
+- id: '1666436695112'
+  alias: Nightly build upload to Github
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:23:23'
+  condition: []
+  action:
+  - data:
+      addon: a0d7b954_ssh
+      input: /config/nightly_upload_git.sh
+    service: hassio.addon_stdin
+  mode: single
