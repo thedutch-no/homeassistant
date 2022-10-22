@@ -36,3 +36,4 @@ secrets.yaml
 known_devices.yaml
 id_ed25529*
 create_git_repository.sh
+nightly_upload_git.sh
