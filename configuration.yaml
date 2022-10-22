@@ -2,7 +2,6 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
-
 # Include files
 group: !include groups.yaml
 automation: !include automations.yaml
@@ -19,6 +18,12 @@ input_number: !include input_number.yaml
 input_select: !include input_select.yaml
 template: !include templates.yaml
 #powercalc: !include powercalc.yaml
+
+# Extra logging options
+logger:
+  default: debug
+  logs:
+    custom_components.powercalc: debug
 
 # Text to speech
 tts:
@@ -54,11 +59,6 @@ wasp_sensor:
       - binary_sensor.bathroom_door_contact
     timeout: 30
 
-
-# Extra logging options
-logger:
-  default: warning
-  logs:
-    custom_components.powercalc: debug
-
-# Recorder settings
+# Shell commands
+shell_command:
+  nightly_upload_git: bash /config/nightly_upload_git.sh
