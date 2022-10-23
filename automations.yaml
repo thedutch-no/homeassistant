@@ -504,6 +504,11 @@
       hvac_mode: heat
     target:
       entity_id: climate.livingroom
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.setpoint_heatpump
+      value: '{{ states(''input_number.setpoint_heatpump_norm'') }}'
+    alias: Set Setpoint Heatpumt to Norm temp
   mode: single
 - id: '1661967233221'
   alias: Enter or Leave Work zone - weekdays
@@ -539,6 +544,11 @@
       fan_mode: powerfull
     target:
       entity_id: climate.livingroom
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.setpoint_heatpump
+      value: '{{ states(''input_number.setpoint_heatpump_pre_heat'') }}'
+    alias: Set Setpoint Heatpumt to Pre Heat temp
   mode: single
 - id: '1662243879240'
   alias: Leaving Home - weekend
@@ -1530,10 +1540,11 @@
     entity_id: input_boolean.take_a_shower
     state: 'on'
   action:
-  - type: turn_on
-    device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
-    entity_id: switch.panel_oven_br_relay
-    domain: switch
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.setpoint_bathroom
+      value: '{{ states(''input_number.setpoint_bathroom_shower'') }}'
+    alias: Set bathroom setpoint to Shower temp
   mode: single
 - id: '1665954362535'
   alias: Alarm to ON - Trigger automations
@@ -1563,44 +1574,37 @@
       entity_id: automation.alarm_tts_tijd_om_naar_bed_te_gaan
   mode: single
 - id: '1666291130997'
-  alias: Heating - Bathroom
-  description: ''
+  alias: Heating - Bathroom Setpoint
+  description: Set the temp setpoint for the bathroom heater
   trigger:
   - platform: state
     entity_id:
-    - sensor.bathroom_climate_sensor_temperature
-  condition:
-  - type: is_not_open
-    condition: device
-    device_id: ec25a77f9a2a4fd1d10c2d989ff56a1f
-    entity_id: binary_sensor.bathroom_door_contact
-    domain: binary_sensor
+    - person.rob
+  condition: []
   action:
   - choose:
     - conditions:
       - condition: state
+        entity_id: person.rob
+        state: home
+      - condition: state
         entity_id: input_boolean.take_a_shower
-        state: 'on'
-      sequence:
-      - if:
-        - condition: numeric_state
-          entity_id: sensor.bathroom_climate_sensor_temperature
-          below: 23
-        then:
-        - type: turn_on
-          device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
-          entity_id: switch.panel_oven_br_relay
-          domain: switch
-        else:
-        - type: turn_off
-          device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
-          entity_id: switch.panel_oven_br_relay
-          domain: switch
-    - conditions:
+        state: 'off'
       - condition: state
         entity_id: input_boolean.night_mode
-        state: 'on'
-      sequence: []
+        state: 'off'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_bathroom
+          value: '{{ states(''input_number.setpoint_bathroom_norm'') }}'
+        alias: Set bathroom setpoint to Norm temp
+    default:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.setpoint_bathroom
+        value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
+      alias: Set bathroom setpoint to Min temp
   mode: single
 - id: '1666436695112'
   alias: Nightly build upload to Github
@@ -1612,4 +1616,149 @@
   action:
   - service: shell_command.nightly_upload_git
     data: {}
+  mode: single
+- id: '1666522979870'
+  alias: Heating - Bathroom control
+  description: Control the heater in the bathroom
+  trigger:
+  - platform: state
+    entity_id:
+    - input_number.setpoint_bathroom
+    id: setpoint
+  - platform: state
+    entity_id:
+    - sensor.bathroom_climate_sensor_temperature
+    id: temp
+  - platform: state
+    entity_id:
+    - sensor.bathroom_climate_sensor_temperature
+    to: unavailable
+    id: unavailable
+  - platform: state
+    entity_id:
+    - sensor.bathroom_climate_sensor_temperature
+    to: unknown
+    id: unknown
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: unavailable
+      - condition: trigger
+        id: unknown
+      sequence:
+      - type: turn_on
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+          <= (states(''input_number.setpoint_bathroom'')|int) }}
+
+          '
+        alias: Temperature below setpoint
+      sequence:
+      - type: turn_on
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+          > (states(''input_number.setpoint_bathroom'')|int + 1 ) }}
+
+          '
+        alias: Temperature above setpoint
+      sequence:
+      - type: turn_off
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+  mode: single
+- id: '1666527539158'
+  alias: Bedroom - Button
+  description: 'Single click everything OFF
+
+    Double click everything ON'
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f142428ab4fd02fa19af7a47e856a1da
+    type: action
+    subtype: single
+    discovery_id: 0x00158d0006f39b8e action_single
+    id: single
+  - platform: device
+    domain: mqtt
+    device_id: f142428ab4fd02fa19af7a47e856a1da
+    type: action
+    subtype: double
+    discovery_id: 0x00158d0006f39b8e action_double
+    id: double
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: single
+      sequence:
+      - choose:
+        - conditions:
+          - condition: device
+            device_id: d025b64e201a029004e4ba6c85647f07
+            domain: media_player
+            entity_id: media_player.bedroom_google_speaker
+            type: is_playing
+          sequence:
+          - service: media_player.media_stop
+            data: {}
+            target:
+              entity_id: media_player.bedroom_google_speaker
+        alias: Choose between Google speaker playing or not
+        default:
+        - type: turn_off
+          device_id: 6945be442bab645c9f650254bcbf4351
+          entity_id: switch.ventilation
+          domain: switch
+        - service: media_player.media_stop
+          data: {}
+          target:
+            entity_id:
+            - media_player.kitchen_sonos_speaker
+            - media_player.livingroom_sonos_speaker
+          alias: 'Media player: Stop - Kitchen and Livingroom speakers'
+        - service: climate.set_hvac_mode
+          data:
+            hvac_mode: heat
+          target:
+            entity_id: climate.livingroom
+        - service: climate.set_temperature
+          data:
+            temperature: 16
+          target:
+            entity_id: climate.livingroom
+        - service: climate.set_fan_mode
+          data:
+            fan_mode: quiet
+          target:
+            entity_id: climate.livingroom
+        - service: input_boolean.turn_on
+          data: {}
+          target:
+            entity_id: input_boolean.night_mode
+        - service: script.check_alarm_clock
+          data: {}
+        - service: script.turn_off_all_lights_and_mediaplayers
+          data: {}
+        - service: script.check_doors_closed
+          data: {}
+    - conditions:
+      - condition: trigger
+        id: double
+      sequence:
+      - service: script.turn_on_all_lights
+        data: {}
+    alias: Choose between Single or Double click
   mode: single

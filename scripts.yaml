@@ -40,7 +40,7 @@ livingroom_apple_tv_plex:
       entity_id: remote.livingroom_apple_tv
   mode: single
 turn_off_all_lights_and_mediaplayers:
-  alias: Turn Off ALL Lights and Mediaplayers
+  alias: Turn Off ALL Lights
   sequence:
   - service: scene.turn_on
     target:
@@ -62,18 +62,12 @@ turn_off_all_lights_and_mediaplayers:
     target:
       entity_id: scene.livingroom_lights_to_off_2
     metadata: {}
-  - service: media_player.media_stop
-    data: {}
-    target:
-      entity_id:
-      - media_player.living_room
-      - media_player.kitchen
-      - media_player.bedroom_speaker
   - service: scene.turn_on
     target:
       entity_id: scene.bathroom_off
     metadata: {}
   mode: single
+  icon: mdi:lightbulb-group-off
 flash_livingroom_ceiling_amsterdam:
   alias: Flash - Livingroom ceiling - Amsterdam
   sequence:
@@ -178,65 +172,6 @@ tts_washing_machine_done_via_file:
       entity_id: media_player.livingroom_sonos_cloud
   mode: single
   icon: mdi:bullhorn-variant-outline
-ma_radio10_live:
-  alias: 'MA: radio10 - Live'
-  sequence:
-  - service: mass.queue_command
-    data:
-      command: play_media
-      uri: https://25633.live.streamtheworld.com/RADIO10.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&tdtok=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6ImZTeXA4In0.eyJpc3MiOiJ0aXNydiIsInN1YiI6IjIxMDY0IiwiaWF0IjoxNjM5MzA3OTI3LCJ0ZC1yZWciOmZhbHNlfQ.M1XyOoGP7k3xDI5uj3Uo3gOJe649FtkpMM-CzTzXB0k&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwNzkyNywiaXNzIjoidGlzcnYifQ.xQ7iyNKaRWtFcrjLkIXgPsMDx-34IWkGCvKEe0Khd38
-      enqueue_mode: play
-    target:
-      entity_id: media_player.mass_livingroom_speaker
-  mode: single
-  icon: mdi:radio
-ma_radio10_love_songs:
-  alias: 'MA: radio10 - Love songs'
-  sequence:
-  - service: mass.queue_command
-    data:
-      command: play_media
-      enqueue_mode: play
-      uri: https://22343.live.streamtheworld.com/TLPSTR04.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODI0MywiaXNzIjoidGlzcnYifQ.xtU5IoIigyhRMN3Vy_uWekqp3zckYKPtFojsiKntchE
-    target:
-      entity_id: media_player.mass_livingroom_speaker
-  mode: single
-  icon: mdi:radio
-ma_radio10_disco_clasics:
-  alias: 'MA: radio10 - Disco clasics'
-  sequence:
-  - service: media_player.play_media
-    data:
-      media_content_id: https://22593.live.streamtheworld.com/TLPSTR23.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODE5MSwiaXNzIjoidGlzcnYifQ.RXqcSN6mmdEkAQpvh5RNxr4tpOy59C0P_COzsDhPUN4
-      enqueue: play
-    target:
-      entity_id: media_player.livingroom_sonos_speaker
-  mode: single
-  icon: mdi:radio
-ma_radio10_60s_70s_hits:
-  alias: 'MA: radio10 - 60s and 70s Hits'
-  sequence:
-  - service: mass.queue_command
-    data:
-      command: play_media
-      enqueue_mode: play
-      uri: https://22613.live.streamtheworld.com/TLPSTR18.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODAwNiwiaXNzIjoidGlzcnYifQ.9-YQKmSmssL6ObQ1JSLaYo5BoHk2GI5SPgoqNc5IrZs
-    target:
-      entity_id: media_player.mass_livingroom_speaker
-  mode: single
-  icon: mdi:radio
-ma_radio10_80s_hits:
-  alias: 'MA: radio10 - 80s Hits'
-  sequence:
-  - service: mass.queue_command
-    data:
-      command: play_media
-      enqueue_mode: play
-      uri: https://25303.live.streamtheworld.com/TLPSTR20_SC?DIST=TuneIn&TGT=TuneIn&maxServers=2&tdtok=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6ImZTeXA4In0.eyJpc3MiOiJ0aXNydiIsInN1YiI6IjIxMDY0IiwiaWF0IjoxNjM5MzA4MTI4LCJ0ZC1yZWciOmZhbHNlfQ.Vn9sfnqL5pPwWxHWk3N24Egcb9mzFlASHITP5cML7ss&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODEyOCwiaXNzIjoidGlzcnYifQ.ICfMreMy03iij98CZmpC3YCOyd7a9fk9DNQVfMnkTHI
-    target:
-      entity_id: media_player.mass_livingroom_speaker
-  mode: single
-  icon: mdi:radio
 radio10_live:
   alias: radio10 - Live
   sequence:
@@ -313,3 +248,82 @@ create_local_announcement_file:
       language: nl-NL
       message: Hier moet de te spreken tekst komen te staan
   mode: single
+check_alarm_clock:
+  alias: Check Alarm clock
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_boolean.alarm_clock_on
+      state: 'off'
+    then:
+    - service: media_player.play_media
+      data:
+        media_content_id: http://192.168.28.110:8123/local/sounds/de_wekker_staat_niet_aan_nl-nl_cloud.mp3
+        media_content_type: music
+        announce: true
+      target:
+        entity_id: media_player.bedroom_google_speaker
+    else:
+    - service: tts.cloud_say
+      data:
+        language: nl-NL
+        message: De wekker is ingesteld op {{as_timestamp(states('sensor.wake_up_time'))
+          | int | timestamp_custom('%H:%M', true)}} uur
+        entity_id: media_player.bedroom_google_speaker
+  mode: single
+  icon: mdi:speaker-message
+create_local_announcement_file_duplicate:
+  alias: Announce Wake up time
+  sequence:
+  - service: tts.cloud_say
+    data:
+      language: nl-NL
+      message: De wekker is ingesteld op {{as_timestamp(states('sensor.wake_up_time'))
+        | int | timestamp_custom('%H:%M', true)}} uur
+      entity_id: media_player.bedroom_google_speaker
+  mode: single
+  icon: mdi:speaker-message
+turn_on_all_lights:
+  alias: Turn On ALL Lights
+  sequence:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bathroom_lights_to_on_100
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.livingroom_lights_to_on_100_352
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.hallway_lights_to_on_100_352
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.kitchen_lights_to_on_100
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.frontdoor_lights_to_on_100_352
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bathroom_lights_to_on_100
+    metadata: {}
+  mode: single
+  icon: mdi:lightbulb-group
+check_doors_closed:
+  alias: Check doors closed
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.deuren
+      state: 'on'
+    then:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.bedroom_google_speaker
+        message: Er staan nog deuren open
+        language: nl-NL
+  mode: single
+  icon: mdi:speaker-message
