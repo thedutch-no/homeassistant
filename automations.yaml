@@ -688,11 +688,6 @@
           time: 00:00:00
         target:
           entity_id: input_datetime.travel_time_customer
-      - service: input_datetime.set_datetime
-        data:
-          time: 00:00:00
-        target:
-          entity_id: input_datetime.travel_time_work
     default: []
   mode: single
 - id: '1663509415956'
@@ -1754,6 +1749,7 @@
           data: {}
         - service: script.check_doors_closed
           data: {}
+          enabled: false
     - conditions:
       - condition: trigger
         id: double
