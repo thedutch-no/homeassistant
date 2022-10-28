@@ -1070,8 +1070,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.bed_time''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.bed_time''))
+      }}'
     alias: 'When it is Alarm time '
   condition:
   - condition: zone
@@ -1084,8 +1084,8 @@
     entity_id: input_boolean.night_mode
     state: 'off'
   - condition: template
-    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.bed_time''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.bed_time''))
+      }}'
   action:
   - service: media_player.play_media
     data:
@@ -1124,8 +1124,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.prepare_for_bed''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.prepare_for_bed''))
+      }}'
     alias: 'When it is Alarm time '
   condition:
   - condition: zone
@@ -1138,8 +1138,8 @@
     entity_id: input_boolean.night_mode
     state: 'off'
   - condition: template
-    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.prepare_for_bed''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.prepare_for_bed''))
+      }}'
   action:
   - service: media_player.play_media
     data:
@@ -1321,58 +1321,108 @@
         domain: switch
   mode: single
 - id: '1663949770225'
-  alias: Stove - Pizza timer
+  alias: Stove - Baking timer
   description: ''
   trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.stove_pizza
-    to: 'on'
+  - platform: event
+    event_type: timer.finished
+    id: timer
+    event_data:
+      entity_id: timer.stove_timer
+  - platform: device
+    domain: mqtt
+    device_id: 2e810a69606ed4d95af364ccd35d8aa3
+    type: action
+    subtype: single
+    discovery_id: 0x00158d0006fbc993 action_single
+    id: single
+  - platform: device
+    domain: mqtt
+    device_id: 2e810a69606ed4d95af364ccd35d8aa3
+    type: action
+    subtype: double
+    discovery_id: 0x00158d0006fbc993 action_double
+    id: double
+  - platform: device
+    domain: mqtt
+    device_id: 2e810a69606ed4d95af364ccd35d8aa3
+    type: action
+    subtype: hold
+    discovery_id: 0x00158d0006fbc993 action_hold
+    id: hold
   condition: []
   action:
-  - delay:
-      hours: 0
-      minutes: 15
-      seconds: 0
-      milliseconds: 0
-  - service: media_player.volume_set
-    data:
-      volume_level: 0.6
-    target:
-      entity_id: media_player.bedroom_speaker
-  - service: tts.google_translate_say
-    data:
-      entity_id: media_player.bedroom_speaker
-      message: De Pizza is klaar
-      language: nl
-  - delay:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
-  - condition: device
-    type: is_on
-    device_id: 16e7395ec0936980f7fbe5050ae487b9
-    entity_id: switch.stove
-    domain: switch
-  - service: media_player.volume_set
-    data:
-      volume_level: 0.6
-    target:
-      entity_id: media_player.bedroom_speaker
-  - service: tts.google_translate_say
-    data:
-      entity_id: media_player.bedroom_speaker
-      message: De oven staat nog aan
-      language: nl
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: timer
+      sequence:
+      - service: media_player.play_media
+        data:
+          media_content_id: http://192.168.28.110:8123/local/sounds/je_eten_in_de_oven_is_klaar_nl-nl_cloud.mp3
+          media_content_type: music
+          announce: true
+          extra:
+            volume: 40
+        target:
+          entity_id: media_player.livingroom_sonos_cloud
+        enabled: true
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.stove_baking
+          - input_boolean.stove_pizza
+    - conditions:
+      - condition: trigger
+        id: single
+      sequence:
+      - service: timer.start
+        data:
+          duration: 00:01:00
+        target:
+          entity_id: timer.stove_timer
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.stove_baking
+          - input_boolean.stove_pizza
+    - conditions:
+      - condition: trigger
+        id: double
+      sequence:
+      - service: timer.start
+        data:
+          duration: 00:45:00
+        target:
+          entity_id: timer.stove_timer
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.stove_baking
+    - conditions:
+      - condition: trigger
+        id: hold
+      sequence:
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.stove_timer
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.stove_baking
+          - input_boolean.stove_pizza
   mode: single
 - id: '1664214800860'
   alias: Time - Prepare to Leave
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.prepare_to_leave''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.prepare_to_leave''))
+      }}'
     alias: 'When it is Alarm time '
   condition:
   - condition: zone
@@ -1534,8 +1584,8 @@
   - service: input_number.set_value
     data_template:
       entity_id: input_number.setpoint_bathroom
-      value: '{{ states(''input_number.setpoint_bathroom_shower'') }}'
-    alias: Set bathroom setpoint to Shower temp
+      value: '{{ states(''input_number.setpoint_bathroom_max'') }}'
+    alias: Set bathroom setpoint to Max temp
   mode: single
 - id: '1665954362535'
   alias: Alarm to ON - Trigger automations

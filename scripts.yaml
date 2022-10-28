@@ -246,7 +246,7 @@ create_local_announcement_file:
       entity_id: media_player.bedroom_google_speaker
       cache: true
       language: nl-NL
-      message: Hier moet de te spreken tekst komen te staan
+      message: Je eten in de oven is klaar, eet smakelijk
   mode: single
 check_alarm_clock:
   alias: Check Alarm clock
