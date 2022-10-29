@@ -19,7 +19,7 @@ binary_sensor:
       {% else %}
         {{ false }}
       {% endif %}
-  
+
   #
   # Bathroom occupancy when any of these are true
   # - motion detected
@@ -164,10 +164,10 @@ sensor:
     state: >
       {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
       {% if states('input_boolean.take_a_shower') == 'on' %}
-         {% set ps = states('input_datetime.prep_time_shower') %}
-       {% else %}
-         {% set ps = states('input_datetime.prep_time_no_shower') %}
-       {% endif %}
+        {% set ps = states('input_datetime.prep_time_shower') %}
+      {% else %}
+        {% set ps = states('input_datetime.prep_time_no_shower') %}
+      {% endif %}
       {% set pm = states('input_datetime.prep_time_morning') %}
       {% set pc = states('input_datetime.prep_time_car') %}
       {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pc.split(':')[0] | int %}
@@ -420,3 +420,4 @@ sensor:
   # - All entities in domain light
   #
   #########################
+

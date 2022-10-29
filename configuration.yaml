@@ -50,15 +50,6 @@ powercalc:
   power_sensor_naming: "{} Powersensor"
   energy_sensor_naming: "{} Energysensor"
 
-# Wasp Sensors
-#wasp_sensor:
-#  - name: bathroom_wasp
-#    wasp_sensors:
-#      - binary_sensor.bathroom_motion_occupancy
-#    box_sensors:
-#      - binary_sensor.bathroom_door_contact
-#    timeout: 30
-
 # Shell commands
 shell_command:
   nightly_upload_git: /bin/bash nightly_upload_git.sh
