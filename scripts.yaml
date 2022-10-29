@@ -135,7 +135,7 @@ stop_bedroom_speaker:
   - service: media_player.media_stop
     data: {}
     target:
-      entity_id: media_player.bedroom_speaker
+      entity_id: media_player.bedroom_google_speaker
   mode: single
 media_player_join_kitchen_to_livingroom:
   alias: Media Player Join Kitchen to Livingroom
@@ -143,9 +143,9 @@ media_player_join_kitchen_to_livingroom:
   - service: media_player.join
     data:
       group_members:
-      - media_player.kitchen
+      - media_player.kitchen_sonos_speaker
     target:
-      entity_id: media_player.living_room
+      entity_id: media_player.livingroom_sonos_speaker
   mode: single
 media_player_join_livingroom_to_kitchen:
   alias: Media Player Join Livingroom to Kitchen
@@ -153,9 +153,9 @@ media_player_join_livingroom_to_kitchen:
   - service: media_player.join
     data:
       group_members:
-      - media_player.living_room
+      - media_player.livingroom_sonos_speaker
     target:
-      entity_id: media_player.kitchen
+      entity_id: media_player.kitchen_sonos_speaker
   mode: single
 tts_washing_machine_done_via_file:
   alias: 'Announce: De wasmachine is klaar (mp3)'
@@ -246,7 +246,7 @@ create_local_announcement_file:
       entity_id: media_player.bedroom_google_speaker
       cache: true
       language: nl-NL
-      message: Je eten in de oven is klaar, eet smakelijk
+      message: De auto verwarming is niet aangesloten
   mode: single
 check_alarm_clock:
   alias: Check Alarm clock
@@ -327,3 +327,32 @@ check_doors_closed:
         language: nl-NL
   mode: single
   icon: mdi:speaker-message
+check_kupevame_connected:
+  alias: Check Kupevame connected
+  sequence:
+  - type: turn_on
+    device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+    entity_id: switch.kupevarme
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - if:
+    - condition: numeric_state
+      entity_id: sensor.kupevarme_power
+      above: 100
+    then:
+    - service: input_boolean.turn_off
+      data: {}
+    else:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.kupevarme_connected
+  - type: turn_off
+    device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+    entity_id: switch.kupevarme
+    domain: switch
+  mode: single

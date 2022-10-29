@@ -477,7 +477,7 @@
       entity_id: climate.livingroom
   mode: single
 - id: '1661913757000'
-  alias: Entering Home
+  alias: Entering Home zone
   description: ''
   trigger:
   - platform: zone
@@ -692,7 +692,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.frontdoor_motion_sensor_occupancy
+    - binary_sensor.entrance_motion_sensor_occupancy
     id: motion
   - platform: device
     domain: mqtt
@@ -712,7 +712,7 @@
   - type: is_illuminance
     condition: device
     device_id: b6edfa39e6cccfd378d2d8b059d94515
-    entity_id: sensor.frontdoor_motion_sensor_illuminance_lux
+    entity_id: sensor.entrance_motion_sensor_illuminance_lux
     domain: sensor
     below: 100
   action:
@@ -725,7 +725,7 @@
       - choose:
         - conditions:
           - condition: state
-            entity_id: binary_sensor.frontdoor_motion_sensor_occupancy
+            entity_id: binary_sensor.entrance_motion_sensor_occupancy
             state: 'on'
           sequence:
           - if:
@@ -738,14 +738,16 @@
                 color_temp: 387
                 brightness_pct: 10
               target:
-                entity_id: light.frontdoor_ceiling
+                entity_id:
+                - light.entrance_ceiling
             else:
             - service: light.turn_on
               data:
                 color_temp: 153
                 brightness_pct: 100
               target:
-                entity_id: light.frontdoor_ceiling
+                entity_id:
+                - light.entrance_ceiling
           - if:
             - condition: state
               entity_id: person.rob
@@ -765,7 +767,8 @@
         - service: light.turn_off
           data: {}
           target:
-            entity_id: light.frontdoor_ceiling
+            entity_id:
+            - light.entrance_ceiling
     - conditions:
       - condition: trigger
         id: switch-on
@@ -776,7 +779,8 @@
           color_temp: 153
           brightness_pct: 100
         target:
-          entity_id: light.frontdoor_ceiling
+          entity_id:
+          - light.entrance_ceiling
     - conditions:
       - condition: trigger
         id: switch-off
@@ -784,7 +788,8 @@
       - service: light.turn_off
         data: {}
         target:
-          entity_id: light.frontdoor_ceiling
+          entity_id:
+          - light.entrance_ceiling
     default: []
   mode: single
 - id: '1663512068927'
@@ -910,7 +915,7 @@
     data:
       volume_level: 0.3
     target:
-      entity_id: media_player.bedroom_speaker
+      entity_id: media_player.bedroom_google_speaker
   - service: media_player.play_media
     data:
       media_content_type: music
@@ -1825,3 +1830,69 @@
         target:
           entity_id: media_player.kitchen_sonos_speaker
       action_click_double: []
+- id: '1667044154408'
+  alias: Entrance door opens
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: a974d0b22cc6384df44bb848ac2edfbc
+    entity_id: binary_sensor.entrance_door_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: home
+      sequence:
+      - type: turn_on
+        device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+        entity_id: switch.kupevarme
+        domain: switch
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+      - if:
+        - condition: numeric_state
+          entity_id: sensor.kupevarme_power
+          above: 100
+        then:
+        - service: input_boolean.turn_on
+          data: {}
+          target:
+            entity_id: input_boolean.kupevarme_connected
+        else:
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id: input_boolean.kupevarme_connected
+        - service: media_player.play_media
+          data:
+            media_content_id: http://192.168.28.110:8123/local/sounds/de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.mp3
+            media_content_type: music
+            announce: true
+            extra:
+              volume: 40
+          target:
+            entity_id: media_player.kitchen_sonos_cloud
+          enabled: true
+      - type: turn_off
+        device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+        entity_id: switch.kupevarme
+        domain: switch
+    default:
+    - service: notify.mobile_app_robs_iphone_11
+      data:
+        message: 'De voordeur is geopend '
+        title: URGENT
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+  mode: single
