@@ -1318,7 +1318,7 @@
         device_id: 16e7395ec0936980f7fbe5050ae487b9
         entity_id: sensor.stove_power
         domain: sensor
-        above: 10
+        above: 50
       sequence:
       - type: turn_on
         device_id: 16e7395ec0936980f7fbe5050ae487b9
@@ -1552,7 +1552,11 @@
   mode: single
 - id: '1664298114210'
   alias: Time - Varmepumpe Night mode start time
-  description: ''
+  description: 'Set the temperature and fan-mode of the varmepumpe to the ''min''
+    settings for the night.
+
+    Triggered by either the corresponding  ''night mode time'' or the ''night mode
+    timer'''
   trigger:
   - platform: template
     value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
@@ -1568,17 +1572,14 @@
   - condition: zone
     entity_id: person.rob
     zone: zone.home
-  - condition: state
-    entity_id: input_boolean.alarm_clock_on
-    state: 'on'
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: climate.livingroom
-      state: 'off'
   - condition: template
     value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
       | int  | timestamp_custom(''%H:%M'', true))}}'
+  - condition: device
+    type: is_on
+    device_id: 646da9678751ccdd9526239de9fde3d0
+    entity_id: switch.varmepumpe
+    domain: switch
   action:
   - service: climate.set_temperature
     data:
@@ -1694,37 +1695,37 @@
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.varmepumpe_night_mode
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.prepare_for_bed
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.time_for_bed
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.wake_up_time
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_to_leave''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.prepare_to_leave
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', true)}}'
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.time_to_leave
   mode: single
@@ -1835,6 +1836,9 @@
 
           '
         alias: Temperature below setpoint
+      - condition: state
+        entity_id: binary_sensor.bathroom_door_contact
+        state: 'off'
       sequence:
       - type: turn_on
         device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
@@ -1847,6 +1851,9 @@
 
           '
         alias: Temperature above setpoint
+      - condition: state
+        entity_id: binary_sensor.bathroom_door_contact
+        state: 'on'
       sequence:
       - type: turn_off
         device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
@@ -2167,7 +2174,7 @@
   - choose:
     - conditions:
       - condition: trigger
-        id: temp_refrigerator
+        id: temp
       sequence:
       - service: script.send_notification_to_phone
         data:
