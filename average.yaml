@@ -1,0 +1,3 @@
+name: 'Refrigirator - Avg Power'
+entiries:
+  - sensor.refrigirator_power

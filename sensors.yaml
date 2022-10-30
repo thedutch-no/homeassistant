@@ -31,3 +31,37 @@
   name: Estimated Illuminance
   entity_id: weather.met_no
 
+#
+# Sensors in the Average platform
+#
+- platform: average
+  name: 'Panel oven BR - avg Power'
+  unique_id: fdba4864-5fcd-40bc-b56e-673a86e59327
+  duration:
+    hours: 3
+  entities: 
+    - sensor.panel_oven_br_power
+
+- platform: average
+  name: 'Panel oven FD - avg Power'
+  unique_id: 2235c274-78bb-4825-a626-82ad817fd72b
+  duration:
+    hours: 3
+  entities: 
+    - sensor.panel_oven_fd_power
+
+- platform: average
+  name: 'Refrigerator - avg Power'
+  unique_id: b4e4281b-42f9-4356-b68c-fa050f9cc15c
+  duration:
+    hours: 3
+  entities: 
+    - sensor.refrigerator_power
+
+- platform: average
+  name: 'Freezer - avg Power'
+  unique_id: 63529b8e-9b3f-4ded-b840-9047023dd83c
+  duration:
+    hours: 3
+  entities: 
+    - sensor.freezer_power

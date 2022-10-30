@@ -17,6 +17,7 @@ input_boolean: !include input_boolean.yaml
 input_number: !include input_number.yaml
 input_select: !include input_select.yaml
 template: !include templates.yaml
+#average: !include average.yaml
 #powercalc: !include powercalc.yaml
 
 # Extra logging options
@@ -53,3 +54,11 @@ powercalc:
 # Shell commands
 shell_command:
   nightly_upload_git: /bin/bash nightly_upload_git.sh
+
+# Sonos
+sonos:
+    media_player:
+      hosts:
+        - 192.168.10.191
+        - 192.168.10.192
+

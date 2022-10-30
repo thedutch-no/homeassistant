@@ -458,6 +458,8 @@
           entity_id:
           - media_player.livingroom_sonos_speaker
       action_click_double: []
+      rotate_left_loop: true
+      rotate_right_loop: true
 - id: '1661913713702'
   alias: Leaving Home - weekdays
   description: ''
@@ -485,6 +487,11 @@
       temperature: 16
     target:
       entity_id: climate.livingroom
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.setpoint_entrance
+      value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+    alias: Set entrance setpoint to Min temp
   mode: single
 - id: '1661913757000'
   alias: Entering Home zone
@@ -913,6 +920,7 @@
     value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.wake_up_time''))
       | int  | timestamp_custom(''%H:%M'', true))}}'
     alias: 'When it is Alarm time '
+    enabled: false
   - platform: event
     event_type: timer.finished
     id: timer
@@ -937,6 +945,11 @@
       media_content_id: http://192.168.28.110:8123/local/sounds/EarlyRiser.mp3
     target:
       entity_id: media_player.bedroom_google_speaker
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.setpoint_entrance
+      value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+    alias: Set entrance setpoint to Norm temp
   mode: single
 - id: '1663518275430'
   alias: Motion and On/Off sw - Hallway
@@ -1300,6 +1313,12 @@
         device_id: 16e7395ec0936980f7fbe5050ae487b9
         entity_id: switch.stove
         domain: switch
+      - type: is_power
+        condition: device
+        device_id: 16e7395ec0936980f7fbe5050ae487b9
+        entity_id: sensor.stove_power
+        domain: sensor
+        above: 10
       sequence:
       - type: turn_on
         device_id: 16e7395ec0936980f7fbe5050ae487b9
@@ -1638,8 +1657,12 @@
     alias: Set bathroom setpoint to Max temp
   mode: single
 - id: '1665954362535'
-  alias: Alarm to ON - Trigger automations
-  description: ''
+  alias: 'Alarm Clock: Changes state'
+  description: 'When Alarm Clock changes state to:
+
+    Off - Cancel all related timers
+
+    On - Start all related timers'
   trigger:
   - platform: state
     entity_id:
@@ -1712,6 +1735,9 @@
   - platform: state
     entity_id:
     - person.rob
+  - platform: state
+    entity_id:
+    - input_boolean.take_a_shower
   condition: []
   action:
   - choose:
@@ -1730,6 +1756,22 @@
         data_template:
           entity_id: input_number.setpoint_bathroom
           value: '{{ states(''input_number.setpoint_bathroom_norm'') }}'
+        alias: Set bathroom setpoint to Norm temp
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: home
+      - condition: state
+        entity_id: input_boolean.take_a_shower
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'off'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_bathroom
+          value: '{{ states(''input_number.setpoint_bathroom_max'') }}'
         alias: Set bathroom setpoint to Norm temp
     default:
     - service: input_number.set_value
@@ -1750,7 +1792,7 @@
     data: {}
   mode: single
 - id: '1666522979870'
-  alias: Heating - Bathroom control
+  alias: Heating - Bathroom Control
   description: Control the heater in the bathroom
   trigger:
   - platform: state
@@ -1784,10 +1826,12 @@
         device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
         entity_id: switch.panel_oven_br_relay
         domain: switch
+      - service: script.send_notification_to_phone
+        data: message "De badkamer temperatuur sensor werkt niet"
     - conditions:
       - condition: template
         value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
-          <= (states(''input_number.setpoint_bathroom'')|int) }}
+          < (states(''input_number.setpoint_bathroom'')|int) }}
 
           '
         alias: Temperature below setpoint
@@ -1799,7 +1843,7 @@
     - conditions:
       - condition: template
         value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
-          > (states(''input_number.setpoint_bathroom'')|int + 1 ) }}
+          >= (states(''input_number.setpoint_bathroom'')|int ) }}
 
           '
         alias: Temperature above setpoint
@@ -1916,6 +1960,8 @@
         target:
           entity_id: media_player.kitchen_sonos_speaker
       action_click_double: []
+      rotate_left_loop: true
+      rotate_right_loop: true
 - id: '1667044154408'
   alias: Entrance door opens - incl check kupevarme connected
   description: ''
@@ -2027,4 +2073,262 @@
               name: default
               critical: 1
               volume: 1
+  mode: single
+- id: '1667130145506'
+  alias: 'Alarm: Refrigerator Temperature or Relais'
+  description: Send notification to phone when temperature in Refrigerator get to
+    high, or the Power module go to OFF
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: f21ae7bf3f02bae225e990de1c4ec098
+    entity_id: sensor.refrigerator_climate_sensor_temperature
+    domain: sensor
+    above: 5
+    id: temp_refrigerator
+  - type: temperature
+    platform: device
+    device_id: 0b81d78be011448684a3f7d39e8d4243
+    entity_id: sensor.freezer_smal_climate_sensor_temperature
+    domain: sensor
+    above: -10
+    id: temp_freezer
+  - platform: device
+    type: turned_off
+    device_id: 18faf7de3e71823d5785c05c2b6a7ba7
+    entity_id: switch.refrigerator
+    domain: switch
+    id: relais
+  - platform: numeric_state
+    entity_id: sensor.refrigirator_avg_power
+    below: 10
+    id: power
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: temp_refrigerator
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: Temperatuur in de koelkast is te hoog
+    - conditions:
+      - condition: trigger
+        id: temp_freezer
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: Temperatuur in de kleine vriezer is te hoog
+    - conditions:
+      - condition: trigger
+        id: relais
+      sequence:
+      - type: turn_on
+        device_id: 18faf7de3e71823d5785c05c2b6a7ba7
+        entity_id: switch.refrigerator
+        domain: switch
+      - service: script.send_notification_to_phone
+        data:
+          message: Het relais van de koelkast was uit, kontroleer NU of het weer aan
+            is.
+    - conditions:
+      - condition: trigger
+        id: power
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: De koelkast verbruikt minder dan 10W
+  mode: single
+- id: '1667131158628'
+  alias: 'Alarm: Freezer Temperature or Relais'
+  description: Send notification to phone when temperature in Refrigerator get to
+    high, or the Power module go to OFF
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 7c1a7d8b2a1aca3762aa01cd8de7e69b
+    entity_id: sensor.freezer_big_climate_sensor_temperature
+    domain: sensor
+    id: temp
+    above: -12
+  - platform: device
+    type: turned_off
+    device_id: 0f08d4da9e30f4939418aa3e7f24bf68
+    entity_id: switch.freezer
+    domain: switch
+    id: relais
+  - platform: numeric_state
+    entity_id: sensor.freezer_avg_power
+    below: 50
+    id: power
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: temp_refrigerator
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: Temperatuur in de vriezer is te hoog
+    - conditions:
+      - condition: trigger
+        id: relais
+      sequence:
+      - type: turn_on
+        device_id: 0f08d4da9e30f4939418aa3e7f24bf68
+        entity_id: switch.freezer
+        domain: switch
+      - service: script.send_notification_to_phone
+        data:
+          message: Het relais van de vriezer was uit, kontroleer NU of het weer aan
+            is.
+    - conditions:
+      - condition: trigger
+        id: power
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: Vriezer stroom verbruik onder 50W
+  mode: single
+- id: '1667131790134'
+  alias: 'Alarm: Home Assistant has Started'
+  description: Send notification to my phone when Home Assistant is Started
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: script.send_notification_to_phone
+    data:
+      message: Home Assistant has started
+  mode: single
+- id: '1667136799601'
+  alias: Heating - Entrance Control
+  description: Control the heater in the entrance
+  trigger:
+  - platform: state
+    entity_id:
+    - input_number.setpoint_entrance
+    id: setpoint
+  - platform: state
+    entity_id:
+    - sensor.entrance_climate_sensor_temperature
+    id: temp
+  - platform: state
+    entity_id:
+    - sensor.entrance_climate_sensor_temperature
+    to: unavailable
+    id: unavailable
+  - platform: state
+    entity_id:
+    - sensor.entrance_climate_sensor_temperature
+    to: unknown
+    id: unknown
+  - platform: state
+    entity_id:
+    - binary_sensor.entrance_door_contact
+    id: outside_door
+  - platform: state
+    entity_id:
+    - binary_sensor.kitchen_door_contact
+    id: kitchen_door
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: unavailable
+      - condition: trigger
+        id: unknown
+      sequence:
+      - type: turn_on
+        device_id: ce4c6a6640c4cf45c169e6920fb139d5
+        entity_id: switch.panel_oven_fd
+        domain: switch
+      - service: script.send_notification_to_phone
+        data: message "De voordeur temperatuur sensor werkt niet"
+    - conditions:
+      - condition: trigger
+        id: outside_door
+      - condition: trigger
+        id: kitchen_door
+      sequence:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.kitchen_door_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.entrance_door_contact
+          state: 'on'
+      - type: turn_off
+        device_id: ce4c6a6640c4cf45c169e6920fb139d5
+        entity_id: switch.panel_oven_fd
+        domain: switch
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.entrance_climate_sensor_temperature'')|int)
+          < (states(''input_number.setpoint_entrance'')|int) }}
+
+          '
+        alias: Temperature below setpoint
+      - type: is_not_open
+        condition: device
+        device_id: 5fdee7b781300c48c89db1ce99e464a0
+        entity_id: binary_sensor.kitchen_door_contact
+        domain: binary_sensor
+      - type: is_not_open
+        condition: device
+        device_id: a974d0b22cc6384df44bb848ac2edfbc
+        entity_id: binary_sensor.entrance_door_contact
+        domain: binary_sensor
+      sequence:
+      - type: turn_on
+        device_id: ce4c6a6640c4cf45c169e6920fb139d5
+        entity_id: switch.panel_oven_fd
+        domain: switch
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.entrance_climate_sensor_temperature'')|int)
+          >= (states(''input_number.setpoint_entrance'')|int ) }}
+
+          '
+        alias: Temperature above setpoint
+      sequence:
+      - type: turn_off
+        device_id: ce4c6a6640c4cf45c169e6920fb139d5
+        entity_id: switch.panel_oven_fd
+        domain: switch
+  mode: single
+- id: '1667137210405'
+  alias: Heating - Entrance Setpoint
+  description: Set the temp setpoint for the entrance heater
+  trigger:
+  - platform: state
+    entity_id:
+    - person.rob
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: home
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'off'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_entrance
+          value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+        alias: Set entrance setpoint to Norm temp
+    default:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.setpoint_entrance
+        value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+      alias: Set entrance setpoint to Min temp
   mode: single

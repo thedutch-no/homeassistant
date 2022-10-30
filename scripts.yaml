@@ -358,3 +358,24 @@ check_kupevame_connected:
     entity_id: switch.kupevarme
     domain: switch
   mode: single
+send_notification_to_phone:
+  alias: Send Notification to Phone
+  sequence:
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      message: '{{ message }}'
+      title: URGENT
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 1
+  mode: single
+test_notification:
+  alias: test notification
+  sequence:
+  - service: script.send_notification_to_phone
+    data:
+      message: dit is de tekst
+  mode: single
