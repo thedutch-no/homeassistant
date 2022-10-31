@@ -1125,6 +1125,7 @@
   - condition: template
     value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.bed_time''))
       }}'
+    enabled: false
   action:
   - service: media_player.play_media
     data:
@@ -1185,6 +1186,7 @@
   - condition: template
     value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.prepare_for_bed''))
       }}'
+    enabled: false
   action:
   - service: media_player.play_media
     data:
@@ -1739,6 +1741,10 @@
   - platform: state
     entity_id:
     - input_boolean.take_a_shower
+  - platform: state
+    entity_id:
+    - input_boolean.night_mode
+    id: night_mode
   condition: []
   action:
   - choose:
@@ -1854,6 +1860,7 @@
       - condition: state
         entity_id: binary_sensor.bathroom_door_contact
         state: 'on'
+        enabled: false
       sequence:
       - type: turn_off
         device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
@@ -2167,7 +2174,7 @@
     id: relais
   - platform: numeric_state
     entity_id: sensor.freezer_avg_power
-    below: 50
+    below: 40
     id: power
   condition: []
   action:
