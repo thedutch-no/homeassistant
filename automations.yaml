@@ -433,14 +433,14 @@
     data: {}
   mode: single
 - id: '1660236736187'
-  alias: Livingroom - Volume control
+  alias: 'Media: Volume control - Livingroom'
   description: ''
   use_blueprint:
     path: EPMatt/ikea_e1744.yaml
     input:
       integration: Zigbee2MQTT
       controller_entity: sensor.office_symfonisk_action
-      helper_last_controller_event: input_text.office_symfonisk_remote_helper
+      helper_last_controller_event: input_text.livingroom_symfonisk_remote_helper
       action_click_short:
       - service: media_player.media_play_pause
         data: {}
@@ -1576,24 +1576,38 @@
     zone: zone.home
   - condition: template
     value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
-      | int  | timestamp_custom(''%H:%M'', true))}}'
+      | int  | timestamp_custom(''%H:%M'', false))}}'
   - condition: device
     type: is_on
     device_id: 646da9678751ccdd9526239de9fde3d0
     entity_id: switch.varmepumpe
     domain: switch
   action:
-  - service: climate.set_temperature
-    data:
-      hvac_mode: heat
-      temperature: 16
-    target:
-      entity_id: climate.livingroom
-  - service: climate.set_fan_mode
-    data:
-      fan_mode: quiet
-    target:
-      entity_id: climate.livingroom
+  - choose:
+    - conditions:
+      - type: is_temperature
+        condition: device
+        device_id: ae52f9cc6167e7050a6e865cf51140ee
+        entity_id: sensor.openweathermap_forecast_temperature
+        domain: sensor
+        above: 5
+      sequence:
+      - service: climate.turn_off
+        data: {}
+        target:
+          entity_id: climate.livingroom
+    default:
+    - service: climate.set_temperature
+      data:
+        hvac_mode: heat
+        temperature: 16
+      target:
+        entity_id: climate.livingroom
+    - service: climate.set_fan_mode
+      data:
+        fan_mode: quiet
+      target:
+        entity_id: climate.livingroom
   mode: single
 - id: '1664386381506'
   alias: Time - Turn Night mode On
@@ -1919,17 +1933,6 @@
             - media_player.kitchen_sonos_speaker
             - media_player.livingroom_sonos_speaker
           alias: 'Media player: Stop - Kitchen and Livingroom speakers'
-        - service: climate.set_temperature
-          data:
-            temperature: 16
-            hvac_mode: heat
-          target:
-            entity_id: climate.livingroom
-        - service: climate.set_fan_mode
-          data:
-            fan_mode: quiet
-          target:
-            entity_id: climate.livingroom
         - service: input_boolean.turn_on
           data: {}
           target:
@@ -1941,6 +1944,10 @@
         - service: script.check_doors_closed
           data: {}
           enabled: false
+        - service: automation.trigger
+          data: {}
+          target:
+            entity_id: automation.alarm_varmepumpe_off_time
     - conditions:
       - condition: trigger
         id: double
@@ -1950,7 +1957,7 @@
     alias: Choose between Single or Double click
   mode: single
 - id: '1666798507130'
-  alias: Kitchen - Volume control
+  alias: 'Media: Volume control - Kitchen'
   description: ''
   use_blueprint:
     path: EPMatt/ikea_e1744.yaml
