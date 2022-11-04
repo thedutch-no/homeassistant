@@ -2181,7 +2181,7 @@
     id: relais
   - platform: numeric_state
     entity_id: sensor.freezer_avg_power
-    below: 40
+    below: 30
     id: power
   condition: []
   action:
