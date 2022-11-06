@@ -74,6 +74,32 @@ sensor:
 
   #########################
   #
+  # Next Timer based on:
+  # - list of active timers
+  # - returns first active timer from list
+  #
+  #########################
+  - name: "Next Timer"
+    unique_id: 6e3b77e9-5eb9-4190-b75a-60952187b0bd    
+    icon: mdi:timer-cog-outline
+    state: >
+      {%- set ns = namespace(sensors=[]) -%}
+      {% set active_timers = [ 
+        states.timer.prepare_for_bed,
+        states.timer.time_for_bed,
+        states.timer.wake_up_time,
+        states.timer.prepare_to_leave,
+        states.timer.time_to_leave
+        ] %}
+      {% if active_timers | selectattr('state', 'eq', 'active') | list | count > 0 %}
+        {% set nt = active_timers[0] %}
+      {% else %}
+        {% set nt = 0 %}
+      {% endif %}
+      {{ nt }} 
+
+  #########################
+  #
   # Calculate wake-up time based on:
   # - start time
   # - prep time morning

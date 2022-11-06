@@ -1708,24 +1708,42 @@
         entity_id: input_boolean.alarm_clock_on
         state: 'on'
       sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.varmepumpe_night_mode
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.prepare_for_bed
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.time_for_bed
+      - if:
+        - condition: template
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+            - as_timestamp(now()))) | int > 0}}'
+        then:
+        - service: timer.start
+          data:
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+              - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+          target:
+            entity_id: timer.varmepumpe_night_mode
+        alias: 'Timer: Start Timer - Varmepumpe Night mode'
+      - if:
+        - condition: template
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+            - as_timestamp(now()))) | int > 0}}'
+        then:
+        - service: timer.start
+          data:
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+              - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+          target:
+            entity_id: timer.prepare_for_bed
+        alias: 'Timer: Start Timer - Prepare for bed'
+      - if:
+        - condition: template
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+            - as_timestamp(now()))) | int > 0}}'
+        then:
+        - service: timer.start
+          data:
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+              - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+          target:
+            entity_id: timer.time_for_bed
+        alias: 'Timer: Start Timer - Bed time'
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
