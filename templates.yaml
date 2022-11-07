@@ -116,7 +116,7 @@ sensor:
     state: >
       {% set ws = today_at(states('input_datetime.time_work_start')) %}
       {% if states('binary_sensor.workday') == 'on' %}
-        {% if states('input_boolean.take_a_shower') == 'on' %}
+        {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %}
           {% set ps = states('input_datetime.prep_time_shower') %}
         {% else %}
           {% set ps = states('input_datetime.prep_time_no_shower') %}
@@ -179,7 +179,6 @@ sensor:
   #
   # Calculate time to leave based on:
   # - wake-up time
-  # - prep time shower
   # - prep time morning
   # - prep time car
   #
@@ -189,15 +188,10 @@ sensor:
     icon: mdi:clock-alert-outline
     state: >
       {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
-      {% if states('input_boolean.take_a_shower') == 'on' %}
-        {% set ps = states('input_datetime.prep_time_shower') %}
-      {% else %}
-        {% set ps = states('input_datetime.prep_time_no_shower') %}
-      {% endif %}
       {% set pm = states('input_datetime.prep_time_morning') %}
       {% set pc = states('input_datetime.prep_time_car') %}
-      {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pc.split(':')[0] | int %}
-      {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int + pc.split(':')[0] | int %}
+      {% set h = pm.split(':')[0] | int + pc.split(':')[0] | int %}
+      {% set m = pm.split(':')[1] | int + pc.split(':')[0] | int %}
       {% if states('binary_sensor.workday') == 'on' %}
         {% set ttl = wu + timedelta(hours=h, minutes=m) %}
       {% else %}

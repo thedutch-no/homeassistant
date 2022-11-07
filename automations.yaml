@@ -323,14 +323,18 @@
   - condition: time
     weekday:
     - mon
+    - tue
+    - wed
+    - thu
+    - fri
   action:
   - type: turn_on
     device_id: db7b598f3161f4f63ef322452a48c2ae
     entity_id: switch.sonoff_1001365a80_1
     domain: switch
   - delay:
-      hours: 0
-      minutes: 30
+      hours: 2
+      minutes: 0
       seconds: 0
       milliseconds: 0
   - type: turn_off
@@ -1685,6 +1689,9 @@
     entity_id:
     - input_boolean.alarm_clock_on
     id: Alarm On/Off
+  - platform: state
+    entity_id:
+    - input_boolean.take_a_shower_tomorrow
   condition: []
   action:
   - choose:
