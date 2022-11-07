@@ -298,19 +298,6 @@
         domain: switch
     default: []
   mode: single
-- id: '1658578160774'
-  alias: Chagrge iPad
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: secrets!ipad_webhook
-  condition: []
-  action:
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.charge_ipad
-  mode: single
 - id: '1658580860745'
   alias: iPhone 6 Charging Control
   description: ''
