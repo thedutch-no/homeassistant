@@ -1,12 +1,12 @@
 -== Watchman Report ==- 
 
--== Congratulations, all 32 services from your config are available!
+-== Congratulations, all 35 services from your config are available!
 
--== Missing 49 entity(ies) from 259 found in your config:
+-== Missing 46 entity(ies) from 284 found in your config:
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | Entity ID                                               | State   | Location                                                                         |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
-| input_boolean.focus_mode_sleep                          | missing | automations.yaml:600,605,733,839,970                                             |
+| input_boolean.focus_mode_sleep                          | missing | automations.yaml:692,697                                                         |
 | sensor.stove                                            | missing | powercalc.yaml:93                                                                |
 | sensor.microwave                                        | missing | powercalc.yaml:97                                                                |
 | sensor.refrigerator                                     | missing | powercalc.yaml:101                                                               |
@@ -25,22 +25,19 @@
 | sensor.all_heating                                      | missing | powercalc.yaml:167                                                               |
 | sensor.all_equipment                                    | missing | powercalc.yaml:175                                                               |
 | scene.before                                            | missing | scripts.yaml:114                                                                 |
-| media_player.living_room_sonos_speaker                  | missing | scripts.yaml:148,156                                                             |
-| binary_sensor.bathroom_motion_occupancy                 | missing | templates.yaml:32                                                                |
-| binary_sensor.bathroom_wasp                             | missing | templates.yaml:33                                                                |
-| binary_sensor.refrigerator_firmware_update              | unavail | dwains-dashboard/configs/entities.yaml:9                                         |
-| binary_sensor.freezer_firmware_update                   | unavail | dwains-dashboard/configs/entities.yaml:17                                        |
-| binary_sensor.water_heater_firmware_update              | unavail | dwains-dashboard/configs/entities.yaml:31                                        |
-| binary_sensor.microwave_firmware_update                 | unavail | dwains-dashboard/configs/entities.yaml:33                                        |
+| binary_sensor.refrigerator_firmware_update              | missing | dwains-dashboard/configs/entities.yaml:9                                         |
+| binary_sensor.freezer_firmware_update                   | missing | dwains-dashboard/configs/entities.yaml:17                                        |
+| binary_sensor.water_heater_firmware_update              | missing | dwains-dashboard/configs/entities.yaml:31                                        |
+| binary_sensor.microwave_firmware_update                 | missing | dwains-dashboard/configs/entities.yaml:33                                        |
 | button.eve_extend_8de2_identify                         | unknown | dwains-dashboard/configs/entities.yaml:39                                        |
 | button.eve_water_guard_identify                         | unknown | dwains-dashboard/configs/entities.yaml:41                                        |
-| button.refrigerator_ota_update                          | unavail | dwains-dashboard/configs/entities.yaml:43                                        |
+| button.refrigerator_ota_update                          | missing | dwains-dashboard/configs/entities.yaml:43                                        |
 | button.refrigerator_reboot                              | unknown | dwains-dashboard/configs/entities.yaml:45                                        |
-| button.freezer_ota_update                               | unavail | dwains-dashboard/configs/entities.yaml:47                                        |
+| button.freezer_ota_update                               | missing | dwains-dashboard/configs/entities.yaml:47                                        |
 | button.freezer_reboot                                   | unknown | dwains-dashboard/configs/entities.yaml:49                                        |
-| button.water_heater_ota_update                          | unavail | dwains-dashboard/configs/entities.yaml:51                                        |
+| button.water_heater_ota_update                          | missing | dwains-dashboard/configs/entities.yaml:51                                        |
 | button.water_heater_reboot                              | unknown | dwains-dashboard/configs/entities.yaml:53                                        |
-| button.stove_power_module_ota_update                    | unavail | dwains-dashboard/configs/entities.yaml:55                                        |
+| button.stove_power_module_ota_update                    | missing | dwains-dashboard/configs/entities.yaml:55                                        |
 | button.stove_power_module_reboot                        | unknown | dwains-dashboard/configs/entities.yaml:57                                        |
 | media_player.mass_kitchen                               | missing | dwains-dashboard/configs/entities.yaml:61                                        |
 | number.kitchen_bass                                     | missing | dwains-dashboard/configs/entities.yaml:63                                        |
@@ -57,6 +54,6 @@
 | light.my_lamp                                           | missing | custom_components/scheduler/services.yaml:64,124                                 |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Report created on 29 Oct 2022 00:41:19
--== Parsed 43 files in 1.06s., ignored 0 files 
--== Generated in: 0.03s. Validated in: 0.01s.
+-== Report created on 13 Nov 2022 19:07:02
+-== Parsed 46 files in 1.45s., ignored 0 files 
+-== Generated in: 0.21s. Validated in: 0.01s.

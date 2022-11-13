@@ -400,6 +400,9 @@
     device_id: cbf534da6c764a45913dbffa197bb083
     entity_id: switch.washing_machine_power_module_relay
     domain: switch
+  - service: script.send_notification_to_phone
+    data:
+      message: Er is een water lek in de keuken
   mode: single
 - id: '1659958835456'
   alias: Washing machine - Done
@@ -666,33 +669,6 @@
     target:
       entity_id: climate.livingroom
   mode: single
-- id: '1662878697608'
-  alias: iPhone 11 - Focus mode change
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.robs_iphone_11_focus
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - type: is_on
-        condition: device
-        device_id: e2805a54ef37bd8661ea49a1397ce28b
-        entity_id: binary_sensor.robs_iphone_11_focus
-        domain: binary_sensor
-      sequence:
-      - service: input_boolean.turn_on
-        data: {}
-        target:
-          entity_id: input_boolean.focus_mode_sleep
-    default:
-    - service: input_boolean.turn_off
-      data: {}
-      target:
-        entity_id: input_boolean.focus_mode_sleep
-  mode: single
 - id: '1663248731397'
   alias: Change start location detected
   description: ''
@@ -775,215 +751,6 @@
           entity_id: input_datetime.travel_time_customer
     default: []
   mode: single
-- id: '1663509415956'
-  alias: Motion and On/Off sw - Frontdoor
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.entrance_motion_sensor_occupancy
-    id: motion
-  - platform: device
-    domain: mqtt
-    device_id: 6c548e3322378ac6dc46c70504abb3f5
-    type: action
-    subtype: 'on'
-    discovery_id: 0x8cf681fffe50526d action_on
-    id: switch-on
-  - platform: device
-    domain: mqtt
-    device_id: 6c548e3322378ac6dc46c70504abb3f5
-    type: action
-    subtype: 'off'
-    discovery_id: 0x8cf681fffe50526d action_off
-    id: switch-off
-  condition:
-  - type: is_illuminance
-    condition: device
-    device_id: b6edfa39e6cccfd378d2d8b059d94515
-    entity_id: sensor.entrance_motion_sensor_illuminance_lux
-    domain: sensor
-    below: 100
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: motion
-        alias: motion trigger
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.entrance_motion_sensor_occupancy
-            state: 'on'
-          sequence:
-          - if:
-            - condition: state
-              entity_id: input_boolean.focus_mode_sleep
-              state: 'on'
-            then:
-            - service: light.turn_on
-              data:
-                color_temp: 387
-                brightness_pct: 10
-              target:
-                entity_id:
-                - light.entrance_ceiling
-            else:
-            - service: light.turn_on
-              data:
-                color_temp: 153
-                brightness_pct: 100
-              target:
-                entity_id:
-                - light.entrance_ceiling
-          - if:
-            - condition: state
-              entity_id: person.rob
-              state: not_home
-            then:
-            - service: notify.mobile_app_robs_iphone_11
-              data:
-                message: Beweging bij de voordeur
-                title: Motion detected
-                data:
-                  push:
-                    sound:
-                      name: default
-                      critical: 1
-                      volume: 1
-        default:
-        - service: light.turn_off
-          data: {}
-          target:
-            entity_id:
-            - light.entrance_ceiling
-    - conditions:
-      - condition: trigger
-        id: switch-on
-        alias: switch-on trigger
-      sequence:
-      - service: light.turn_on
-        data:
-          color_temp: 153
-          brightness_pct: 100
-        target:
-          entity_id:
-          - light.entrance_ceiling
-    - conditions:
-      - condition: trigger
-        id: switch-off
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id:
-          - light.entrance_ceiling
-    default: []
-  mode: single
-- id: '1663512068927'
-  alias: Motion and On/Off sw - Kitchen
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.kitchen_motion_sensor_occupancy
-    id: motion
-  - platform: device
-    domain: mqtt
-    device_id: 9c23bbbefc64f218b524eefa84c05136
-    type: action
-    subtype: 'on'
-    discovery_id: 0xb4e3f9fffe79383b action_on
-    id: switch-on
-  - platform: device
-    domain: mqtt
-    device_id: 9c23bbbefc64f218b524eefa84c05136
-    type: action
-    subtype: 'off'
-    discovery_id: 0xb4e3f9fffe79383b action_off
-    id: switch-off
-  condition:
-  - type: is_illuminance
-    condition: device
-    device_id: 9380fbe33c2662e0d5c49c28abd182d1
-    entity_id: sensor.kitchen_motion_sensor_illuminance_lux
-    domain: sensor
-    below: 300
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: motion
-        alias: motion trigger
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.kitchen_motion_sensor_occupancy
-            state: 'on'
-          sequence:
-          - if:
-            - condition: state
-              entity_id: input_boolean.focus_mode_sleep
-              state: 'on'
-            then:
-            - service: light.turn_on
-              data:
-                color_temp: 387
-                brightness_pct: 10
-              target:
-                entity_id: light.kitchen_countertop
-            else:
-            - service: light.turn_on
-              data:
-                color_temp: 153
-                brightness_pct: 100
-              target:
-                entity_id: light.kitchen_countertop
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.kitchen_motion_sensor_occupancy
-            state: 'off'
-          - condition: state
-            entity_id: input_boolean.overide_kitchen_lights
-            state: 'off'
-          sequence:
-          - service: light.turn_off
-            data: {}
-            target:
-              device_id: 62ea123f40f9f9539cc5585a497c96ab
-        default: []
-    - conditions:
-      - condition: trigger
-        id: switch-on
-        alias: switch-on trigger
-      sequence:
-      - service: light.turn_on
-        data:
-          color_temp: 153
-          brightness_pct: 100
-        target:
-          entity_id: light.kitchen_countertop
-      - service: input_boolean.turn_on
-        data: {}
-        target:
-          entity_id: input_boolean.overide_kitchen_lights
-    - conditions:
-      - condition: trigger
-        id: switch-off
-        alias: Switch-off trigger
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id: light.kitchen_countertop
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.overide_kitchen_lights
-    default: []
-  mode: single
 - id: '1663516142150'
   alias: Time - Wake Up time
   description: ''
@@ -1022,92 +789,6 @@
       entity_id: input_number.setpoint_entrance
       value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
     alias: Set entrance setpoint to Norm temp
-  mode: single
-- id: '1663518275430'
-  alias: Motion and On/Off sw - Hallway
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.hallway_motion_sensor_occupancy
-    id: motion
-  - platform: device
-    domain: mqtt
-    device_id: 6e27023210b26c48943753f940005249
-    type: action
-    subtype: 'on'
-    discovery_id: 0xb4e3f9fffeb92588 action_on
-    id: switch-on
-  - platform: device
-    domain: mqtt
-    device_id: 6e27023210b26c48943753f940005249
-    type: action
-    subtype: 'off'
-    discovery_id: 0xb4e3f9fffeb92588 action_off
-    id: switch-off
-  condition:
-  - type: is_illuminance
-    condition: device
-    device_id: dcb6bbaf69fb2f9282e15831ff53069d
-    entity_id: sensor.hallway_motion_sensor_illuminance_lux
-    domain: sensor
-    below: 100
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: motion
-        alias: motion trigger
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.hallway_motion_sensor_occupancy
-            state: 'on'
-          sequence:
-          - if:
-            - condition: state
-              entity_id: input_boolean.focus_mode_sleep
-              state: 'on'
-            then:
-            - service: light.turn_on
-              data:
-                color_temp: 387
-                brightness_pct: 10
-              target:
-                entity_id: light.hallway_ceiling
-            else:
-            - service: light.turn_on
-              data:
-                color_temp: 326
-                brightness_pct: 100
-              target:
-                entity_id: light.hallway_ceiling
-        default:
-        - service: light.turn_off
-          data: {}
-          target:
-            entity_id: light.hallway_ceiling
-    - conditions:
-      - condition: trigger
-        id: switch-on
-        alias: switch-on trigger
-      sequence:
-      - service: light.turn_on
-        data:
-          color_temp: 326
-          brightness_pct: 100
-        target:
-          entity_id: light.hallway_ceiling
-    - conditions:
-      - condition: trigger
-        id: switch-off
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id: light.hallway_ceiling
-    default: []
   mode: single
 - id: '1663689046568'
   alias: Change start time detected
@@ -1269,107 +950,6 @@
         volume: 40
     target:
       entity_id: media_player.livingroom_sonos_cloud
-  mode: single
-- id: '1663692136457'
-  alias: Motion and On/Off sw - Bathroom
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bathroom_motion_sensor_occupancy
-    id: motion
-    alias: Motion - Detected/Ended
-  - platform: device
-    domain: mqtt
-    device_id: fbb6e8159553be4d237cfdd1588c8c83
-    type: action
-    subtype: 'on'
-    discovery_id: 0x0c4314fffe9d0bdd action_on
-    id: switch-on
-    alias: Switch - On
-  - platform: device
-    domain: mqtt
-    device_id: fbb6e8159553be4d237cfdd1588c8c83
-    type: action
-    subtype: 'off'
-    discovery_id: 0x0c4314fffe9d0bdd action_off
-    id: switch-off
-    alias: Switch - Off
-  - platform: state
-    entity_id:
-    - binary_sensor.bathroom_door_contact
-  condition:
-  - type: is_illuminance
-    condition: device
-    device_id: 40fdbc02d377fb49728375b88c2231fc
-    entity_id: sensor.bathroom_motion_sensor_illuminance_lux
-    domain: sensor
-    below: 100
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: motion
-        alias: motion trigger
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.bathroom_motion_sensor_occupancy
-            state: 'on'
-          sequence:
-          - if:
-            - condition: state
-              state: 'on'
-              entity_id: input_boolean.night_mode
-            then:
-            - service: light.turn_on
-              data:
-                brightness_pct: 10
-              target:
-                entity_id: light.bathroom_dimmer
-            else:
-            - service: light.turn_on
-              data:
-                brightness_pct: 100
-              target:
-                entity_id: light.bathroom_dimmer
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.bathroom_motion_sensor_occupancy
-            state: 'off'
-          sequence:
-          - if:
-            - type: is_open
-              condition: device
-              device_id: ec25a77f9a2a4fd1d10c2d989ff56a1f
-              entity_id: binary_sensor.bathroom_door_contact
-              domain: binary_sensor
-            then:
-            - service: light.turn_off
-              data: {}
-              target:
-                entity_id: light.bathroom_dimmer
-        default: []
-    - conditions:
-      - condition: trigger
-        id: switch-on
-        alias: switch-on trigger
-      sequence:
-      - service: light.turn_on
-        data:
-          brightness_pct: 100
-        target:
-          entity_id: light.bathroom_dimmer
-    - conditions:
-      - condition: trigger
-        id: switch-off
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id: light.bathroom_dimmer
-    default: []
   mode: single
 - id: '1663948844908'
   alias: Stove - Status and Warnings
@@ -1925,12 +1505,12 @@
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
     to: unavailable
-    id: unavailable
+    id: error
   - platform: state
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
     to: unknown
-    id: unknown
+    id: error
   - platform: event
     event_type: timer.finished
     event_data:
@@ -1941,9 +1521,7 @@
   - choose:
     - conditions:
       - condition: trigger
-        id: unavailable
-      - condition: trigger
-        id: unknown
+        id: error
       sequence:
       - type: turn_on
         device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
@@ -2470,7 +2048,7 @@
       alias: Set entrance setpoint to Min temp
   mode: single
 - id: '1668334440246'
-  alias: Lights - Bathroom
+  alias: Motion and On/Off sw - Bathroom
   description: ''
   trigger:
   - platform: state
@@ -2600,7 +2178,7 @@
         alias: 'Light: Turn off Bathroom dimmer'
   mode: single
 - id: '1668339418253'
-  alias: Lights - Hallway
+  alias: Motion and On/Off sw - Hallway
   description: ''
   trigger:
   - platform: state
@@ -2723,7 +2301,7 @@
           entity_id: light.hallway_ceiling
   mode: single
 - id: '1668340187123'
-  alias: Lights - Kitchen
+  alias: Motion and On/Off sw - Kitchen
   description: ''
   trigger:
   - platform: state
@@ -2846,7 +2424,7 @@
           entity_id: light.kitchen_countertop
   mode: single
 - id: '1668341094239'
-  alias: Lights - Entrance
+  alias: Motion and On/Off sw - Entrance
   description: ''
   trigger:
   - platform: state
@@ -2967,4 +2545,218 @@
         data: {}
         target:
           entity_id: light.entrance_ceiling
+  mode: single
+- id: '1668356299902'
+  alias: Heating - Livingroom Control
+  description: Control the heatpump in the livingroom
+  trigger:
+  - platform: state
+    entity_id:
+    - input_number.setpoint_heatpump
+    id: setpoint
+  - platform: state
+    entity_id:
+    - sensor.livingroom_climate_sensor_temperature
+    id: temp
+  - platform: state
+    entity_id:
+    - sensor.livingroom_climate_sensor_temperature
+    to: unavailable
+    id: error
+  - platform: state
+    entity_id:
+    - sensor.livingroom_climate_sensor_temperature
+    to: unknown
+    id: error
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: unavailable
+      - condition: trigger
+        id: unknown
+      sequence:
+      - type: turn_on
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+      - service: script.send_notification_to_phone
+        data: message "De badkamer temperatuur sensor werkt niet"
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+          < (states(''input_number.setpoint_bathroom'')|int) }}
+
+          '
+        alias: Temperature below setpoint
+      - condition: state
+        entity_id: binary_sensor.bathroom_door_contact
+        state: 'off'
+      sequence:
+      - type: turn_on
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+    - conditions:
+      - condition: template
+        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+          >= (states(''input_number.setpoint_bathroom'')|int ) }}
+
+          '
+        alias: Temperature above setpoint
+      sequence:
+      - type: turn_off
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: door
+      sequence:
+      - if:
+        - condition: state
+          entity_id: binary_sensor.bathroom_door_contact
+          state: 'on'
+        then:
+        - service: timer.start
+          data: {}
+          target:
+            entity_id: timer.door_bathroom
+        else:
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.door_bathroom
+    - conditions:
+      - condition: trigger
+        id: timer
+      sequence:
+      - type: turn_off
+        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+        entity_id: switch.panel_oven_br_relay
+        domain: switch
+  mode: single
+- id: '1668356358372'
+  alias: Heating - Livingroom Setpoint
+  description: Set the temp setpoint for the livingroom heatpump
+  trigger:
+  - platform: state
+    entity_id:
+    - person.rob
+  - platform: state
+    entity_id:
+    - input_boolean.night_mode
+    id: night_mode
+  - type: temperature
+    platform: device
+    device_id: fad839a478cf933108ada5eec2c78470
+    entity_id: sensor.outside_climate_sensor_temperature
+    domain: sensor
+    above: 5
+    id: outside
+  - type: temperature
+    platform: device
+    device_id: 7e0c7b2998dac7e3aa422ad1b6416dff
+    entity_id: sensor.livingroom_climate_sensor_temperature
+    domain: sensor
+    below: 16
+    id: living
+  - platform: state
+    entity_id:
+    - sensor.livingroom_climate_sensor_temperature
+    id: temp
+  - platform: state
+    entity_id:
+    - sensor.livingroom_climate_sensor_temperature
+    to: unavailable
+    id: error
+  - platform: state
+    entity_id:
+    - sensor.bathroom_climate_sensor_temperature
+    to: unknown
+    id: error
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: home
+      - condition: state
+        entity_id: input_boolean.take_a_shower
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'off'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_bathroom
+          value: '{{ states(''input_number.setpoint_bathroom_norm'') }}'
+        alias: Set bathroom setpoint to Norm temp
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: home
+      - condition: state
+        entity_id: input_boolean.take_a_shower
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'off'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_bathroom
+          value: '{{ states(''input_number.setpoint_bathroom_max'') }}'
+        alias: Set bathroom setpoint to Norm temp
+    default:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.setpoint_bathroom
+        value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
+      alias: Set bathroom setpoint to Min temp
+  mode: single
+- id: '1668357692650'
+  alias: 'Alarm: Sonos speakers'
+  description: One or more Sonos speakers is in unavailable or unknown state
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.livingroom_sonos_speaker
+    to: unavailable
+    id: living
+  - platform: state
+    entity_id:
+    - media_player.livingroom_sonos_speaker
+    to: unknown
+    id: living
+  - platform: state
+    entity_id:
+    - media_player.kitchen_sonos_speaker
+    to: unavailable
+    id: kitchen
+  - platform: state
+    entity_id:
+    - media_player.kitchen_sonos_speaker
+    to: unknown
+    id: kitchen
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: living
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: De Sonos speaker in de woonkamer werkt niet
+    - conditions:
+      - condition: trigger
+        id: kitchen
+      sequence:
+      - service: script.send_notification_to_phone
+        data:
+          message: De Sonos speaker in de keuken werkt niet
   mode: single
