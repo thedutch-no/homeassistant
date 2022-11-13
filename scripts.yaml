@@ -66,6 +66,15 @@ turn_off_all_lights_and_mediaplayers:
     target:
       entity_id: scene.bathroom_off
     metadata: {}
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.overide_bathroom_lights
+      - input_boolean.overide_entrance_lights
+      - input_boolean.overide_hallway_lights
+      - input_boolean.overide_kitchen_lights
+      - input_boolean.overide_shower_lights
   mode: single
   icon: mdi:lightbulb-group-off
 calculate_wake_up_time:
