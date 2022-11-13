@@ -20,19 +20,6 @@ binary_sensor:
         {{ false }}
       {% endif %}
 
-  #
-  # Bathroom occupancy when any of these are true
-  # - motion detected
-  # - wasp sensor active
-  #
-  - name: batheroom_occupied
-    device_class: occupancy
-    state: >
-      {{
-        is_state('binary_sensor.bathroom_motion_occupancy','on')
-        or is_state('binary_sensor.bathroom_wasp','on')
-      }}
-
 sensor:
   #########################
   #
@@ -71,6 +58,44 @@ sensor:
       {% endif %}
     #        The code for the Conditional Card on the dashboard:
     # {{states('sensor.low_battery_devices')}}
+
+  #########################
+  #
+  # Calculate prepare for bed time based on:
+  # - bed time
+  # - prep time evenings
+  #
+  #########################
+  - name: "Prepare for Bed"
+    unique_id: cbd391da-f492-4dad-a7bd-69aa150d07b2
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.bed_time')) %}
+      {% set pe = states('input_datetime.prep_time_evening') %}
+      {% set pfb = wu - timedelta(hours = pe.split(':')[0] | int , minutes = pe.split(':')[1] | int) %}
+      {{ pfb }}
+
+  #########################
+  #
+  # Calculate bed time based on:
+  # - wake-up time
+  # - sleep duration
+  #
+  #########################
+  - name: "Bed Time"
+    unique_id: c03b5681-6cc9-4491-ad98-4d195cc907e3
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% if states('binary_sensor.workday') == 'on' %}
+        {% set sd = states('input_datetime.sleep_duration_workday') %}
+      {% else %}
+        {% set sd = states('input_datetime.sleep_duration_weekend') %}
+      {% endif %}
+      {% set h = sd.split(':')[0] | int %}
+      {% set m = sd.split(':')[1] | int %}
+      {% set bedtime = wu - timedelta(hours=h, minutes=m) %}
+      {{ bedtime }}
 
   #########################
   #
@@ -113,41 +138,25 @@ sensor:
 
   #########################
   #
-  # Calculate bed time based on:
-  # - wake-up time
-  # - sleep duration
+  # Calculate prepare to leave based on:
+  # - time to leave
+  # - prep time entrance
   #
   #########################
-  - name: "Bed Time"
-    unique_id: c03b5681-6cc9-4491-ad98-4d195cc907e3
+  - name: "Prepare to leave"
+    unique_id: d3b87483-31e1-4a16-a233-6209f8033bf9
     icon: mdi:clock-alert-outline
     state: >
-      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set lt =  as_datetime(states('sensor.time_to_leave')) %}
+      {% set pe = states('input_datetime.prep_time_entrance') %}
+      {% set h = pe.split(':')[0] | int %}
+      {% set m = pe.split(':')[1] | int %}
       {% if states('binary_sensor.workday') == 'on' %}
-        {% set sd = states('input_datetime.sleep_duration_workday') %}
+        {% set ptl = lt - timedelta(hours=h, minutes=m) %}
       {% else %}
-        {% set sd = states('input_datetime.sleep_duration_weekend') %}
+        {% set ptl = lt %}
       {% endif %}
-      {% set h = sd.split(':')[0] | int %}
-      {% set m = sd.split(':')[1] | int %}
-      {% set bedtime = wu - timedelta(hours=h, minutes=m) %}
-      {{ bedtime }}
-
-  #########################
-  #
-  # Calculate prepare for bed time based on:
-  # - bed time
-  # - prep time evenings
-  #
-  #########################
-  - name: "Prepare for Bed"
-    unique_id: cbd391da-f492-4dad-a7bd-69aa150d07b2
-    icon: mdi:clock-alert-outline
-    state: >
-      {% set wu =  as_datetime(states('sensor.bed_time')) %}
-      {% set pe = states('input_datetime.prep_time_evening') %}
-      {% set pfb = wu - timedelta(hours = pe.split(':')[0] | int , minutes = pe.split(':')[1] | int) %}
-      {{ pfb }}
+      {{ ptl }}
 
   #########################
   #
@@ -175,28 +184,6 @@ sensor:
     
   #########################
   #
-  # Calculate prepare to leave based on:
-  # - time to leave
-  # - prep time entrance
-  #
-  #########################
-  - name: "Prepare to leave"
-    unique_id: d3b87483-31e1-4a16-a233-6209f8033bf9
-    icon: mdi:clock-alert-outline
-    state: >
-      {% set lt =  as_datetime(states('sensor.time_to_leave')) %}
-      {% set pe = states('input_datetime.prep_time_entrance') %}
-      {% set h = pe.split(':')[0] | int %}
-      {% set m = pe.split(':')[1] | int %}
-      {% if states('binary_sensor.workday') == 'on' %}
-        {% set ptl = lt - timedelta(hours=h, minutes=m) %}
-      {% else %}
-        {% set ptl = lt %}
-      {% endif %}
-      {{ ptl }}
-
-  #########################
-  #
   # Calculate Varmepumpe Night time based on:
   # - bed time
   # - prep time varmepumpe night
@@ -219,7 +206,7 @@ sensor:
   #
   #########################
   - name: "Night mode On Time"
-    unique_id: 372b4211-a1d0-4ea8-b8d6-cfcbe0ddaf29
+    unique_id: 0ca769e0-d76d-4156-bd4e-25c24efd1bc3
     icon: mdi:clock-alert-outline
     state: >
       {% set bt =  as_datetime(states('sensor.bed_time')) %}
@@ -235,7 +222,7 @@ sensor:
   #
   #########################
   - name: "Night mode Off Time"
-    unique_id: 30d1da5f-d522-4984-9f3d-812a43d78874
+    unique_id: d01d4c93-97a9-4f02-8643-0fa23d4948d1
     icon: mdi:clock-alert-outline
     state: >
       {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
