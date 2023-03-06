@@ -1,0 +1,904 @@
+- id: '1658064693070'
+  name: 'Bedroom - Lights to: OFF'
+  entities:
+    light.bedroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling
+      supported_features: 44
+      state: 'off'
+  icon: mdi:lightbulb-outline
+  metadata:
+    light.bedroom_ceiling:
+      entity_only: true
+- id: '1658064804513'
+  name: 'Bedroom - Lights to: ON - 50-352'
+  entities:
+    light.bedroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 127
+      color_temp_kelvin: 2840
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-50
+  metadata:
+    light.bedroom_ceiling:
+      entity_only: true
+- id: '1658064846211'
+  name: 'Bedroom - Lights to: ON - 100-352'
+  entities:
+    light.bedroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2840
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.bedroom_ceiling:
+      entity_only: true
+- id: '1658064890410'
+  name: 'Bedroom - Lights to: ON - 100-250'
+  entities:
+    light.bedroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 203
+      color_temp_kelvin: 3984
+      color_temp: 251
+      hs_color:
+      - 26.819
+      - 35.161
+      rgb_color:
+      - 255
+      - 205
+      - 165
+      xy_color:
+      - 0.421
+      - 0.365
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.bedroom_ceiling:
+      entity_only: true
+- id: '1658064953533'
+  name: 'Bedroom - Lights to: ON - 10-400'
+  entities:
+    light.bedroom_ceiling_1:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 26
+      color_temp_kelvin: 2840
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-10
+  metadata:
+    light.bedroom_ceiling_1:
+      entity_only: true
+- id: '1658065028853'
+  name: 'Hallway - Lights to: OFF'
+  entities:
+    light.hallway_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling
+      supported_features: 43
+      state: 'off'
+  icon: mdi:lightbulb-outline
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+- id: '1658065071397'
+  name: 'Livingroom - Lights to: ON - 100-250'
+  entities:
+    light.livingroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Livingroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 4000
+      color_temp: 250
+      hs_color:
+      - 26.812
+      - 34.87
+      rgb_color:
+      - 255
+      - 205
+      - 166
+      xy_color:
+      - 0.421
+      - 0.364
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.livingroom_ceiling:
+      entity_only: true
+- id: '1658065096932'
+  name: 'Livingroom - Lights to: ON - 100-352'
+  entities:
+    light.livingroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Livingroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2849
+      color_temp: 351
+      hs_color:
+      - 28.092
+      - 61.159
+      rgb_color:
+      - 255
+      - 172
+      - 99
+      xy_color:
+      - 0.51
+      - 0.386
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.livingroom_ceiling:
+      entity_only: true
+- id: '1658065151099'
+  name: 'Livingroom - Lights to: ON - 50-352'
+  entities:
+    light.livingroom_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Livingroom - Ceiling
+      supported_features: 43
+      color_mode: color_temp
+      brightness: 127
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-50
+  metadata:
+    light.livingroom_ceiling:
+      entity_only: true
+- id: '1658065310615'
+  name: 'Bedroom - Lights to: ON - 100-454'
+  entities:
+    light.bedroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Bedroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2202
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.bedroom_ceiling:
+      entity_only: true
+- id: '1658065479467'
+  name: 'Hallway - Lights to: ON - 100-250'
+  entities:
+    light.hallway_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling
+      supported_features: 43
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 250
+      hs_color:
+      - 26.812
+      - 34.87
+      rgb_color:
+      - 255
+      - 205
+      - 166
+      xy_color:
+      - 0.421
+      - 0.364
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+- id: '1658065499725'
+  name: 'Hallway - Lights to: ON - 100-352'
+  entities:
+    light.hallway_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 3105
+      color_temp: 322
+      hs_color:
+      - 27.661
+      - 54.116
+      rgb_color:
+      - 255
+      - 180
+      - 117
+      xy_color:
+      - 0.487
+      - 0.381
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+- id: '1658065581539'
+  name: 'Hallway - Lights to: ON - 100-454'
+  entities:
+    light.hallway_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling
+      supported_features: 43
+      color_mode: color_temp
+      brightness: 255
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+- id: '1658065621103'
+  name: 'Entrance - Lights to: OFF'
+  entities:
+    light.entrance_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling
+      supported_features: 44
+      state: 'off'
+  icon: mdi:lightbulb-outline
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+- id: '1658065747393'
+  name: 'Livingroom - Lights to: ON - 100-454'
+  entities:
+    light.livingroom_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Livingroom - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2202
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.livingroom_ceiling:
+      entity_only: true
+- id: '1658065823837'
+  name: 'Hallway - Lights to: ON - 50-352'
+  entities:
+    light.hallway_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling
+      supported_features: 43
+      color_mode: color_temp
+      brightness: 127
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-50
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+- id: '1658066022735'
+  name: 'Entrance - Lights to: ON - 50-352'
+  entities:
+    light.entrance_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 127
+      color_temp_kelvin: 2840
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-50
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+- id: '1658066045651'
+  name: 'Entrance - Lights to: ON - 100-352'
+  entities:
+    light.entrance_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 3105
+      color_temp: 322
+      hs_color:
+      - 27.661
+      - 54.116
+      rgb_color:
+      - 255
+      - 180
+      - 117
+      xy_color:
+      - 0.487
+      - 0.381
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+- id: '1658066063670'
+  name: 'Entrance - Lights to: ON - 100-250'
+  entities:
+    light.entrance_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 4000
+      color_temp: 250
+      hs_color:
+      - 26.812
+      - 34.87
+      rgb_color:
+      - 255
+      - 205
+      - 166
+      xy_color:
+      - 0.421
+      - 0.364
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+- id: '1658066086504'
+  name: 'Entrance - Lights to: ON - 100-454'
+  entities:
+    light.entrance_ceiling:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2202
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+- id: '1658066270671'
+  name: 'Kitchen - Lights to: OFF'
+  entities:
+    light.kitchen_countertop:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen - Countertop
+      supported_features: 45
+      state: 'off'
+  icon: mdi:lightbulb-outline
+  metadata:
+    light.kitchen_countertop:
+      entity_only: true
+- id: '1658066307107'
+  name: 'Kitchen - Lights to: ON - 100'
+  entities:
+    light.kitchen_countertop:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen - Countertop
+      supported_features: 45
+      color_mode: brightness
+      brightness: 255
+      state: 'on'
+  icon: mdi:lightbulb-on
+  metadata:
+    light.kitchen_countertop:
+      entity_only: true
+- id: '1658066336627'
+  name: 'Kitchen - Lights to: ON - 50'
+  entities:
+    light.kitchen_countertop:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen - Countertop
+      supported_features: 45
+      color_mode: brightness
+      brightness: 127
+      state: 'on'
+  icon: mdi:lightbulb-on-50
+  metadata:
+    light.kitchen_countertop:
+      entity_only: true
+- id: '1658068167467'
+  name: 'Livingroom - Lights to: OFF'
+  entities:
+    light.livingroom_ceiling:
+      min_mireds: 250
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      friendly_name: Livingroom - Ceiling
+      supported_features: 43
+      state: 'off'
+  icon: mdi:lightbulb-outline
+  metadata:
+    light.livingroom_ceiling:
+      entity_only: true
+- id: '1663559816461'
+  name: 'Bathroom - Lights to: Off'
+  entities:
+    light.bathroom_dimmer:
+      supported_color_modes:
+      - brightness
+      friendly_name: Bathroom dimmer - Relay
+      supported_features: 32
+      state: 'off'
+  metadata:
+    light.bathroom_dimmer:
+      entity_only: true
+- id: '1663559908016'
+  name: 'Bathroom - Lights to: ON -  15'
+  entities:
+    light.bathroom_dimmer:
+      supported_color_modes:
+      - brightness
+      friendly_name: Bathroom dimmer - Relay
+      supported_features: 32
+      color_mode: brightness
+      brightness: 38
+      state: 'on'
+  metadata:
+    light.bathroom_dimmer:
+      entity_only: true
+- id: '1663560027212'
+  name: 'Bathroom - Lights to: ON -  50'
+  entities:
+    light.bathroom_dimmer:
+      supported_color_modes:
+      - brightness
+      friendly_name: Bathroom dimmer - Relay
+      supported_features: 32
+      color_mode: brightness
+      brightness: 128
+      state: 'on'
+  metadata:
+    light.bathroom_dimmer:
+      entity_only: true
+- id: '1663560059169'
+  name: 'Bathroom - Lights to: ON -  100'
+  entities:
+    light.bathroom_dimmer:
+      supported_color_modes:
+      - brightness
+      friendly_name: Bathroom dimmer - Relay
+      supported_features: 32
+      color_mode: brightness
+      brightness: 255
+      state: 'on'
+  metadata:
+    light.bathroom_dimmer:
+      entity_only: true
+- id: '1678006655729'
+  name: 'Kitchen - Lights to: ON - Night'
+  entities:
+    light.kitchen_countertop:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      friendly_name: Kitchen - Countertop
+      supported_features: 44
+      color_mode: brightness
+      brightness: 26
+      state: 'on'
+  icon: mdi:lightbulb-on-10
+  metadata:
+    light.kitchen_countertop:
+      entity_only: true
+- id: '1678007053381'
+  name: 'Hallway - Lights to: ON - Night'
+  entities:
+    light.hallway_ceiling_1:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Hallway - Ceiling 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 26
+      color_temp_kelvin: 2840
+      color_temp: 352
+      hs_color:
+      - 28.109
+      - 61.425
+      rgb_color:
+      - 255
+      - 171
+      - 98
+      xy_color:
+      - 0.512
+      - 0.385
+      state: 'on'
+  icon: mdi:lightbulb-on-10
+  metadata:
+    light.hallway_ceiling:
+      entity_only: true
+    light.hallway_ceiling_1:
+      entity_only: true
+- id: '1678007586532'
+  name: 'Entrance - Lights to: ON - Night'
+  entities:
+    light.entrance_ceiling_1:
+      min_color_temp_kelvin: 2202
+      max_color_temp_kelvin: 4000
+      min_mireds: 250
+      max_mireds: 454
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - color_temp
+      friendly_name: Entrance - Ceiling 1
+      supported_features: 44
+      color_mode: color_temp
+      brightness: 26
+      color_temp_kelvin: 3105
+      color_temp: 322
+      hs_color:
+      - 27.661
+      - 54.116
+      rgb_color:
+      - 255
+      - 180
+      - 117
+      xy_color:
+      - 0.487
+      - 0.381
+      state: 'on'
+  icon: mdi:lightbulb-on-10
+  metadata:
+    light.entrance_ceiling:
+      entity_only: true
+    light.entrance_ceiling_1:
+      entity_only: true

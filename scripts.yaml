@@ -1,0 +1,778 @@
+livingroom_apple_tv_on:
+  alias: Livingroom - Apple TV - ON
+  sequence:
+  - service: remote.send_command
+    data:
+      command: wakeup
+    target:
+      entity_id: remote.livingroom_apple_tv
+  mode: single
+livingroom_apple_tv_off:
+  alias: Livingroom - Apple TV - OFF
+  sequence:
+  - service: remote.send_command
+    data:
+      delay_secs: 1
+      command:
+      - home_hold
+      - select
+    target:
+      entity_id: remote.livingroom_apple_tv
+  - service: media_player.turn_off
+    target:
+      entity_id: media_player.livingroom_apple_tv
+  mode: single
+livingroom_apple_tv_plex:
+  alias: Livingroom - Apple TV - Plex
+  sequence:
+  - service: remote.send_command
+    data:
+      delay_secs: 1
+      command:
+      - home
+      - home
+      - select
+      - down
+      - down
+      - left
+      - select
+    target:
+      entity_id: remote.livingroom_apple_tv
+  mode: single
+turn_off_all_lights_and_mediaplayers:
+  alias: Turn Off ALL Lights
+  sequence:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bedroom_lights_to_off
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.livingroom_lights_to_off_3
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.livingroom_lights_to_off
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.kitchen_lights_to_off
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.livingroom_lights_to_off_2
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.bathroom_off
+    metadata: {}
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.overide_bathroom_lights
+      - input_boolean.overide_entrance_lights
+      - input_boolean.overide_hallway_lights
+      - input_boolean.overide_kitchen_lights
+      - input_boolean.overide_shower_lights
+  mode: single
+  icon: mdi:lightbulb-group-off
+calculate_wake_up_time:
+  alias: Calculate Wake-up Time
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_select.start_work_time
+      state: Manual
+    then: []
+    else:
+    - service: input_datetime.set_datetime
+      data:
+        time: '{{ (states(''input_select.start_work_time'')+'':00'') }}'
+      target:
+        entity_id: input_datetime.time_work_start
+  mode: single
+stop_bedroom_speaker:
+  alias: Stop Bedroom speaker
+  sequence:
+  - service: media_player.media_stop
+    data: {}
+    target:
+      entity_id: media_player.bedroom_google_speaker
+  mode: single
+media_player_join_kitchen_to_livingroom:
+  alias: Media Player Join Kitchen to Livingroom
+  sequence:
+  - service: media_player.join
+    data:
+      group_members:
+      - media_player.kitchen_sonos_speaker
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+  mode: single
+media_player_join_livingroom_to_kitchen:
+  alias: Media Player Join Livingroom to Kitchen
+  sequence:
+  - service: media_player.join
+    data:
+      group_members:
+      - media_player.livingroom_sonos_speaker
+    target:
+      entity_id: media_player.kitchen_sonos_speaker
+  mode: single
+tts_washing_machine_done_via_file:
+  alias: 'Announce: De wasmachine is klaar (mp3)'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 50
+        play_on_bonded: true
+    target:
+      entity_id: media_player.livingroom_sonos_cloud_speaker
+  mode: single
+  icon: mdi:bullhorn-variant-outline
+create_local_announcement_file:
+  alias: Create local announcement file
+  sequence:
+  - service: tts.cloud_say
+    data:
+      language: en-US
+      message: De oven staat nog aan
+      entity_id: media_player.livingroom_sonos_speaker
+  mode: single
+check_alarm_clock:
+  alias: Check Alarm clock
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_boolean.alarm_clock_on
+      state: 'off'
+    then:
+    - service: media_player.play_media
+      data:
+        media_content_id: http://192.168.28.110:8123/local/sounds/de_wekker_staat_niet_aan_nl-nl_cloud.mp3
+        media_content_type: music
+        announce: true
+      target:
+        entity_id: media_player.bedroom_google_speaker
+    else:
+    - service: tts.cloud_say
+      data:
+        language: nl-NL
+        message: De wekker is ingesteld op {{as_timestamp(states('sensor.wake_up_time'))
+          | int | timestamp_custom('%H:%M', true)}} uur
+        entity_id: media_player.bedroom_google_speaker
+  mode: single
+  icon: mdi:speaker-message
+create_local_announcement_file_duplicate:
+  alias: Announce Wake up time
+  sequence:
+  - service: tts.cloud_say
+    data:
+      language: nl-NL
+      message: De wekker is ingesteld op {{as_timestamp(states('sensor.wake_up_time'))
+        | int | timestamp_custom('%H:%M', true)}} uur
+      entity_id: media_player.bedroom_google_speaker
+  mode: single
+  icon: mdi:speaker-message
+turn_on_all_lights:
+  alias: Turn On ALL Lights
+  sequence:
+  - service: script.trigger_lighting_bedroom
+    data: {}
+  - service: script.trigger_lighting_livingroom
+    data: {}
+  - service: script.trigger_lighting_hallway
+    data: {}
+  - service: script.trigger_lighting_bathroom
+    data: {}
+  - service: script.trigger_lighting_kitchen
+    data: {}
+  - service: script.trigger_lighting_entrance
+    data: {}
+  mode: single
+  icon: mdi:lightbulb-group
+check_doors_closed:
+  alias: Check doors closed
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.deuren
+      state: 'on'
+    then:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.bedroom_google_speaker
+        message: Er staan nog deuren open
+        language: nl-NL
+  mode: single
+  icon: mdi:speaker-message
+check_kupevame_connected:
+  alias: Check Kupevame connected
+  sequence:
+  - type: turn_on
+    device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+    entity_id: switch.kupevarme
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - if:
+    - condition: numeric_state
+      entity_id: sensor.kupevarme_power
+      above: 100
+    then:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.kupevarme_connected
+    else:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.kupevarme_connected
+  - type: turn_off
+    device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+    entity_id: switch.kupevarme
+    domain: switch
+  mode: single
+send_notification_to_phone:
+  alias: Send Notification to Phone
+  sequence:
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      message: '{{ message }}'
+      title: URGENT
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 1
+  - service: persistent_notification.create
+    data:
+      title: Critical Notification
+      message: '{{ message }}'
+  mode: single
+test_notification:
+  alias: test notification
+  sequence:
+  - service: script.send_notification_to_phone
+    data:
+      message: dit is de tekst
+  mode: single
+update_next_timer_entity:
+  alias: Update next timer entity
+  sequence:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: timer.prepare_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value:
+            '[object Object]':
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Prepare for bed
+        target:
+          entity_id: input_text.name_next_timer
+    - conditions:
+      - condition: state
+        entity_id: timer.time_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(sensor.hhmm_bed_time)}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Bed time
+        target:
+          entity_id: input_text.name_next_timer
+    - conditions:
+      - condition: state
+        entity_id: timer.wake_up_time
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(sensor.hhmm_wake_up_time)}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Wake-up time
+        target:
+          entity_id: input_text.name_next_timer
+    - conditions:
+      - condition: state
+        entity_id: timer.prepare_to_leave
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_to_leave''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(sensor.hhmm_prepare_to_leave)}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Prepare to leave
+        target:
+          entity_id: input_text.name_next_timer
+    - conditions:
+      - condition: state
+        entity_id: timer.time_to_leave
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(sensor.hhmm_time_to_leave)}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Time to leave
+        target:
+          entity_id: input_text.name_next_timer
+  mode: single
+mushroom_datetime_minus:
+  alias: Mushroom datetime minus
+  sequence:
+  - service: input_datetime.set_datetime
+    data:
+      time: '{{as_timestamp(as_datetime(state_attr(''input_datetime.mushroom'',''timestamp''))
+        + timedelta(minutes=-5))| timestamp_custom(''%H:%M'', false) }}'
+    target:
+      entity_id: input_datetime.mushroom
+  mode: single
+mushroom_datetime_plus:
+  alias: Mushroom datetime plus
+  sequence:
+  - service: input_datetime.set_datetime
+    data:
+      time: '{{as_timestamp(as_datetime(state_attr(''input_datetime.mushroom'',''timestamp''))
+        + timedelta(minutes=+5))| timestamp_custom(''%H:%M'', false) }}'
+    target:
+      entity_id: input_datetime.mushroom
+  mode: single
+calculate_work_start_datetime:
+  alias: Calculate Work start DateTime
+  sequence:
+  - service: input_datetime.set_datetime
+    data:
+      datetime: "{% if as_timestamp(today_at(states('input_datetime.time_work_start')))
+        < as_timestamp(now()) %}\n  {{ today_at(states('input_datetime.time_work_start'))
+        + timedelta(days=1) }}\n{% else %}\n  {{ today_at(states('input_datetime.time_work_start'))
+        }}\n{% endif %}"
+    target:
+      entity_id: input_datetime.datetime_work_start
+  mode: single
+  icon: mdi:calendar-alert
+send_notification_to_phone_non_urgent:
+  alias: Send Notification to Phone (Non-Urgent)
+  sequence:
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      message: '{{ message }}'
+      title: FYI
+      data:
+        push:
+          sound:
+            name: default
+            critical: 0
+            volume: 1
+  mode: single
+heating_entrance_setpoint_min:
+  alias: Heating - Entrance Setpoint Min
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+    target:
+      entity_id: input_number.setpoint_entrance
+  mode: single
+heating_entrance_setpoint_norm:
+  alias: Heating - Entrance Setpoint Norm
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+    target:
+      entity_id: input_number.setpoint_entrance
+  mode: single
+heating_entrance_setpoint_max:
+  alias: Heating - Entrance Setpoint Max
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_entrance_max'') }}'
+    target:
+      entity_id: input_number.setpoint_entrance
+  mode: single
+heating_bathroom_setpoint_max:
+  alias: Heating - Bathroom Setpoint Max
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_bathroom_max'') }}'
+    target:
+      entity_id: input_number.setpoint_bathroom
+  mode: single
+heating_bathroom_setpoint_min:
+  alias: Heating - Bathroom Setpoint Min
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
+    target:
+      entity_id: input_number.setpoint_bathroom
+  mode: single
+heating_bathroom_setpoint_norm:
+  alias: Heating - Bathroom Setpoint Norm
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_bathroom_norm'') }}'
+    target:
+      entity_id: input_number.setpoint_bathroom
+  mode: single
+heating_varmepumpe_setpoint_max:
+  alias: Heating - Varmepumpe Setpoint Max
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_varmepumpe_max'') }}'
+    target:
+      entity_id: input_number.setpoint_varmepumpe
+  mode: single
+heating_varmepumpe_setpoint_min:
+  alias: Heating - Varmepumpe Setpoint Min
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
+    target:
+      entity_id: input_number.setpoint_varmepumpe
+  mode: single
+heating_varmepumpe_setpoint_norm:
+  alias: Heating - Varmepumpe Setpoint Norm
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
+    target:
+      entity_id: input_number.setpoint_varmepumpe
+  mode: single
+radio10_live:
+  alias: radio10 - Live
+  sequence:
+  - service: media_player.join
+    data:
+      group_members:
+      - media_player.kitchen_sonos_speaker
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+  - service: media_player.play_media
+    data:
+      media_content_id: http://20073.live.streamtheworld.com/RADIO10.mp3?dist=streamradio10nl
+      enqueue: replace
+      media_content_type: music
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+    enabled: true
+  - service: media_player.play_media
+    data:
+      media_content_id: Media-source:http://20073.live.streamtheworld.com/RADIO10.mp3?dist=streamradio10nl
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+    enabled: false
+  mode: single
+  icon: mdi:radio
+radio10_love_songs:
+  alias: radio10 - Love songs
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: https://22343.live.streamtheworld.com/TLPSTR04.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODI0MywiaXNzIjoidGlzcnYifQ.xtU5IoIigyhRMN3Vy_uWekqp3zckYKPtFojsiKntchE
+      enqueue: play
+      media_content_type: music
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+  mode: single
+  icon: mdi:radio
+radio10_disco_clasics:
+  alias: radio10 - Disco clasics
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: https://22593.live.streamtheworld.com/TLPSTR23.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODE5MSwiaXNzIjoidGlzcnYifQ.RXqcSN6mmdEkAQpvh5RNxr4tpOy59C0P_COzsDhPUN4
+      enqueue: play
+      media_content_type: music
+    target:
+      entity_id: media_player.livingroom_sonos_speaker
+  mode: single
+  icon: mdi:radio
+radio10_60s_and_70s_hits:
+  alias: radio10 - 60s and 70s Hits
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: https://22613.live.streamtheworld.com/TLPSTR18.mp3?dist=tunein&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODAwNiwiaXNzIjoidGlzcnYifQ.9-YQKmSmssL6ObQ1JSLaYo5BoHk2GI5SPgoqNc5IrZs
+      enqueue: play
+      media_content_type: music
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_speaker
+  mode: single
+  icon: mdi:radio
+radio10_80s_hits:
+  alias: radio10 - 80s Hits
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: https://25303.live.streamtheworld.com/TLPSTR20_SC?DIST=TuneIn&TGT=TuneIn&maxServers=2&tdtok=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6ImZTeXA4In0.eyJpc3MiOiJ0aXNydiIsInN1YiI6IjIxMDY0IiwiaWF0IjoxNjM5MzA4MTI4LCJ0ZC1yZWciOmZhbHNlfQ.Vn9sfnqL5pPwWxHWk3N24Egcb9mzFlASHITP5cML7ss&gdpr=0&us_privacy=1YNY&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzOTMwODEyOCwiaXNzIjoidGlzcnYifQ.ICfMreMy03iij98CZmpC3YCOyd7a9fk9DNQVfMnkTHI
+      enqueue: play
+      media_content_type: music
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_speaker
+  mode: single
+  icon: mdi:radio
+trigger_shoe_dryer_control:
+  alias: Trigger - Shoe dryer Control
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_shoe_dryer_control
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_shoe_dryer_control
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+trigger_lighting_entrance:
+  alias: Trigger - Lighting Entrance
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_entrance
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_entrance
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+worktime_start:
+  alias: Worktime Start
+  sequence:
+  - condition: state
+    entity_id: input_boolean.worktime_logged
+    state: 'on'
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.worktime_start
+    data:
+      timestamp: '{{ now().timestamp() }}'
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.worktime_logged
+  mode: single
+worktime_stop:
+  alias: Worktime Stop
+  sequence:
+  - condition: state
+    entity_id: input_boolean.worktime_logged
+    state: 'off'
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.worktime_end
+    data:
+      timestamp: '{{ now().timestamp() }}'
+  mode: single
+worktime_log:
+  alias: Worktime Log
+  sequence:
+  - condition: state
+    entity_id: input_boolean.worktime_logged
+    state: 'off'
+    enabled: true
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.worktime_logged
+    enabled: true
+  - service: google_sheets.append_sheet
+    data:
+      config_entry: 39e03eeaa42f890ec229fc41218a787e
+      worksheet: Kopperud
+      data:
+        Date: '{{ as_timestamp(states(''input_datetime.worktime_start'')) | timestamp_custom(''%d-%m-%Y'')
+          }}'
+        Start: '{{ as_timestamp(states(''input_datetime.worktime_start'')) | timestamp_custom(''%H:%M'')
+          }}'
+        End: '{{ as_timestamp(states(''input_datetime.worktime_end'')) | timestamp_custom(''%H:%M'')
+          }}'
+        Duration: '{{ (as_timestamp(states(''input_datetime.worktime_end'')) - as_timestamp(states(''input_datetime.worktime_start'')))
+          | timestamp_custom(''%H:%M'',false)}}'
+  mode: single
+trigger_lighting_bedroom:
+  alias: Trigger - Lighting Bedroom
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_bathroom
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+trigger_lighting_livingroom:
+  alias: Trigger - Lighting Livingroom
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_livingroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_livingroom
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+github_nightly_upload:
+  alias: Github - Nightly upload
+  sequence:
+  - service: shell_command.nightly_upload_git
+    data: {}
+  mode: single
+  icon: mdi:script-text-outline
+trigger_lighting_kitchen:
+  alias: Trigger - Lighting Kitchen
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_kitchen
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_kitchen
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+trigger_lighting_bathroom:
+  alias: Trigger - Lighting Bathroom
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_bathroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_bathroom
+  mode: single
+  icon: mdi:toggle-switch-variant-off
+trigger_lighting_hallway:
+  alias: Trigger - Lighting Hallway
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_lighting_hallway
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.trigger_lighting_hallway
+  mode: single
+  icon: mdi:toggle-switch-variant-off

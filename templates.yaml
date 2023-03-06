@@ -1,0 +1,558 @@
+################################################################################
+#
+# Templates used in HA
+#
+################################################################################
+
+binary_sensor:
+  - name: varmepumpe_on
+    delay_off:
+      minutes: 0
+    state: >
+      {{ states('sensor.varmepumpe_power')|float > 5 }}
+
+  - name: workday
+    unique_id: 83bb15fe-f15f-49d8-8c34-9808365ce250
+    state: >
+      {% if as_datetime(states('input_datetime.datetime_work_start')).isoweekday() < 6 %}
+        {% if states('input_select.start_location') == 'Weekend' %}
+          {{ false }}
+        {% else %}
+          {{ true }}
+        {% endif %}
+      {% else %}
+        {{ false }}
+      {% endif %}
+
+
+sensor:
+  #########################
+  #
+  # Dynamic Energy Prices tracking
+  # - Nordpool region: Oslo
+  #
+  #########################
+  - name: "NordPool Energyprices"
+    unique_id: b59f3231-2982-43c3-ad9d-9bed780dd131
+    icon: mdi:currency-sign
+    unit_of_measurement: "NOK"
+    state: >
+      {{ states('sensor.nordpool_kwh_oslo_nok_3_10_025') | float(0) + states('input_number.nordpool_additional_costs') | float(0) }}
+    attributes:
+      times: >
+        {% set ns = namespace(times=[]) -%}
+        {%- set today = state_attr('sensor.nordpool_kwh_oslo_nok_3_10_025','raw_today') -%}
+        {%- for hours in today -%}
+          {%- set ns.times = ns.times + [as_local((hours.start)).strftime("%Y-%m-%d %H:%M:%S")] -%} 
+        {%- endfor -%}
+        {%- set tomorrow = state_attr('sensor.nordpool_kwh_oslo_nok_3_10_025','raw_tomorrow') -%}
+        {%- for hours in tomorrow -%}
+          {%- set ns.times = ns.times + [as_local((hours.start)).strftime("%Y-%m-%d %H:%M:%S")] -%} 
+        {%- endfor -%}
+        {{ ns.times }}
+      prices: >
+        {% set ns = namespace(prices=[]) -%}
+        {%- set today = state_attr('sensor.nordpool_kwh_oslo_nok_3_10_025','raw_today') -%}
+        {%- for hours in today -%}
+          {%- set ns.prices = ns.prices + [hours.value + states('input_number.nordpool_additional_costs') | float(0)] -%} 
+        {%- endfor -%}
+        {%- set tomorrow = state_attr('sensor.nordpool_kwh_oslo_nok_3_10_025','raw_tomorrow') -%}
+        {%- for hours in tomorrow -%}
+          {%- if hours.value -%}
+            {%- set ns.prices = ns.prices + [hours.value + states('input_number.nordpool_additional_costs') | float(0)] -%} 
+          {%- endif -%}
+        {%- endfor -%}
+        {{ ns.prices }}
+ 
+  #########################
+  #
+  # Battery list bases on:
+  # - battery level below treshold
+  # - treshold is in: input_number.battery_threshold
+  #
+  #########################
+  - name: "Low Battery Devices"
+    unique_id: ba292875-ae67-480d-9867-29cdb20afaea
+    icon: >
+      mdi:battery-low
+    state: >
+      {% set threshold = states('input_number.battery_threshold') | int %}
+      {%- set ns = namespace(sensors=[]) -%}
+      {%- for state in states.sensor 
+        | selectattr('attributes.device_class', 'defined') 
+        | selectattr('attributes.state_class', 'defined') 
+        | selectattr('attributes.device_class', '==', 'battery') 
+        | selectattr('attributes.state_class', '==', 'measurement') 
+        | selectattr('state', 'is_number') -%}
+        {%- if state.state | int <= threshold -%}
+          {% set ns.sensors = ns.sensors + [dict(name = state.name | replace(' battery', '') | replace(' Battery', ''), state = state.state | int)] %}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- set batt = ns.sensors | sort(attribute='state') %}
+      {%- set ns = namespace(batt='') -%}
+      {%- for state in batt -%}
+          {% set ns.batt= ns.batt + (state.name  ~ ' (' ~ state.state ~'%)' ~ "\n") %}
+      {%- endfor -%}
+
+      {% if ns.batt | count > 0 %}
+        {{ ns.batt | truncate(255, true, '...') }}
+      {% else %}
+        {{ 'unavailable' }}
+      {% endif %}
+    #        The code for the Conditional Card on the dashboard:
+    # {{states('sensor.low_battery_devices')}}
+
+  #########################
+  #
+  # Number of Doors Open
+  # - Count the number of open doors (exept washer and dryer)
+  #
+  #########################
+  - name: "Number Of Doors Open"
+    unique_id: 102c4c10-c1d6-4a52-a313-10b8a7aaa154
+    icon: mdi:door-open
+    state: >
+      {%- set ns = namespace(doorsensors=[]) -%}
+      {%- set ns.doorsensors = states.binary_sensor
+                | selectattr('attributes.device_class', 'defined')
+                | selectattr('attributes.device_class', '==', 'door')
+                | selectattr('state', 'eq', 'on')
+                | rejectattr('attributes.friendly_name', 'in' , 'Washing machine - Door sensor contact')
+                | rejectattr('attributes.friendly_name', 'in' , 'Tumble Dryer - Door sensor contact')
+                | map(attribute='name') | list -%}
+      {{ ns.doorsensors | count }}
+
+  #########################
+  #
+  # What Doors Are Open
+  # - Count the number of open doors (exept washer and dryer)
+  #
+  #########################
+  - name: "What Doors Are Open"
+    unique_id: da619118-2e69-45fd-ae14-1c9c68edf6c6
+    icon: mdi:door-open
+    state: >
+      {%- set ns = namespace(doorsensors=[]) -%}
+      {%- set ns.doorsensors = states.binary_sensor
+                | selectattr('attributes.device_class', 'defined')
+                | selectattr('attributes.device_class', '==', 'door')
+                | selectattr('state', 'eq', 'on')
+                | rejectattr('attributes.friendly_name', 'in' , 'Washing machine - Door sensor contact')
+                | rejectattr('attributes.friendly_name', 'in' , 'Tumble Dryer - Door sensor contact')
+                | map(attribute='name') | list -%}
+      {%- if (ns.doorsensors | count > 0) -%}
+        {{ ns.doorsensors | list | join('/n') }}
+      {%- else -%}
+        unavailable
+      {%- endif -%}
+
+  #########################
+  #
+  # Calculate prepare for bed time based on:
+  # - bed time
+  #   - prep time evenings
+  #
+  #########################
+  - name: "Prepare for Bed"
+    unique_id: cbd391da-f492-4dad-a7bd-69aa150d07b2
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.bed_time')) %}
+      {% set pe = states('input_datetime.prep_time_evening') %}
+      {% set pfb = wu - timedelta(hours = pe.split(':')[0] | int , minutes = pe.split(':')[1] | int) %}
+      {{ pfb }}
+
+  #########################
+  #
+  # Calculate bed time based on:
+  # - wake-up time
+  #   - sleep duration
+  #
+  #########################
+  - name: "Bed Time"
+    unique_id: c03b5681-6cc9-4491-ad98-4d195cc907e3
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% if states('binary_sensor.workday') == 'on' %}
+        {% set sd = states('input_datetime.sleep_duration_workday') %}
+      {% else %}
+        {% set sd = states('input_datetime.sleep_duration_weekend') %}
+      {% endif %}
+      {% set h = sd.split(':')[0] | int %}
+      {% set m = sd.split(':')[1] | int %}
+      {% set bedtime = wu - timedelta(hours=h, minutes=m) %}
+      {{ bedtime }}
+
+  #########################
+  #
+  # Calculate wake-up time based on:
+  # - start time work
+  # - workday / weekend
+  #   - travel time to customer
+  #   - travel time to work
+  #   - prep time car
+  #   - prep time entrance
+  #   - prep time morning
+  #   - prep time shower
+  # if states('binary_sensor.workday') == 'on'
+  #########################
+  - name: "Wake-up time"
+    unique_id: dcdc8922-f511-4837-a686-a43ab4ae4a0a
+    icon: mdi:alarm
+    state: >
+      {% set ws = as_datetime(states('input_datetime.datetime_work_start')) %}
+      {% if states('binary_sensor.workday') == 'on' %}
+        {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %} 
+          {% set ps = states('input_datetime.prep_time_shower') %}
+        {% else %}
+          {% set ps = states('input_datetime.prep_time_no_shower') %}
+        {% endif %}
+        {% set pm = states('input_datetime.prep_time_morning') %}
+        {% set pe = states('input_datetime.prep_time_entrance') %}
+        {% set pc = states('input_datetime.prep_time_car') %}
+        {% if states('input_select.start_location') != 'Manual' %}
+          {% set tw = states('input_datetime.travel_time_work') %}
+        {% else %}
+          {% set tw = '00:00' %}
+        {% endif %}
+        {% set td = states('input_datetime.travel_time_customer') %}
+        {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pe.split(':')[0] | int + pc.split(':')[0] | int + tw.split(':')[0] | int + td.split(':')[0] | int %}
+        {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int + pe.split(':')[1] | int + pc.split(':')[1] | int + tw.split(':')[1] | int + td.split(':')[1] | int %}
+        {% set wakeup = ws - timedelta(hours=h, minutes=m) %}
+      {% else %}
+        {% set wakeup = ws %}
+      {% endif %}
+      {{ wakeup }}
+
+  #########################
+  #
+  # Calculate prepare to leave based on:
+  # - wake-up time
+  #   + prep time morning
+  #   + prep time shower
+  #
+  #########################
+  - name: "Prepare to leave"
+    unique_id: d3b87483-31e1-4a16-a233-6209f8033bf9
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu = as_datetime(states('sensor.wake_up_time')) %}
+      {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %} 
+        {% set ps = states('input_datetime.prep_time_shower') %}
+      {% else %}
+        {% set ps = states('input_datetime.prep_time_no_shower') %}
+      {% endif %}
+      {% set pm = states('input_datetime.prep_time_morning') %}
+      {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int %}
+      {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int %}
+      {% if states('input_select.start_location') == 'Weekend' %}
+        {% set ptl = wu %}
+      {% else %}
+        {% set ptl = wu + timedelta(hours=h, minutes=m) %}
+      {% endif %}
+      {{ ptl }}
+
+  #########################
+  #
+  # Calculate time to leave based on:
+  # - prepare to leave
+  #   + prep time entrance
+  #   + prep time car
+  #
+  #########################
+  - name: "Time to leave"
+    unique_id: 08bbcf5c-6db2-41b2-984e-11cb3ccaeb5f
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set ptl = as_datetime(states('sensor.prepare_to_leave')) %}
+      {% set pc = states('input_datetime.prep_time_car') %}
+      {% set pe = states('input_datetime.prep_time_entrance') %}
+      {% set h = pe.split(':')[0] | int + pc.split(':')[0] | int %}
+      {% set m = pe.split(':')[1] | int + pc.split(':')[1] | int %}
+      {% if states('input_select.start_location') == 'Weekend' %}
+        {% set ttl = as_datetime(states('sensor.wake_up_time')) %}
+      {% else %}
+        {% set ttl = ptl + timedelta(hours=h, minutes=m) %}
+      {% endif %}
+      {{ ttl }}
+
+  #########################
+  #
+  # Calculate Varmepumpe Night time based on:
+  # - bed time
+  # - prep time varmepumpe night
+  #
+  #########################
+  - name: "Varmepumpe Night mode Time"
+    unique_id: 539e1b4a-b73d-4cfb-bd84-b02d9921dea7
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.bed_time')) %}
+      {% set vp = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set vnm = bt - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ vnm }}
+
+  #########################
+  #
+  # Calculate Varmepumpe Wale-up time based on:
+  # - bed time
+  # - prep time varmepumpe night
+  #
+  ######################### 
+  - name: "Varmepumpe Wake-up mode Time"
+    unique_id: 257acfff-04c6-4e02-a7c7-67e3994ccefa
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set vp = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set vwm = wu - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ vwm }}
+
+  #########################
+  #
+  # Calculate Night mode On time based on:
+  # - bed time
+  # - prep time Night mode on
+  #
+  #########################
+  - name: "Night mode On Time"
+    unique_id: 0ca769e0-d76d-4156-bd4e-25c24efd1bc3
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.bed_time')) %}
+      {% set pnon = states('input_datetime.prep_time_night_mode_on') %}
+      {% set nmon = bt + timedelta(hours = pnon.split(':')[0] | int, minutes = pnon.split(':')[1] | int) %}
+      {{ nmon }}
+
+  #########################
+  #
+  # Calculate Night mode Off time based on:
+  # - wake-up time
+  # - prep time Night mode off
+  #
+  #########################
+  - name: "Night mode Off Time"
+    unique_id: d01d4c93-97a9-4f02-8643-0fa23d4948d1
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set pnoff = states('input_datetime.prep_time_night_mode_off') %}
+      {% set nmoff = bt - timedelta(hours = pnoff.split(':')[0] | int, minutes = pnoff.split(':')[1] | int) %}
+      {{ nmoff }}
+
+  #########################
+  #
+  # Calculate Bathroom Heating time based on:
+  # - wake-up time
+  # - morning shower activated
+  #
+  #########################
+  - name: "Bathroom Heating Time"
+    unique_id: ba84a0c3-c823-460d-8321-233f0560eb0e
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set vp = states('input_datetime.prep_time_bathroom_heating') %}
+      {% set bht = bt - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ bht }}
+
+  #########################
+  #
+  # Convert Date/Time sensor values to Time sensors:
+  # - sensor.prepare_for_bed
+  # - sensor.bed_time
+  # - sensor.wake_up_time
+  # - sensor.prepare_to_leave
+  # - sensor.time_to_leave
+  # - sensor.night_mode_on_time
+  # - sensor.night_mode_off_time
+  # - sensor.varmepumpe_night_mode_time
+  # - input_datetime.travel_time_work
+  # - input_datetime.travel_time_customer
+  #
+  #########################
+  - name: hhmm-varmepumpe_night_mode_time
+    unique_id: d5f767c0-356c-42c9-8e6e-0cd390a2793e
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.varmepumpe_night_mode_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prepare_for_bed
+    unique_id: 3ddec425-e926-4ba4-a679-2df086885963
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.prepare_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-bed_time
+    unique_id: 687a8763-ee66-4ad3-9c3b-d39c1ad9408b
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.bed_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-bathroom_heating_time
+    unique_id: d398ebc1-f96b-42c2-bed2-470661e768a8
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.bathroom_heating_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-varmepumpe_wake-up_mode_time
+    unique_id: c7dc949e-5e11-4f9f-bb0c-a5980d405732
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.varmepumpe_wake_up_mode_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-wake_up_time
+    unique_id: 0fcdfff2-2c82-43a4-81a2-cfa02dc15baa
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.wake_up_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prepare_to_leave
+    unique_id: c0f509b7-c90f-4d1b-b2f6-c80d0139d435
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.prepare_to_leave')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-time_to_leave
+    unique_id: dc34dca7-4190-4db5-a719-5ef198c0aeef
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.time_to_leave')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prep_time_car
+    unique_id: 02ba41b2-66de-4a0c-ba5a-3f7ddbeee76a
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.prep_time_car'))) | int | timestamp_custom('%H:%M', true)}}
+  - name: hhmm-travel_time_work
+    unique_id: ae09b02f-3645-4673-a919-d2978c91f839
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_work'))) | int | timestamp_custom('%H:%M', true) }}
+  - name: hhmm-travel_time_customer
+    unique_id: 3a1d7d1d-155b-4ed9-aefe-1e2e6d4944c0
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_customer'))) | int | timestamp_custom('%H:%M', true) }}
+  - name: hhmm-night_mode_on_time
+    unique_id: 56c6b7f7-ab76-494d-b663-5f4a42a97182
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.night_mode_on_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-night_mode_off_time
+    unique_id: 635e1c09-2457-496b-965d-a0acb7b2cdeb
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.night_mode_off_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+
+  #  - name: hhmm-
+  #    unique_id:
+  #    icon: mdi:clock-alert-outline
+  #    state: >
+  #      {{ as_timestamp(states('sensor.time_to_leave')) | int | timestamp_custom('%M', true)}}
+
+  #########################
+  #
+  # Grouping All alarm clock timers together in 1 sensor
+  # - prepare for bed
+  # - time for bed
+  # - wake-up time
+  # - prepare to leave
+  # - time to leave
+  #
+  #########################
+  - name: "Active Alarm Clock Timers"
+    unique_id: a97f565e-e7c5-4e82-b9bb-c743881dce50
+    state: >-
+      {{
+        is_state('timer.prepare_for_bed', 'active')
+        + is_state('timer.time_for_bed', 'active')
+        + is_state('timer.wake_up_time', 'active')
+        + is_state('timer.prepare_to_leave', 'active')
+        + is_state('timer.time_to_leave', 'active')
+      }}
+
+
+
+  #########################
+  #
+  # Grouping All appliances together in 1 power sensor
+  # - micorwave
+  # - washing machine
+  # - tumble dryer
+  # - refrigerator
+  # - freezer
+  # - water heater
+  #
+  #########################
+  - name: "All Appliances power"
+    unique_id: 7d24a22f-2cd7-4474-a9d9-14f8e8653693
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.microwave_power')|float(0)
+        + states('sensor.washing_machine_power_module_power')|float(0)
+        + states('sensor.tumble_dryer_power_module_power')|float(0)
+        + states('sensor.refrigerator_power')|float(0)
+        + states('sensor.freezer_power')|float(0)
+        + states('sensor.water_heater_power')|float(0)
+        + states('sensor.stove_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All heating devices together in 1 power sensor
+  # - varmepumpe
+  # - panel oven - bathroom
+  # - panel oven - frontdoor
+  # - ventilation - bedroom
+  #
+  #########################
+  - name: "All Heating power"
+    unique_id: 3ece76ea-d270-4d67-800c-53bbfe256ad7
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.varmepumpe_power')|float(0)
+        + states('sensor.panel_oven_br_power')|float(0)
+        + states('sensor.panel_oven_fd_power')|float(0)
+        + states('sensor.ventilation_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All equipment together in 1 power sensor
+  # - office equipment
+  # - multi-media equipment
+  #
+  #########################
+  - name: "All Equipment power"
+    unique_id: 49f53fac-bc88-459a-a042-634a25399a7a
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.office_equipment_power')|float(0)
+        + states('sensor.multi_media_equipment_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All lights together in 1 power sensor
+  # - All entities in domain light
+  #
+  #########################
+
+
+  #########################
+  #
+  # Debug helper template for Aqara Cube
+  # - use in combination with Zigbee2MQTT - Xiaomi Cube Controler blueprint
+  # - (https://community.home-assistant.io/t/zigbee2mqtt-xiaomi-cube-controller/393203)
+  #
+  #########################
+
+  #########################
+  #
+  # Dynamic Energy Prices tracking
+  # - All entities in domain light
+  #
+  #########################

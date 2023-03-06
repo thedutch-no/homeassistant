@@ -1,0 +1,75 @@
+#
+# System Monitor
+# - https://www.home-assistant.io/integrations/systemmonitor/
+#
+- platform: systemmonitor
+  resources:
+    - type: processor_use      
+    - type: disk_use_percent
+      arg: /config
+    - type: memory_free
+    - type: load_1m
+    - type: load_5m
+    - type: load_15m
+
+- platform: time_date
+  display_options:
+    - 'time'
+    - 'date'
+    - 'date_time'
+    - 'date_time_utc'
+    - 'date_time_iso'
+    - 'time_date'
+    - 'time_utc'
+    - 'beat'
+    
+#
+# Estimated outside illuminance
+# - https://community.home-assistant.io/t/outdoor-illuminance-estimated-from-weather-conditions/52756
+#
+- platform: illuminance
+  name: Estimated Illuminance
+  entity_id: weather.met_no
+
+#
+# Sensors in the Average platform
+#
+- platform: average
+  name: 'Panel oven BR - avg Power'
+  unique_id: fdba4864-5fcd-40bc-b56e-673a86e59327
+  duration:
+    hours: 3
+  entities: 
+    - sensor.panel_oven_br_power
+
+- platform: average
+  name: 'Panel oven FD - avg Power'
+  unique_id: 2235c274-78bb-4825-a626-82ad817fd72b
+  duration:
+    hours: 3
+  entities: 
+    - sensor.panel_oven_fd_power
+
+- platform: average
+  name: 'Refrigerator - avg Power'
+  unique_id: b4e4281b-42f9-4356-b68c-fa050f9cc15c
+  duration:
+    hours: 3
+  entities: 
+    - sensor.refrigerator_power
+
+- platform: average
+  name: 'Freezer - avg Power'
+  unique_id: 63529b8e-9b3f-4ded-b840-9047023dd83c
+  duration:
+    hours: 3
+  entities: 
+    - sensor.freezer_power
+
+- platform: average
+  name: 'Varmepumpe - avg Power'
+  unique_id: a7681680-2920-432f-a6a0-4343439196b6
+  duration:
+    minutes: 5
+  entities: 
+    - sensor.varmepumpe_power

@@ -1,0 +1,209 @@
+#
+# IKEA Light bulbs
+# 
+  # Bedroom Lights
+- platform: powercalc
+  entity_id: light.bedroom_ceiling_1
+  manufacturer: ikea
+  model: LED2003G10
+- platform: powercalc
+  entity_id: light.bedroom_ceiling_2
+  manufacturer: ikea
+  model: LED2003G10
+  # Livingroom Lights
+- platform: powercalc
+  entity_id: light.livingroom_ceiling_1
+  manufacturer: ikea
+  model: LED1537R6
+- platform: powercalc
+  entity_id: light.livingroom_ceiling_2
+  manufacturer: ikea
+  model: LED1537R6
+- platform: powercalc
+  entity_id: light.livingroom_ceiling_3
+  manufacturer: ikea
+  model: LED1537R6
+  # Hallway Lights
+- platform: powercalc
+  entity_id: light.hallway_ceiling_1
+  manufacturer: ikea
+  model: LED1835C6
+- platform: powercalc
+  entity_id: light.hallway_ceiling_2
+  manufacturer: ikea
+  model: LED1835C6
+- platform: powercalc
+  entity_id: light.hallway_ceiling_3
+  manufacturer: ikea
+  model: LED1835C6
+  # Kitchen Lights  
+- platform: powercalc
+  entity_id: light.kitchen_countertop
+  linear:
+    calibrate:
+      - 26 -> 2.0
+      - 51 -> 2.5
+      - 76 -> 3.1
+      - 102 -> 4.1
+      - 127 -> 5.4
+      - 152 -> 7.2
+      - 177 -> 9.6
+      - 203 -> 12.9
+      - 229 -> 17.5
+      - 255 -> 23.7
+  # Frontdoor Lights
+- platform: powercalc
+  entity_id: light.entrance_ceiling_1
+  manufacturer: ikea
+  model: LED1732G11
+
+#
+# Grouping all lights
+#
+- platform: powercalc
+  create_group: All lights
+  unique_id: 74d5b349-0cd5-4507-954c-caa2b1ca2aa8
+  entities:
+    - create_group: Bedroom lights
+      entities:
+        - entity_id: light.bedroom_ceiling_1
+        - entity_id: light.bedroom_ceiling_2
+    - create_group: Livingroom lights
+      entities:
+        - entity_id: light.livingroom_ceiling_1
+        - entity_id: light.livingroom_ceiling_2
+        - entity_id: light.livingroom_ceiling_3
+    - create_group: Hallway lights
+      entities:
+        - entity_id: light.hallway_ceiling_1
+        - entity_id: light.hallway_ceiling_2
+        - entity_id: light.hallway_ceiling_3
+    - create_group: Kitchen lights
+      entities:
+        - entity_id: light.kitchen_countertop
+    - create_group: Entrance lights
+      entities:
+        - entity_id: light.entrance_ceiling_1
+
+#
+# Creating energy sensor and utility meters for these shelly sensors
+#
+#  Standby power usage for the different Shelly units
+#   - Shelly Plug S : 1.0 W
+#   - Shelly 1PM.   : 1.0 W
+#   - Shelly Dimmer : 1.0 W
+#
+  # Stove - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.stove
+  power_sensor_id: sensor.stove_power
+  standby_power: 1
+# Microwave - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.microwave
+  power_sensor_id: sensor.microwave_power
+  standby_power: 1
+  # Refigirator - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.refrigerator
+  power_sensor_id: sensor.refrigerator_power
+  standby_power: 1
+  # Freezer - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.freezer
+  power_sensor_id: sensor.freezer_power
+  standby_power: 1
+  # Panel oven Bathroom - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.panel_oven_br
+  power_sensor_id: sensor.panel_oven_br
+  standby_power: 1
+  # Varmepumpe Livingroom - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.varmepumpe
+  power_sensor_id: sensor.varmepumpe
+  standby_power: 1
+  # Ventilation - Shelly Plus 1PM
+- platform: powercalc
+  entity_id: sensor.ventilation_power
+  power_sensor_id: sensor.ventilation
+  standby_power: 1
+  # Office equipment - Shelly Plug S
+- platform: powercalc
+  entity_id: sensor.office_equipment
+  power_sensor_id: sensor.office_equipment_power
+  standby_power: 1
+  # TV-Audio equipment - Shelly Plug S
+- platform: powercalc
+  entity_id: sensor.multi_media_equipment
+  power_sensor_id: sensor.multi_media_equipment_power
+  standby_power: 1
+  # Panel oven Frontdoor - Shelly Plug S
+- platform: powercalc
+  entity_id: sensor.panel_oven_fd
+  power_sensor_id: sensor.panel_oven_fd
+  standby_power: 1
+  # Water heater - Shelly Plug S
+- platform: powercalc
+  entity_id: sensor.water_heater
+  power_sensor_id: sensor.water_heater_power
+  standby_power: 1
+  # Bathroom - Shelly Dimmer 2
+- platform: powercalc
+  entity_id: sensor.bathroom_light
+  power_sensor_id: sensor.bathroom_dimmer_power
+  standby_power: 1
+
+#
+# Creating energy sensor and utility meters for these sonoff pow r2 sensors
+#   - sensors are running tasmota firmware 12.1.1
+#
+#  Standby power usage for the different Sonoff units
+#   - Sonoff POW2   : 0.5 W
+#
+  # Tumble Dryer - Sonoff Pow R2 - Tasmota
+- platform: powercalc
+  entity_id: sensor.pc_tumble_dryer
+  power_sensor_id: sensor.tumble_dryer_power_module_power
+  standby_power: 0.5
+  # Washing machine - Sonoff Pow R2 - Tasmota
+- platform: powercalc
+  entity_id: sensor.pc_washing_machine
+  power_sensor_id: sensor.washing_machine_power_module_power
+  standby_power: 0.5
+
+#
+# Creating energy sensor and utility meters for 'all appliances' sensor
+# - grouping sensor 'sensor.all_appliances_power' is created in templates.yaml
+#
+- platform: powercalc
+  entity_id: sensor.all_appliances
+  power_sensor_id: sensor.all_appliances_power
+
+#
+# Creating energy sensor and utility meters for 'all heating' sensor
+# - grouping sensor 'sensor.all_heating_power' is created in templates.yaml 
+#
+- platform: powercalc
+  entity_id: sensor.all_heating
+  power_sensor_id: sensor.all_heating_power
+
+#
+# Creating energy sensor and utility meters for 'all equipment' sensor
+# - grouping sensor 'sensor.all_equipment_power' is created in templates.yaml 
+#
+- platform: powercalc
+  entity_id: sensor.all_equipment
+  power_sensor_id: sensor.all_equipment_power
+
+#
+#
+# Creating sensors for un-metered loads
+# - un-meterd loads are devices that use electricity without going thru a power meter device
+#
+#
+
+# Allways ON devices
+
+# On/Off devices
+

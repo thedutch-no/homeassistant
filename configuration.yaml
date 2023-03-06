@@ -1,0 +1,70 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Include files
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor powercalc_label: !include powercalc.yaml
+sensor: !include sensors.yaml
+camera: !include cameras.yaml
+switch: !include switch.yaml
+counter: !include counters.yaml
+binary_sensor: !include binary_sensor.yaml
+input_boolean: !include input_boolean.yaml
+input_number: !include input_number.yaml
+input_select: !include input_select.yaml
+template: !include templates.yaml
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Extra logging options
+logger:
+  default: debug
+  logs:
+    custom_components.powercalc: debug
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+# Smartir
+smartir:
+  check_updates: false
+  
+climate:
+  - platform: smartir
+    name: livingroom_vp
+    unique_id: livingroom_vp
+    device_code: 1019
+    controller_data: remote.rm4_livingroom_remote
+    temperature_sensor: sensor.livingroom_climate_sensor_temperature
+    humidity_sensor: sensor.livingroom_climate_sensor_humidity
+    power_sensor: switch.varmepumpe
+
+# PowerCalc
+powercalc:
+  enable_autodiscovery: false
+  create_utility_meters: true
+  power_sensor_naming: "{} Powersensor"
+  energy_sensor_naming: "{} Energysensor"
+
+# Shell commands
+shell_command:
+  upload_to_git: /bin/bash push_upload_git.sh
+
+  
+# Sonos
+#sonos:
+#    media_player:
+#      hosts:
+#        - 192.168.10.191
+#        - 192.168.10.192
+
+# Withings
+#withings:
+#  client_id: !secret withings_id
+#  client_secret: !secret withings_secret
+#  use_webhook: true

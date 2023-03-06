@@ -1,0 +1,50 @@
+# Created by https://www.toptal.com/developers/gitignore/api/homeassistant
+# Edit at https://www.toptal.com/developers/gitignore?templates=homeassistant
+
+### HomeAssistant ###
+# Files with personal details
+*.crt
+*.csr
+*.key
+*.db*
+*id_rsa*
+*id_ed25519*
+.ssh
+.storage
+.cloud
+.google.token
+.uuid
+icloud/
+google_calendars.yaml
+html5_push_registrations.conf
+ip_bans.yaml
+known_devices.yaml
+plex.conf
+secrets.yaml
+
+# Temporary files
+*.db-journal
+*.pid
+tts
+
+# automatically downloaded dependencies
+deps
+lib
+www/community/
+
+# Log files
+*.log*
+home-assistant.log
+
+# Development files
+blueprints/
+custom_components/
+esphome/
+local_music/
+node-red/
+themes/
+ui_lovelace_minimalist/
+zigbee2mqtt/
+
+# End of https://www.toptal.com/developers/gitignore/api/homeassistant
+

@@ -1,0 +1,20 @@
+start_location:
+  icon: mdi:warehouse
+  options:
+    - "Furuset"
+    - "Okern"
+    - "Vestby"
+    - "Valer"
+    - "Moss"
+    - "Drammen"
+    - "Manual"
+    - "Weekend"
+
+start_time:
+  icon: mdi:clock-start
+  options:
+    - "05:30"
+    - "06:00"
+    - "06:30"
+    - "07:00"
+    - "Manual"

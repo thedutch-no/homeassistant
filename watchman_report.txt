@@ -1,0 +1,33 @@
+-== Watchman Report ==- 
+
+-== Congratulations, all 37 services from your config are available!
+
+-== Missing 20 entity(ies) from 219 found in your config:
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
+| Entity ID                                               | State   | Location                                                                         |
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
+| sensor.stove                                            | missing | powercalc.yaml:93                                                                |
+| sensor.microwave                                        | missing | powercalc.yaml:97                                                                |
+| sensor.refrigerator                                     | missing | powercalc.yaml:101                                                               |
+| sensor.freezer                                          | missing | powercalc.yaml:105                                                               |
+| sensor.panel_oven_br                                    | missing | powercalc.yaml:109,110                                                           |
+| sensor.varmepumpe                                       | missing | powercalc.yaml:113,114                                                           |
+| sensor.ventilation                                      | missing | powercalc.yaml:118                                                               |
+| sensor.office_equipment                                 | missing | powercalc.yaml:121                                                               |
+| sensor.multi_media_equipment                            | missing | powercalc.yaml:125                                                               |
+| sensor.panel_oven_fd                                    | missing | powercalc.yaml:129,130                                                           |
+| sensor.water_heater                                     | missing | powercalc.yaml:133                                                               |
+| sensor.bathroom_light                                   | missing | powercalc.yaml:137                                                               |
+| sensor.pc_tumble_dryer                                  | missing | powercalc.yaml:147                                                               |
+| sensor.pc_washing_machine                               | missing | powercalc.yaml:151                                                               |
+| sensor.all_appliances                                   | missing | powercalc.yaml:159                                                               |
+| sensor.all_heating                                      | missing | powercalc.yaml:167                                                               |
+| sensor.all_equipment                                    | missing | powercalc.yaml:175                                                               |
+| sensor.refrigerator_climate_sen sor_temperature          | unavail | automations.yaml:2050                                                            |
+| sensor.freezer_smal_climate_sensor_temperature          | unavail | automations.yaml:2058                                                            |
+| sensor.freezer_big_climate_sensor_temperature           | missing | automations.yaml:2118                                                            |
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
+
+-== Report created on 06 Jan 2023 21:40:11
+-== Parsed 40 files in 3.46s., ignored 0 files 
+-== Generated in: 0.12s. Validated in: 0.01s.
