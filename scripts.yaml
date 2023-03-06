@@ -712,13 +712,6 @@ trigger_lighting_livingroom:
       - input_boolean.trigger_lighting_livingroom
   mode: single
   icon: mdi:toggle-switch-variant-off
-github_nightly_upload:
-  alias: Github - Nightly upload
-  sequence:
-  - service: shell_command.nightly_upload_git
-    data: {}
-  mode: single
-  icon: mdi:script-text-outline
 trigger_lighting_kitchen:
   alias: Trigger - Lighting Kitchen
   sequence:
@@ -776,3 +769,10 @@ trigger_lighting_hallway:
       - input_boolean.trigger_lighting_hallway
   mode: single
   icon: mdi:toggle-switch-variant-off
+github_upload:
+  alias: Github - Upload
+  sequence:
+  - service: shell_command.upload_to_git
+    data: {}
+  mode: single
+  icon: mdi:script-text-outline
