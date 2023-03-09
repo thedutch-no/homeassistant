@@ -688,16 +688,20 @@
       sequence:
       - service: script.worktime_stop
         data: {}
-      - service: climate.set_fan_mode
-        data:
-          fan_mode: powerfull
-        target:
-          entity_id: climate.livingroom
-      - service: input_number.set_value
-        data_template:
-          entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
-        alias: Set Setpoint Heatpumt to Pre Heat temp
+      - if:
+        - condition: time
+          after: '12:00:00'
+        then:
+        - service: input_number.set_value
+          data_template:
+            entity_id: input_number.setpoint_varmepumpe
+            value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
+          alias: Set Setpoint Heatpumt to Pre Heat temp
+        - service: climate.set_fan_mode
+          data:
+            fan_mode: powerfull
+          target:
+            entity_id: climate.livingroom
   mode: single
 - id: '1663248731397'
   alias: Change start location detected
@@ -2721,7 +2725,7 @@
     alias: Overide - Off
   - platform: state
     entity_id:
-    - input_boolean.trigger_lighting_ktchen
+    - input_boolean.trigger_lighting_kitchen
     to: 'on'
     id: Boolean
   condition: []
@@ -3886,8 +3890,7 @@
           target:
             entity_id: switch.shoe_dryer
         - service: timer.start
-          data:
-            duration: 00:30:00
+          data: {}
           target:
             entity_id:
             - timer.shoe_dryer
