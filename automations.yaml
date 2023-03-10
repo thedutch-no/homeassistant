@@ -1652,8 +1652,8 @@
   - platform: state
     entity_id:
     - binary_sensor.bathroom_door_contact
-    to: 'on'
     id: Door
+    enabled: false
   condition: []
   action:
   - choose:
@@ -1704,6 +1704,7 @@
     - conditions:
       - condition: trigger
         id: Door
+        enabled: true
       - condition: numeric_state
         entity_id: sensor.bathroom_climate_sensor_humidity
         above: 70
@@ -1755,29 +1756,40 @@
     entity_id:
     - input_number.setpoint_bathroom
     id: setpoint
+    enabled: true
   - platform: state
     entity_id:
     - binary_sensor.bathroom_door_contact
-    id: door
+    id: door-open
+    to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.bathroom_door_contact
+    to: 'off'
+    id: door-closed
   - platform: state
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
     id: temp
+    enabled: true
   - platform: state
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
     to: unavailable
     id: error
+    enabled: true
   - platform: state
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
     to: unknown
     id: error
+    enabled: true
   - platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.door_bathroom
     id: timer
+    enabled: true
   condition: []
   action:
   - choose:
@@ -1792,50 +1804,66 @@
       - service: script.send_notification_to_phone
         data: message "De badkamer temperatuur sensor werkt niet"
     - conditions:
-      - condition: template
-        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
-          < (states(''input_number.setpoint_bathroom'')|int) }}
-
-          '
-        alias: Temperature below setpoint
-      - condition: state
-        entity_id: binary_sensor.bathroom_door_contact
-        state: 'off'
-      sequence:
-      - type: turn_on
-        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
-        entity_id: switch.panel_oven_br_relay
-        domain: switch
-    - conditions:
-      - condition: template
-        value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
-          >= (states(''input_number.setpoint_bathroom'')|int ) }}
-
-          '
-        alias: Temperature above setpoint
-      sequence:
-      - type: turn_off
-        device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
-        entity_id: switch.panel_oven_br_relay
-        domain: switch
-    - conditions:
       - condition: trigger
-        id: door
+        id: door-open
       sequence:
-      - if:
-        - condition: state
-          entity_id: binary_sensor.bathroom_door_contact
-          state: 'on'
-        then:
-        - service: timer.start
-          data: {}
-          target:
-            entity_id: timer.door_bathroom
-        else:
-        - service: timer.cancel
-          data: {}
-          target:
-            entity_id: timer.door_bathroom
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bathroom_door_contact
+            state: 'on'
+          sequence:
+          - service: timer.start
+            data: {}
+            target:
+              entity_id: timer.door_bathroom
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bathroom_door_contact
+            state: 'off'
+          sequence:
+          - service: timer.cancel
+            data: {}
+            target:
+              entity_id: timer.door_bathroom
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: setpoint
+        - condition: trigger
+          id: temp
+        - condition: trigger
+          id: door-closed
+      sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+              < (states(''input_number.setpoint_bathroom'')|int) }}
+
+              '
+            alias: Temperature below setpoint
+          - condition: state
+            entity_id: binary_sensor.bathroom_door_contact
+            state: 'off'
+          sequence:
+          - type: turn_on
+            device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+            entity_id: switch.panel_oven_br_relay
+            domain: switch
+        - conditions:
+          - condition: template
+            value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+              >= (states(''input_number.setpoint_bathroom'')|int ) }}
+
+              '
+            alias: Temperature above setpoint
+          sequence:
+          - type: turn_off
+            device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+            entity_id: switch.panel_oven_br_relay
+            domain: switch
     - conditions:
       - condition: trigger
         id: timer
@@ -2231,7 +2259,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 0
   - platform: state
     entity_id:
     - binary_sensor.entrance_door_contact
@@ -2252,6 +2280,11 @@
     - sensor.entrance_climate_sensor_temperature
     to: unknown
     id: error
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.timer_doors_entrance
+    id: timer
   condition: []
   action:
   - choose:
@@ -2269,10 +2302,10 @@
       - condition: trigger
         id: door-open
       sequence:
-      - type: turn_off
-        device_id: ce4c6a6640c4cf45c169e6920fb139d5
-        entity_id: switch.panel_oven_fd
-        domain: switch
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.timer_doors_entrance
     - conditions:
       - condition: or
         conditions:
@@ -2289,6 +2322,14 @@
             value_template: '{{ (states(''sensor.entrance_climate_sensor_temperature'')|int)
               < (states(''input_number.setpoint_entrance'')|int) }}'
             alias: Temperature below setpoint
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.entrance_door_contact
+              state: 'off'
+            - condition: state
+              entity_id: binary_sensor.kitchen_door_contact
+              state: 'off'
           sequence:
           - type: turn_on
             device_id: ce4c6a6640c4cf45c169e6920fb139d5
@@ -2304,6 +2345,14 @@
             device_id: ce4c6a6640c4cf45c169e6920fb139d5
             entity_id: switch.panel_oven_fd
             domain: switch
+    - conditions:
+      - condition: trigger
+        id: timer
+      sequence:
+      - type: turn_off
+        device_id: ce4c6a6640c4cf45c169e6920fb139d5
+        entity_id: switch.panel_oven_fd
+        domain: switch
   mode: single
 - id: '1667137210405'
   alias: Heating - Entrance Setpoint
