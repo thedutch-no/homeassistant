@@ -22,7 +22,7 @@ frontend:
 
 # Extra logging options
 logger:
-  default: debug
+  default: warn
   logs:
     custom_components.powercalc: debug
 

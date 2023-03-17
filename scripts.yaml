@@ -630,7 +630,7 @@ worktime_start:
     target:
       entity_id: input_datetime.worktime_start
     data:
-      timestamp: '{{ now().timestamp() }}'
+      timestamp: '{{ as_timestamp(now() + timedelta(minutes=3)) }}'
   - service: input_boolean.turn_off
     data: {}
     target:
@@ -646,7 +646,7 @@ worktime_stop:
     target:
       entity_id: input_datetime.worktime_end
     data:
-      timestamp: '{{ now().timestamp() }}'
+      timestamp: '{{ as_timestamp(now() - timedelta(minutes=3)) }}'
   mode: single
 worktime_log:
   alias: Worktime Log
