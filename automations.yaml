@@ -4066,3 +4066,168 @@
         target:
           entity_id: scene.livingroom_lights_to_on_100_352
   mode: single
+- id: '1679210663596'
+  alias: Lighting - Kitchen (combined motion sensors)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.motion_kitchen
+    id: Motion
+    alias: Motion Detected
+  - platform: device
+    domain: mqtt
+    device_id: 9c23bbbefc64f218b524eefa84c05136
+    type: action
+    subtype: 'on'
+    discovery_id: 0xb4e3f9fffe79383b action_on
+    id: Switch - on
+    alias: Switch - On
+  - platform: device
+    domain: mqtt
+    device_id: 9c23bbbefc64f218b524eefa84c05136
+    type: action
+    subtype: 'off'
+    discovery_id: 0xb4e3f9fffe79383b action_off
+    id: Switch - off
+    alias: Switch - Off
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.light_kitchen
+    id: Timer
+    alias: Timer - Done
+  - platform: state
+    entity_id:
+    - input_boolean.overide_kitchen_lights
+    to: 'off'
+    id: Overide - off
+    alias: Overide - Off
+  - platform: state
+    entity_id:
+    - input_boolean.trigger_lighting_kitchen
+    to: 'on'
+    id: Boolean
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Motion
+      - condition: numeric_state
+        entity_id: sensor.estimated_illuminance
+        below: 2500
+      - condition: state
+        entity_id: binary_sensor.motion_kitchen
+        state: 'on'
+      sequence:
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.light_kitchen
+      - condition: state
+        entity_id: light.kitchen_countertop
+        state: 'off'
+      - if:
+        - condition: state
+          entity_id: input_boolean.night_mode
+          state: 'on'
+        then:
+        - service: scene.turn_on
+          data: {}
+          target:
+            entity_id: scene.kitchen_lights_to_on_night
+        else:
+        - service: scene.turn_on
+          data: {}
+          target:
+            entity_id: scene.kitchen_lights_to_on_100
+    - conditions:
+      - condition: trigger
+        id: Motion
+      - condition: state
+        entity_id: input_boolean.overide_kitchen_lights
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.motion_kitchen
+        state: 'off'
+      sequence:
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.light_kitchen
+    - conditions:
+      - condition: trigger
+        id: Switch - on
+      sequence:
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.light_kitchen
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.overide_kitchen_lights
+      - service: scene.turn_on
+        data: {}
+        target:
+          entity_id: scene.kitchen_lights_to_on_100
+    - conditions:
+      - condition: trigger
+        id: Switch - off
+      sequence:
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.light_kitchen
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.overide_kitchen_lights
+      - service: scene.turn_on
+        data:
+          transition: 10
+        target:
+          entity_id: scene.kitchen_lights_to_off
+    - conditions:
+      - condition: trigger
+        id: Timer
+      sequence:
+      - service: scene.turn_on
+        data:
+          transition: 10
+        target:
+          entity_id: scene.kitchen_lights_to_off
+    - conditions:
+      - condition: trigger
+        id: Overide - off
+      - condition: state
+        entity_id: light.kitchen_countertop
+        state: 'on'
+      sequence:
+      - service: timer.start
+        data:
+          duration: 0
+        target:
+          entity_id: timer.light_kitchen
+    - conditions:
+      - condition: trigger
+        id: Boolean
+      - condition: numeric_state
+        entity_id: sensor.estimated_illuminance
+        below: 1550
+      sequence:
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.light_kitchen
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.overide_kitchen_lights
+      - service: scene.turn_on
+        data:
+          transition: 30
+        target:
+          entity_id: scene.kitchen_lights_to_on_100
+  mode: single
