@@ -4231,3 +4231,47 @@
         target:
           entity_id: scene.kitchen_lights_to_on_100
   mode: single
+- id: '1679935789687'
+  alias: Varmepumpe - Power module ERROR state
+  description: 'Send msg to phone when one of these conditions occur
+
+    - Overheating
+
+    - Overpowering
+
+    - Overvoltage'
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.varmepumpe_overvoltage
+    to: 'on'
+    id: overvoltage
+  - platform: state
+    entity_id:
+    - binary_sensor.varmepumpe_overheating
+    to: 'on'
+    id: overheating
+  - platform: state
+    entity_id:
+    - binary_sensor.varmepumpe_overpowering
+    to: 'on'
+    id: overpowering
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: overvoltage
+      sequence:
+      - device_id: 646da9678751ccdd9526239de9fde3d0
+        domain: button
+        entity_id: button.varmepumpe_reboot
+        type: press
+      - service: script.send_notification_to_phone
+        data:
+          message: Varmepumpe - power module has an Overvoltage Error, unit is Rebooting
+    default:
+    - service: script.send_notification_to_phone
+      data:
+        message: Varmepumpe - power module has an Error
+  mode: single
