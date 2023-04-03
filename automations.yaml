@@ -4275,3 +4275,38 @@
       data:
         message: Varmepumpe - power module has an Error
   mode: single
+- id: '1680533409706'
+  alias: 3D Printer - Power control
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 6e30624b0389fb2b6943e1509e506693
+    type: action
+    subtype: single
+    discovery_id: 0x00158d00084e3bce action_single
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.octoprint_printing
+        state: 'off'
+      - condition: state
+        entity_id: switch.3d_printing_outlet
+        state: 'on'
+      sequence:
+      - type: turn_off
+        device_id: ecf721c80cd518a7cf42f97a05f43076
+        entity_id: switch.3d_printing_outlet
+        domain: switch
+    - conditions:
+      - condition: state
+        entity_id: switch.3d_printing_outlet
+        state: 'off'
+      sequence:
+      - type: turn_on
+        device_id: ecf721c80cd518a7cf42f97a05f43076
+        entity_id: switch.3d_printing_outlet
+        domain: switch
+  mode: single
