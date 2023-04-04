@@ -1309,7 +1309,7 @@
       media_content_type: music
       announce: true
       extra:
-        volume: 40
+        volume: 35
     target:
       entity_id: media_player.livingroom_sonos_cloud_speaker
   - service: script.send_notification_to_phone_non_urgent
