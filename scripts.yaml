@@ -776,3 +776,21 @@ github_upload:
     data: {}
   mode: single
   icon: mdi:script-text-outline
+trigger_3d_printer_control:
+  alias: Trigger - 3D Printer Control
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_3d_printer_control
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.trigger_3d_printer_control
+  mode: single
+  icon: mdi:toggle-switch-variant-off

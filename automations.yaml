@@ -4285,16 +4285,27 @@
     type: action
     subtype: single
     discovery_id: 0x00158d00084e3bce action_single
+    id: trigger
+  - platform: state
+    entity_id:
+    - input_boolean.trigger_3d_printer_control
+    to: 'on'
+    id: trigger
   condition: []
   action:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.octoprint_printing
-        state: 'off'
-      - condition: state
         entity_id: switch.3d_printing_outlet
         state: 'on'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.octoprint_printing
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.octoprint_printing
+          state: unavailable
       sequence:
       - type: turn_off
         device_id: ecf721c80cd518a7cf42f97a05f43076
