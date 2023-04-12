@@ -4285,16 +4285,27 @@
     type: action
     subtype: single
     discovery_id: 0x00158d00084e3bce action_single
-    id: trigger
+    id: button
   - platform: state
     entity_id:
     - input_boolean.trigger_3d_printer_control
     to: 'on'
-    id: trigger
+    id: button
+  - platform: state
+    entity_id:
+    - binary_sensor.octoprint_printing
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    id: auto_off
   condition: []
   action:
   - choose:
     - conditions:
+      - condition: trigger
+        id: button
       - condition: state
         entity_id: switch.3d_printing_outlet
         state: 'on'
@@ -4311,12 +4322,27 @@
         device_id: ecf721c80cd518a7cf42f97a05f43076
         entity_id: switch.3d_printing_outlet
         domain: switch
+        enabled: true
     - conditions:
+      - condition: trigger
+        id: button
       - condition: state
         entity_id: switch.3d_printing_outlet
         state: 'off'
       sequence:
       - type: turn_on
+        device_id: ecf721c80cd518a7cf42f97a05f43076
+        entity_id: switch.3d_printing_outlet
+        domain: switch
+        enabled: true
+    - conditions:
+      - condition: trigger
+        id: auto_off
+      - condition: state
+        entity_id: input_boolean.overide_3d_printer_auto_off
+        state: 'off'
+      sequence:
+      - type: turn_off
         device_id: ecf721c80cd518a7cf42f97a05f43076
         entity_id: switch.3d_printing_outlet
         domain: switch
