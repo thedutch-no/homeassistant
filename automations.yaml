@@ -4319,10 +4319,9 @@
           state: unavailable
       sequence:
       - type: turn_off
-        device_id: ecf721c80cd518a7cf42f97a05f43076
-        entity_id: switch.3d_printing_outlet
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
         domain: switch
-        enabled: true
     - conditions:
       - condition: trigger
         id: button
@@ -4330,11 +4329,10 @@
         entity_id: switch.3d_printing_outlet
         state: 'off'
       sequence:
-      - type: turn_on
-        device_id: ecf721c80cd518a7cf42f97a05f43076
-        entity_id: switch.3d_printing_outlet
+      - type: turn_off
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
         domain: switch
-        enabled: true
     - conditions:
       - condition: trigger
         id: auto_off
@@ -4343,7 +4341,7 @@
         state: 'off'
       sequence:
       - type: turn_off
-        device_id: ecf721c80cd518a7cf42f97a05f43076
-        entity_id: switch.3d_printing_outlet
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
         domain: switch
   mode: single
