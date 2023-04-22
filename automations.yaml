@@ -4309,6 +4309,11 @@
       - condition: state
         entity_id: switch.3d_printing_outlet
         state: 'on'
+      - condition: device
+        type: is_on
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
+        domain: switch
       - condition: or
         conditions:
         - condition: state
@@ -4317,6 +4322,7 @@
         - condition: state
           entity_id: binary_sensor.octoprint_printing
           state: unavailable
+        enabled: false
       sequence:
       - type: turn_off
         device_id: 8478713ca354fe3bcf5018e407d53227
@@ -4328,8 +4334,13 @@
       - condition: state
         entity_id: switch.3d_printing_outlet
         state: 'off'
+      - condition: device
+        type: is_off
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
+        domain: switch
       sequence:
-      - type: turn_off
+      - type: turn_on
         device_id: 8478713ca354fe3bcf5018e407d53227
         entity_id: switch.3d_printer_switch
         domain: switch
