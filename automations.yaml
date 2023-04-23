@@ -2006,6 +2006,11 @@
       - condition: state
         entity_id: person.rob
         state: home
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: switch.kupevarme
+          state: unavailable
       sequence:
       - type: turn_on
         device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
@@ -2044,17 +2049,22 @@
         device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
         entity_id: switch.kupevarme
         domain: switch
-    default:
-    - service: notify.mobile_app_robs_iphone_11
-      data:
-        message: 'De voordeur is geopend '
-        title: URGENT
+    - conditions:
+      - condition: state
+        entity_id: person.rob
+        state: not_home
+      sequence:
+      - service: notify.mobile_app_robs_iphone_11
         data:
-          push:
-            sound:
-              name: default
-              critical: 1
-              volume: 1
+          message: 'De voordeur is geopend '
+          title: URGENT
+          data:
+            push:
+              sound:
+                name: default
+                critical: 1
+                volume: 1
+    default: []
   mode: single
 - id: '1667048656790'
   alias: Entrance door opened
