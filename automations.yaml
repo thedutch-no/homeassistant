@@ -4307,43 +4307,15 @@
     to: 'off'
     for:
       hours: 0
-      minutes: 5
+      minutes: 0
       seconds: 0
-    id: auto_off
+    id: finished
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
         id: button
-      - condition: state
-        entity_id: switch.3d_printing_outlet
-        state: 'on'
-      - condition: device
-        type: is_on
-        device_id: 8478713ca354fe3bcf5018e407d53227
-        entity_id: switch.3d_printer_switch
-        domain: switch
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: binary_sensor.octoprint_printing
-          state: 'off'
-        - condition: state
-          entity_id: binary_sensor.octoprint_printing
-          state: unavailable
-        enabled: false
-      sequence:
-      - type: turn_off
-        device_id: 8478713ca354fe3bcf5018e407d53227
-        entity_id: switch.3d_printer_switch
-        domain: switch
-    - conditions:
-      - condition: trigger
-        id: button
-      - condition: state
-        entity_id: switch.3d_printing_outlet
-        state: 'off'
       - condition: device
         type: is_off
         device_id: 8478713ca354fe3bcf5018e407d53227
@@ -4356,13 +4328,49 @@
         domain: switch
     - conditions:
       - condition: trigger
-        id: auto_off
-      - condition: state
-        entity_id: input_boolean.overide_3d_printer_auto_off
-        state: 'off'
+        id: button
+      - condition: device
+        type: is_on
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
+        domain: switch
       sequence:
       - type: turn_off
         device_id: 8478713ca354fe3bcf5018e407d53227
         entity_id: switch.3d_printer_switch
         domain: switch
+    - conditions:
+      - condition: trigger
+        id: finished
+      - condition: device
+        type: is_on
+        device_id: 8478713ca354fe3bcf5018e407d53227
+        entity_id: switch.3d_printer_switch
+        domain: switch
+      sequence:
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.timer_3d_printer_cool_down
+  mode: single
+- id: '1682435819117'
+  alias: 3D Printer - Done
+  description: ''
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    id: timer
+    event_data:
+      entity_id: timer.timer_3d_printer_cool_down
+  condition:
+  - condition: device
+    type: is_on
+    device_id: 8478713ca354fe3bcf5018e407d53227
+    entity_id: switch.3d_printer_switch
+    domain: switch
+  action:
+  - type: turn_off
+    device_id: 8478713ca354fe3bcf5018e407d53227
+    entity_id: switch.3d_printer_switch
+    domain: switch
   mode: single
