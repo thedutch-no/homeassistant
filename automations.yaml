@@ -4310,6 +4310,7 @@
       minutes: 0
       seconds: 0
     id: finished
+    from: 'on'
   condition: []
   action:
   - choose:
@@ -4347,6 +4348,9 @@
         device_id: 8478713ca354fe3bcf5018e407d53227
         entity_id: switch.3d_printer_switch
         domain: switch
+      - condition: state
+        entity_id: input_boolean.overide_3d_printer_auto_off
+        state: 'off'
       sequence:
       - service: timer.start
         data: {}
