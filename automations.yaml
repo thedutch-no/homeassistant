@@ -76,6 +76,10 @@
             device_id: cbf534da6c764a45913dbffa197bb083
             entity_id: switch.washing_machine_power_module_relay
             domain: switch
+          - service: timer.cancel
+            data: {}
+            target:
+              entity_id: timer.washing_machine_cool_down
         - conditions:
           - type: is_not_open
             condition: device
@@ -468,7 +472,7 @@
   trigger:
   - platform: event
     event_type: timer.finished
-    id: timer
+    id: cool_down
     event_data:
       entity_id: timer.washing_machine_cool_down
   condition:
@@ -478,29 +482,21 @@
     entity_id: switch.washing_machine_power_module_relay
     domain: switch
   action:
-  - repeat:
-      until:
-      - condition: device
-        type: is_off
-        device_id: cbf534da6c764a45913dbffa197bb083
-        entity_id: switch.washing_machine_power_module_relay
-        domain: switch
-      sequence:
-      - service: media_player.play_media
-        data:
-          media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
-          media_content_type: music
-          announce: true
-          extra:
-            volume: 40
-        target:
-          entity_id:
-          - media_player.livingroom_sonos_cloud_speaker
-      - delay:
-          hours: 0
-          minutes: 2
-          seconds: 0
-          milliseconds: 0
+  - service: timer.start
+    data:
+      duration: 0:05:00
+    target:
+      entity_id: timer.washing_machine_cool_down
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_cloud_speaker
   mode: single
 - id: '1659974516452'
   alias: Tumble Dryer - Done
@@ -2408,7 +2404,7 @@
   trigger:
   - platform: state
     entity_id:
-    - binary_sensor.bathroom_motion_sensor_occupancy
+    - binary_sensor.motion_bathroom
     id: Motion
     alias: Motion Detected
   - platform: device
@@ -2450,14 +2446,12 @@
     - conditions:
       - condition: trigger
         id: Motion
-      - type: is_motion
-        condition: device
-        device_id: 40fdbc02d377fb49728375b88c2231fc
-        entity_id: binary_sensor.bathroom_motion_sensor_occupancy
-        domain: binary_sensor
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
         below: 2500
+      - condition: state
+        entity_id: binary_sensor.motion_bathroom
+        state: 'on'
       sequence:
       - service: timer.cancel
         data: {}
@@ -2487,13 +2481,11 @@
     - conditions:
       - condition: trigger
         id: Motion
-      - type: is_no_motion
-        condition: device
-        device_id: 40fdbc02d377fb49728375b88c2231fc
-        entity_id: binary_sensor.bathroom_motion_sensor_occupancy
-        domain: binary_sensor
       - condition: state
         entity_id: input_boolean.overide_bathroom_lights
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.motion_bathroom
         state: 'off'
       sequence:
       - service: timer.start
@@ -4291,11 +4283,18 @@
   trigger:
   - platform: device
     domain: mqtt
-    device_id: 6e30624b0389fb2b6943e1509e506693
+    device_id: d5170c2b6d6577873b5adcb82ae6c2a9
     type: action
     subtype: single
-    discovery_id: 0x00158d00084e3bce action_single
-    id: button
+    discovery_id: 0x00158d00084e1989 action_single
+    id: single
+  - platform: device
+    domain: mqtt
+    device_id: d5170c2b6d6577873b5adcb82ae6c2a9
+    type: action
+    subtype: hold
+    discovery_id: 0x00158d00084e1989 action_hold
+    id: hold
   - platform: state
     entity_id:
     - input_boolean.trigger_3d_printer_control
@@ -4316,7 +4315,7 @@
   - choose:
     - conditions:
       - condition: trigger
-        id: button
+        id: hold
       - condition: device
         type: is_off
         device_id: 8478713ca354fe3bcf5018e407d53227
@@ -4327,9 +4326,18 @@
         device_id: 8478713ca354fe3bcf5018e407d53227
         entity_id: switch.3d_printer_switch
         domain: switch
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+      - type: turn_on
+        device_id: 71f04a9b6bbaadd5df63ef3125e928e3
+        entity_id: switch.3d_printer_light_switch
+        domain: switch
     - conditions:
       - condition: trigger
-        id: button
+        id: hold
       - condition: device
         type: is_on
         device_id: 8478713ca354fe3bcf5018e407d53227
@@ -4340,6 +4348,10 @@
         device_id: 8478713ca354fe3bcf5018e407d53227
         entity_id: switch.3d_printer_switch
         domain: switch
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.overide_3d_printer_auto_off
     - conditions:
       - condition: trigger
         id: finished
@@ -4356,6 +4368,17 @@
         data: {}
         target:
           entity_id: timer.timer_3d_printer_cool_down
+    - conditions:
+      - condition: trigger
+        id: single
+      - condition: state
+        entity_id: switch.3d_printer_switch
+        state: 'on'
+      sequence:
+      - type: toggle
+        device_id: 71f04a9b6bbaadd5df63ef3125e928e3
+        entity_id: switch.3d_printer_light_switch
+        domain: switch
   mode: single
 - id: '1682435819117'
   alias: 3D Printer - Done
