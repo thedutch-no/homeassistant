@@ -128,7 +128,7 @@
             device_id: cbf534da6c764a45913dbffa197bb083
             entity_id: sensor.washing_machine_power_module_power
             domain: sensor
-            above: 5
+            above: 4
             alias: Washing machine power > 5
           - condition: state
             entity_id: timer.washing_machine_cool_down
