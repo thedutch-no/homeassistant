@@ -759,7 +759,7 @@
     light.bathroom_dimmer:
       entity_only: true
 - id: '1663559908016'
-  name: 'Bathroom - Lights to: ON -  15'
+  name: 'Bathroom - Lights to: ON -  Night'
   entities:
     light.bathroom_dimmer:
       supported_color_modes:
@@ -767,7 +767,7 @@
       friendly_name: Bathroom dimmer - Relay
       supported_features: 32
       color_mode: brightness
-      brightness: 38
+      brightness: 36
       state: 'on'
   metadata:
     light.bathroom_dimmer:

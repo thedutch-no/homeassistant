@@ -73,3 +73,19 @@
     minutes: 5
   entities: 
     - sensor.varmepumpe_power
+
+- platform: average
+  name: 'Washing machine - avg Power'
+  unique_id: 2bc5518a-e949-4678-8a4b-ee64bb81f20c
+  duration:
+    minutes: 15
+  entities:
+    sensor.washing_machine_power_module_power
+
+- platform: average
+  name: 'Tumble dryer - avg Power'
+  unique_id: ecf31280-eb31-4ba6-955f-34da8c6d0ec4
+  duration:
+    minutes: 15
+  entities:
+    sensor.tumble_dryer_power_module_power

@@ -2031,16 +2031,13 @@
           data: {}
           target:
             entity_id: input_boolean.kupevarme_connected
-        - service: media_player.play_media
+        - service: notify.mobile_app_robs_iphone_11
           data:
-            media_content_id: http://192.168.28.110:8123/local/sounds/de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.mp3
-            media_content_type: music
-            announce: true
-            extra:
-              volume: 40
-          target:
-            entity_id: media_player.kitchen_sonos_cloud_speaker
-          enabled: true
+            message: Auto verwarming niet aangesloten.
+            title: Warm your car
+            data:
+              push:
+                sound: de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.wav
       - type: turn_off
         device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
         entity_id: switch.kupevarme
@@ -2406,7 +2403,7 @@
     entity_id:
     - binary_sensor.motion_bathroom
     id: Motion
-    alias: Motion Detected
+    alias: Motion
   - platform: device
     domain: mqtt
     device_id: fbb6e8159553be4d237cfdd1588c8c83
@@ -2428,18 +2425,19 @@
     event_data:
       entity_id: timer.light_bathroom
     id: Timer
-    alias: Timer - Done
+    alias: Timer
   - platform: state
     entity_id:
     - input_boolean.overide_bathroom_lights
     to: 'off'
-    id: Overide - off
-    alias: Overide - Off
+    id: Overide
+    alias: Overide
   - platform: state
     entity_id:
     - input_boolean.trigger_lighting_bathroom
     to: 'on'
     id: Boolean
+    alias: Boolean
   condition: []
   action:
   - choose:
@@ -2448,7 +2446,7 @@
         id: Motion
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 2500
+        below: input_number.min_lux_bathroom
       - condition: state
         entity_id: binary_sensor.motion_bathroom
         state: 'on'
@@ -2465,19 +2463,16 @@
           entity_id: input_boolean.night_mode
           state: 'on'
         then:
-        - service: light.turn_on
+        - service: scene.turn_on
           data:
-            brightness_step_pct: 10
+            transition: 10
           target:
-            entity_id: light.bathroom_dimmer
-          alias: 'Light: Turn on Bathroom dimmer - 10%'
+            entity_id: scene.bathroom_15
         else:
-        - service: light.turn_on
-          data:
-            brightness_step_pct: 100
+        - service: scene.turn_on
+          data: {}
           target:
-            entity_id: light.bathroom_dimmer
-          alias: 'Light: Turn on Bathroom dimmer - 100%'
+            entity_id: scene.bathroom_lights_to_on_100
     - conditions:
       - condition: trigger
         id: Motion
@@ -2505,12 +2500,10 @@
         data: {}
         target:
           entity_id: input_boolean.overide_bathroom_lights
-      - service: light.turn_on
-        data:
-          brightness_pct: 100
+      - service: scene.turn_on
+        data: {}
         target:
-          entity_id: light.bathroom_dimmer
-        alias: 'Light: Turn on Bathroom dimmer - 100%'
+          entity_id: scene.bathroom_lights_to_on_100
     - conditions:
       - condition: trigger
         id: Switch - off
@@ -2523,24 +2516,22 @@
         data: {}
         target:
           entity_id: input_boolean.overide_bathroom_lights
-      - service: light.turn_off
+      - service: scene.turn_on
         data: {}
         target:
-          entity_id: light.bathroom_dimmer
-        alias: 'Light: Turn off Bathroom dimmer'
+          entity_id: scene.bathroom_off
     - conditions:
       - condition: trigger
         id: Timer
       sequence:
-      - service: light.turn_off
+      - service: scene.turn_on
         data:
           transition: 10
         target:
-          entity_id: light.bathroom_dimmer
-        alias: 'Light: Turn off Bathroom dimmer'
+          entity_id: scene.bathroom_off
     - conditions:
       - condition: trigger
-        id: Overide - off
+        id: Overide
       - condition: state
         entity_id: light.bathroom_dimmer
         state: 'on'
@@ -2555,7 +2546,7 @@
         id: Boolean
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 1500
+        below: input_number.min_lux_bathroom
       sequence:
       - service: timer.cancel
         data: {}
@@ -2565,13 +2556,10 @@
         data: {}
         target:
           entity_id: input_boolean.overide_bathroom_lights
-      - service: light.turn_on
-        data:
-          brightness_pct: 100
-          transition: 30
+      - service: scene.turn_on
+        data: {}
         target:
-          entity_id: light.bathroom_dimmer
-        alias: 'Light: Turn on Bathroom dimmer - 100%'
+          entity_id: scene.bathroom_lights_to_on_100
   mode: single
 - id: '1668339418253'
   alias: Lighting - Hallway
@@ -2581,7 +2569,7 @@
     entity_id:
     - binary_sensor.motion_hallway
     id: Motion
-    alias: Motion Detected
+    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 6e27023210b26c48943753f940005249
@@ -2603,18 +2591,19 @@
     event_data:
       entity_id: timer.light_hallway
     id: Timer
-    alias: Timer - Done
+    alias: Timer
   - platform: state
     entity_id:
     - input_boolean.overide_hallway_lights
     to: 'off'
-    id: Overide - off
-    alias: Overide Off
+    id: Overide
+    alias: Overide
   - platform: state
     entity_id:
     - input_boolean.trigger_lighting_hallway
     to: 'on'
     id: Boolean
+    alias: Boolean
   condition: []
   action:
   - choose:
@@ -2623,7 +2612,7 @@
         id: Motion
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 2500
+        below: input_number.min_lux_hallway
       - condition: state
         entity_id: binary_sensor.motion_hallway
         state: 'on'
@@ -2641,7 +2630,8 @@
           state: 'on'
         then:
         - service: scene.turn_on
-          data: {}
+          data:
+            transition: 10
           target:
             entity_id: scene.hallway_lights_to_on_night
         else:
@@ -2707,7 +2697,7 @@
           entity_id: scene.livingroom_lights_to_off
     - conditions:
       - condition: trigger
-        id: Overide - off
+        id: Overide
       - condition: state
         entity_id: light.hallway_ceiling
         state: 'on'
@@ -2722,7 +2712,7 @@
         id: Boolean
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 1550
+        below: input_number.min_lux_hallway
       sequence:
       - service: timer.cancel
         data: {}
@@ -2746,7 +2736,7 @@
     entity_id:
     - binary_sensor.motion_entrance
     id: Motion
-    alias: Motion Detected
+    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 6c548e3322378ac6dc46c70504abb3f5
@@ -2772,14 +2762,15 @@
   - platform: state
     entity_id:
     - input_boolean.overide_entrance_lights
-    id: Overide - Off
+    id: Overide
     to: 'off'
     alias: Overide - Off
   - platform: state
     entity_id:
     - input_boolean.trigger_lighting_entrance
     to: 'on'
-    alias: Boolean
+    alias: Boolean - On
+    id: Boolean
   condition: []
   action:
   - choose:
@@ -2788,7 +2779,7 @@
         id: Motion
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 2500
+        below: input_number.min_lux_entrance
       - condition: state
         entity_id: binary_sensor.motion_entrance
         state: 'on'
@@ -2806,7 +2797,8 @@
           state: 'on'
         then:
         - service: scene.turn_on
-          data: {}
+          data:
+            transition: 10
           target:
             entity_id: scene.entrance_lights_to_on_night
         else:
@@ -2872,7 +2864,7 @@
           entity_id: scene.livingroom_lights_to_off_2
     - conditions:
       - condition: trigger
-        id: Overide - off
+        id: Overide
       - condition: state
         entity_id: light.entrance_ceiling
         state: 'on'
@@ -2887,7 +2879,7 @@
         id: Boolean
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 1300
+        below: input_number.min_lux_entrance
       sequence:
       - service: timer.cancel
         data: {}
@@ -3845,6 +3837,7 @@
     subtype: 'on'
     discovery_id: 0x0c4314fffeedf302 action_on
     id: Switch - on
+    alias: Switch - On
   - platform: device
     domain: mqtt
     device_id: 07562ebaa6355216d0dea756af6c96cd
@@ -3852,11 +3845,21 @@
     subtype: 'off'
     discovery_id: 0x0c4314fffeedf302 action_off
     id: Switch - off
+    alias: Switch - Off
+  - platform: device
+    domain: mqtt
+    device_id: 07562ebaa6355216d0dea756af6c96cd
+    type: action
+    subtype: arrow_left_click
+    discovery_id: 0x0c4314fffeedf302 action_arrow_left_click
+    id: Switch - left
+    alias: Switch - Left
   - platform: state
     entity_id:
     - input_boolean.trigger_lighting_livingroom
     to: 'on'
     id: Boolean
+    alias: Boolean
   condition: []
   action:
   - choose:
@@ -3867,8 +3870,7 @@
       - service: scene.turn_on
         data: {}
         target:
-          entity_id:
-          - scene.livingroom_lights_to_on_100_250
+          entity_id: scene.livingroom_lights_to_on_100_352
     - conditions:
       - condition: trigger
         id: Switch - off
@@ -3883,13 +3885,21 @@
         id: Boolean
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 1550
+        below: input_number.min_lux_livingroom
       sequence:
       - service: scene.turn_on
         data:
           transition: 30
         target:
           entity_id: scene.livingroom_lights_to_on_100_352
+    - conditions:
+      - condition: trigger
+        id: Switch - left
+      sequence:
+      - service: scene.turn_on
+        data: {}
+        target:
+          entity_id: scene.livingroom_lights_to_on_100_250
   mode: single
 - id: '1679210663596'
   alias: Lighting - Kitchen
@@ -3899,7 +3909,7 @@
     entity_id:
     - binary_sensor.motion_kitchen
     id: Motion
-    alias: Motion Detected
+    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 9c23bbbefc64f218b524eefa84c05136
@@ -3921,18 +3931,19 @@
     event_data:
       entity_id: timer.light_kitchen
     id: Timer
-    alias: Timer - Done
+    alias: Timer
   - platform: state
     entity_id:
     - input_boolean.overide_kitchen_lights
     to: 'off'
-    id: Overide - off
-    alias: Overide - Off
+    id: Overide
+    alias: Overide
   - platform: state
     entity_id:
     - input_boolean.trigger_lighting_kitchen
     to: 'on'
     id: Boolean
+    alias: Boolean
   condition: []
   action:
   - choose:
@@ -3941,7 +3952,7 @@
         id: Motion
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 2500
+        below: input_number.min_lux_kitchen
       - condition: state
         entity_id: binary_sensor.motion_kitchen
         state: 'on'
@@ -4025,7 +4036,7 @@
           entity_id: scene.kitchen_lights_to_off
     - conditions:
       - condition: trigger
-        id: Overide - off
+        id: Overide
       - condition: state
         entity_id: light.kitchen_countertop
         state: 'on'
@@ -4040,7 +4051,7 @@
         id: Boolean
       - condition: numeric_state
         entity_id: sensor.estimated_illuminance
-        below: 1550
+        below: input_number.min_lux_kitchen
       sequence:
       - service: timer.cancel
         data: {}
@@ -4223,4 +4234,132 @@
     device_id: 8478713ca354fe3bcf5018e407d53227
     entity_id: switch.3d_printer_switch
     domain: switch
+  mode: single
+- id: '1684058655679'
+  alias: Bedroom - Button New
+  description: 'Single click everything OFF
+
+    Double click everything ON'
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f142428ab4fd02fa19af7a47e856a1da
+    type: action
+    subtype: single
+    discovery_id: 0x00158d0006f39b8e action_single
+    id: single
+  - platform: device
+    domain: mqtt
+    device_id: f142428ab4fd02fa19af7a47e856a1da
+    type: action
+    subtype: double
+    discovery_id: 0x00158d0006f39b8e action_double
+    id: double
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: single
+      sequence:
+      - choose:
+        - conditions:
+          - condition: device
+            device_id: d025b64e201a029004e4ba6c85647f07
+            domain: media_player
+            entity_id: media_player.bedroom_google_speaker
+            type: is_playing
+          sequence:
+          - service: media_player.media_stop
+            data: {}
+            target:
+              device_id: d025b64e201a029004e4ba6c85647f07
+        - conditions:
+          - condition: state
+            entity_id: input_boolean.night_mode
+            state: 'on'
+          sequence: []
+        default:
+        - type: turn_off
+          device_id: 6945be442bab645c9f650254bcbf4351
+          entity_id: fan.ventilation_relay
+          domain: fan
+        - service: media_player.media_stop
+          data: {}
+          target:
+            entity_id:
+            - media_player.kitchen_sonos_speaker
+            - media_player.livingroom_sonos_speaker
+          alias: 'Media player: Stop - Kitchen and Livingroom speakers'
+        - service: input_boolean.turn_on
+          data: {}
+          target:
+            entity_id: input_boolean.night_mode
+        - service: script.check_alarm_clock
+          data: {}
+        - service: script.turn_off_all_lights_and_mediaplayers
+          data: {}
+        - service: script.check_doors_closed
+          data: {}
+          enabled: false
+        - service: automation.trigger
+          data: {}
+          target:
+            entity_id: automation.alarm_varmepumpe_off_time
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id:
+            - input_boolean.overide_bathroom_lights
+            - input_boolean.overide_entrance_lights
+            - input_boolean.overide_hallway_lights
+            - input_boolean.overide_kitchen_lights
+            - input_boolean.overide_shower_lights
+            - input_boolean.take_a_shower
+    - conditions:
+      - condition: trigger
+        id: double
+      sequence:
+      - service: script.turn_on_all_lights
+        data: {}
+    alias: Choose between Single or Double click
+  mode: single
+- id: '1684062960735'
+  alias: Kitchen door opened
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 5fdee7b781300c48c89db1ce99e464a0
+    entity_id: binary_sensor.kitchen_door_contact
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: person.rob
+    state: home
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: switch.kupevarme
+      state: unavailable
+  - condition: template
+    value_template: '{{ (as_timestamp(now()) - as_timestamp(states.binary_sensor.entrance_door_contact.last_changed))
+      < 60 }}
+
+      '
+    alias: Entrance door opened <60 sec ago
+  - condition: state
+    entity_id: input_boolean.kupevarme_connected
+    state: 'off'
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id: media_player.kitchen_sonos_cloud_speaker
+    enabled: true
   mode: single
