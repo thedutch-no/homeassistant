@@ -794,3 +794,75 @@ trigger_3d_printer_control:
       entity_id: input_boolean.trigger_3d_printer_control
   mode: single
   icon: mdi:toggle-switch-variant-off
+media_play_radio_10:
+  alias: 'Media: Play Radio 10 - Live'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/d227990c-2385-4419-8159-1c73a33a58dd
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
+media_play_radio_10_60s_and_70s:
+  alias: 'Media: Play Radio 10 - 60s and 70s'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/39874081-8a87-45ca-a67f-52bae3372ae8
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
+media_play_radio_10_80s:
+  alias: 'Media: Play Radio 10 - 80s'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/641009df-7fe1-498c-8ef1-9b9eaf74bd52
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
+media_play_radio_10_90s:
+  alias: 'Media: Play Radio 10 - 90s'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/dc1da731-5046-47df-98db-6fc2dbb6d8c5
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
+media_play_radio_10_non_stop:
+  alias: 'Media: Play Radio 10 - Non Stop'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/c1c834eb-e84e-43fc-8841-6749e19b4edc
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
+media_play_radio_10_top_4000:
+  alias: 'Media: Play Radio 10 - Top 4000'
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: media-source://radio_browser/54660f01-599c-4781-8fe2-008729962b4b
+      media_content_type: Music
+      enqueue: replace
+    target:
+      entity_id: media_player.my_speakers
+  mode: single
+  icon: mdi:radio
