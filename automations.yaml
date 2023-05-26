@@ -2138,22 +2138,6 @@
   description: Send notification to phone when temperature in Refrigerator get to
     high, or the Power module go to OFF
   trigger:
-  - type: temperature
-    platform: device
-    device_id: f21ae7bf3f02bae225e990de1c4ec098
-    entity_id: sensor.refrigerator_climate_sensor_temperature
-    domain: sensor
-    above: 5
-    id: temp_refrigerator
-    enabled: false
-  - type: temperature
-    platform: device
-    device_id: 0b81d78be011448684a3f7d39e8d4243
-    entity_id: sensor.freezer_smal_climate_sensor_temperature
-    domain: sensor
-    above: -10
-    id: temp_freezer
-    enabled: false
   - platform: device
     type: turned_off
     device_id: 18faf7de3e71823d5785c05c2b6a7ba7
@@ -2167,20 +2151,6 @@
   condition: []
   action:
   - choose:
-    - conditions:
-      - condition: trigger
-        id: temp_refrigerator
-      sequence:
-      - service: script.send_notification_to_phone
-        data:
-          message: Temperatuur in de koelkast is te hoog
-    - conditions:
-      - condition: trigger
-        id: temp_freezer
-      sequence:
-      - service: script.send_notification_to_phone
-        data:
-          message: Temperatuur in de kleine vriezer is te hoog
     - conditions:
       - condition: trigger
         id: relais
