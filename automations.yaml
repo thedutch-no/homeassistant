@@ -4122,14 +4122,12 @@
     id: button
   - platform: state
     entity_id:
-    - binary_sensor.octoprint_printing
-    to: 'off'
+    - sensor.octoprint_current_state
     for:
       hours: 0
       minutes: 0
       seconds: 0
-    id: finished
-    from: 'on'
+    id: octoprint
   condition: []
   action:
   - choose:
@@ -4174,7 +4172,7 @@
           entity_id: input_boolean.overide_3d_printer_auto_off
     - conditions:
       - condition: trigger
-        id: finished
+        id: octoprint
       - condition: device
         type: is_on
         device_id: 8478713ca354fe3bcf5018e407d53227
@@ -4184,10 +4182,20 @@
         entity_id: input_boolean.overide_3d_printer_auto_off
         state: 'off'
       sequence:
-      - service: timer.start
-        data: {}
-        target:
-          entity_id: timer.timer_3d_printer_cool_down
+      - if:
+        - condition: state
+          entity_id: sensor.octoprint_current_state
+          state: Printing
+        then:
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.timer_3d_printer_cool_down
+        else:
+        - service: timer.start
+          data: {}
+          target:
+            entity_id: timer.timer_3d_printer_cool_down
     - conditions:
       - condition: trigger
         id: single
