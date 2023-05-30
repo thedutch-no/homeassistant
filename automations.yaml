@@ -807,6 +807,16 @@
           time: '{{ states(''input_datetime.travel_time_drammen'') }}'
         target:
           entity_id: input_datetime.travel_time_customer
+    - conditions:
+      - condition: state
+        entity_id: input_select.start_location
+        state: Brumunddal
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: '{{ states(''input_datetime.travel_time_brumunddal'') }}'
+        target:
+          entity_id: input_datetime.travel_time_customer
     default: []
   mode: single
 - id: '1663516142150'

@@ -9,6 +9,7 @@ start_location:
     - "Drammen"
     - "Manual"
     - "Weekend"
+    - "Brumunddal"
 
 start_time:
   icon: mdi:clock-start
