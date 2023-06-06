@@ -655,12 +655,14 @@
       - light.kitchen_countertop
       - light.hallway_ceiling
       - light.livingroom_ceiling
+    enabled: false
   - service: input_boolean.turn_on
     data: {}
     target:
       entity_id:
       - input_boolean.overide_kitchen_lights
       - input_boolean.overide_hallway_lights
+    enabled: false
   - service: script.worktime_log
     data: {}
   mode: single
