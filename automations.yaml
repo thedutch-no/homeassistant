@@ -861,6 +861,7 @@
     alias: Set bathroom setpoint to Min temp
   - service: script.turn_on_all_lights
     data: {}
+    enabled: false
   - service: input_boolean.turn_on
     data: {}
     target:
@@ -868,6 +869,7 @@
       - input_boolean.overide_kitchen_lights
       - input_boolean.overide_hallway_lights
       - input_boolean.overide_bathroom_lights
+    enabled: false
   - service: script.trigger_shoe_dryer_control
     data: {}
   - if:
