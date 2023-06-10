@@ -4141,7 +4141,19 @@
       hours: 0
       minutes: 0
       seconds: 0
-    id: octoprint
+    id: from_unavail
+    from: unavailable
+    to: Operational
+  - platform: state
+    entity_id:
+    - sensor.octoprint_current_state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: from_printing
+    from: Printing
+    to: Operational
   condition: []
   action:
   - choose:
@@ -4186,32 +4198,6 @@
           entity_id: input_boolean.overide_3d_printer_auto_off
     - conditions:
       - condition: trigger
-        id: octoprint
-      - condition: device
-        type: is_on
-        device_id: 8478713ca354fe3bcf5018e407d53227
-        entity_id: switch.3d_printer_switch
-        domain: switch
-      - condition: state
-        entity_id: input_boolean.overide_3d_printer_auto_off
-        state: 'off'
-      sequence:
-      - if:
-        - condition: state
-          entity_id: sensor.octoprint_current_state
-          state: Printing
-        then:
-        - service: timer.cancel
-          data: {}
-          target:
-            entity_id: timer.timer_3d_printer_cool_down
-        else:
-        - service: timer.start
-          data: {}
-          target:
-            entity_id: timer.timer_3d_printer_cool_down
-    - conditions:
-      - condition: trigger
         id: single
       - condition: state
         entity_id: switch.3d_printer_switch
@@ -4221,6 +4207,26 @@
         device_id: 71f04a9b6bbaadd5df63ef3125e928e3
         entity_id: switch.3d_printer_light_switch
         domain: switch
+        alias: Toggle Printer Lights
+    - conditions:
+      - condition: trigger
+        id: from_unavail
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.overide_3d_printer_auto_off
+    - conditions:
+      - condition: trigger
+        id: from_printing
+      - condition: state
+        entity_id: input_boolean.overide_3d_printer_auto_off
+        state: 'off'
+      sequence:
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.timer_3d_printer_cool_down
   mode: single
 - id: '1682435819117'
   alias: 3D Printer - Done
