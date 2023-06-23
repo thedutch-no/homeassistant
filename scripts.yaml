@@ -803,7 +803,7 @@ media_play_radio_10:
       media_content_type: Music
       enqueue: replace
     target:
-      entity_id: media_player.my_speakers
+      entity_id: media_player.livingroom_sonos_speaker
   mode: single
   icon: mdi:radio
 media_play_radio_10_60s_and_70s:
