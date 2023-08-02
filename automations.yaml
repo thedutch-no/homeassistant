@@ -979,7 +979,7 @@
       media_content_type: music
       announce: true
       extra:
-        volume: 30
+        volume: 35
     target:
       entity_id:
       - media_player.livingroom_sonos_cloud_speaker
@@ -1002,7 +1002,7 @@
       media_content_type: music
       announce: true
       extra:
-        volume: 30
+        volume: 35
     target:
       entity_id:
       - media_player.livingroom_sonos_cloud_speaker
