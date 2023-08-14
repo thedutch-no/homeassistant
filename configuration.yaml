@@ -7,7 +7,7 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-sensor powercalc_label: !include powercalc.yaml
+#sensor powercalc_label: !include powercalc.yaml
 sensor: !include sensors.yaml
 camera: !include cameras.yaml
 switch: !include switch.yaml
@@ -19,12 +19,15 @@ input_select: !include input_select.yaml
 template: !include templates.yaml
 frontend:
   themes: !include_dir_merge_named themes
+powercalc: !include powercalc.yaml
 
 # Extra logging options
 logger:
-  default: warn
+  default: warning
   logs:
     custom_components.powercalc: debug
+
+
 
 # Text to speech
 tts:
@@ -45,11 +48,11 @@ climate:
     power_sensor: switch.varmepumpe
 
 # PowerCalc
-powercalc:
-  enable_autodiscovery: false
-  create_utility_meters: true
-  power_sensor_naming: "{} Powersensor"
-  energy_sensor_naming: "{} Energysensor"
+#powercalc:
+#  enable_autodiscovery: false
+#  create_utility_meters: true
+#  power_sensor_naming: "{} Powersensor"
+#  energy_sensor_naming: "{} Energysensor"
 
 # Shell commands
 shell_command:
