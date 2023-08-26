@@ -2160,7 +2160,7 @@
     id: relais
   - platform: numeric_state
     entity_id: sensor.refrigirator_avg_power
-    below: 10
+    below: 9
     id: power
   condition: []
   action:
