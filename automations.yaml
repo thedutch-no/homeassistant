@@ -2998,12 +2998,12 @@
   - platform: state
     entity_id:
     - person.rob
-    enabled: false
+    enabled: true
   - platform: state
     entity_id:
     - input_boolean.night_mode
     id: night_mode
-    enabled: false
+    enabled: true
   - type: temperature
     platform: device
     device_id: fad839a478cf933108ada5eec2c78470
@@ -3019,12 +3019,12 @@
     domain: sensor
     below: 16
     id: living
-    enabled: false
+    enabled: true
   - platform: state
     entity_id:
     - sensor.livingroom_climate_sensor_temperature
     id: temp
-    enabled: false
+    enabled: true
   - platform: state
     entity_id:
     - sensor.openweathermap_forecast_temperature
