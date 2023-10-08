@@ -63,7 +63,7 @@ sensor:
           {%- endif -%}
         {%- endfor -%}
         {{ ns.prices }}
- 
+
   #########################
   #
   # Battery list bases on:
@@ -281,7 +281,7 @@ sensor:
   #
   # Calculate Varmepumpe Night time based on:
   # - bed time
-  # - prep time varmepumpe night
+  #   - prep time varmepumpe offset
   #
   #########################
   - name: "Varmepumpe Night mode Time"
@@ -296,8 +296,8 @@ sensor:
   #########################
   #
   # Calculate Varmepumpe Wale-up time based on:
-  # - bed time
-  # - prep time varmepumpe night
+  # - wake-up time
+  #   - prep time varmepumpe offset
   #
   ######################### 
   - name: "Varmepumpe Wake-up mode Time"
@@ -313,7 +313,7 @@ sensor:
   #
   # Calculate Night mode On time based on:
   # - bed time
-  # - prep time Night mode on
+  #   - prep time Night mode on
   #
   #########################
   - name: "Night mode On Time"
@@ -329,7 +329,7 @@ sensor:
   #
   # Calculate Night mode Off time based on:
   # - wake-up time
-  # - prep time Night mode off
+  #   - prep time Night mode off
   #
   #########################
   - name: "Night mode Off Time"
@@ -346,6 +346,7 @@ sensor:
   # Calculate Bathroom Heating time based on:
   # - wake-up time
   # - morning shower activated
+  #   - prep time Bathroom heating
   #
   #########################
   - name: "Bathroom Heating Time"

@@ -2,6 +2,10 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+homeassistant:
+  # Load packages
+  
+
 # Include files
 group: !include groups.yaml
 automation: !include automations.yaml

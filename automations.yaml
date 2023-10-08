@@ -652,17 +652,15 @@
       brightness_pct: 100
     target:
       entity_id:
-      - light.kitchen_countertop
-      - light.hallway_ceiling
       - light.livingroom_ceiling
-    enabled: false
+    enabled: true
   - service: input_boolean.turn_on
     data: {}
     target:
       entity_id:
       - input_boolean.overide_kitchen_lights
       - input_boolean.overide_hallway_lights
-    enabled: false
+    enabled: true
   - service: script.worktime_log
     data: {}
   mode: single
@@ -1537,6 +1535,15 @@
   - platform: state
     entity_id:
     - input_boolean.take_a_shower_tomorrow
+    id: shower
+  - platform: state
+    entity_id:
+    - input_datetime.time_work_start
+    id: time
+  - platform: state
+    entity_id:
+    - input_datetime.travel_time_customer
+    id: customer
   condition: []
   action:
   - choose:
@@ -1697,8 +1704,8 @@
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_bathroom
-          value: '{{ states(''input_number.setpoint_bathroom_max'') }}'
-        alias: Set bathroom setpoint to Max temp
+          value: '{{ states(''input_number.setpoint_bathroom_norm'') }}'
+        alias: Set bathroom setpoint to Norm temp
     - conditions:
       - condition: state
         entity_id: person.rob
@@ -2120,6 +2127,7 @@
       sequence:
       - service: script.check_kupevame_connected
         data: {}
+        enabled: false
       - if:
         - condition: state
           entity_id: input_boolean.kupevarme_connected
@@ -2135,6 +2143,7 @@
           target:
             entity_id: media_player.kitchen_sonos_cloud_speaker
           enabled: true
+        enabled: false
     default:
     - service: notify.mobile_app_robs_iphone_11
       data:
@@ -2997,154 +3006,82 @@
   trigger:
   - platform: state
     entity_id:
-    - person.rob
-    enabled: true
-  - platform: state
-    entity_id:
     - input_boolean.night_mode
     id: night_mode
     enabled: true
-  - type: temperature
-    platform: device
-    device_id: fad839a478cf933108ada5eec2c78470
-    entity_id: sensor.outside_climate_sensor_temperature
-    domain: sensor
-    above: 5
-    id: outside
-    enabled: false
-  - type: temperature
-    platform: device
-    device_id: 7e0c7b2998dac7e3aa422ad1b6416dff
-    entity_id: sensor.livingroom_climate_sensor_temperature
-    domain: sensor
-    below: 16
-    id: living
-    enabled: true
-  - platform: state
-    entity_id:
-    - sensor.livingroom_climate_sensor_temperature
-    id: temp
-    enabled: true
-  - platform: state
-    entity_id:
-    - sensor.openweathermap_forecast_temperature
-    id: forecast
-    enabled: false
+    to: 'on'
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.home
+    event: enter
+    id: home
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.magnor
+    event: leave
+    id: magnor
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.sorumsand
+    event: leave
+    id: sørumsand
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.work
+    event: leave
+    id: work
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.varmepumpe_night_mode
+    id: night_mode
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
-        id: night_mode
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.night_mode
-            state: 'on'
-          sequence:
-          - choose:
-            - conditions:
-              - type: is_temperature
-                condition: device
-                device_id: ae52f9cc6167e7050a6e865cf51140ee
-                entity_id: sensor.openweathermap_forecast_temperature
-                domain: sensor
-                above: -6
-                alias: Forecast temp > -6
-              sequence:
-              - service: input_number.set_value
-                data_template:
-                  entity_id: input_number.setpoint_varmepumpe
-                  value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
-                alias: Set varmepumpe setpoint to Min temp
-            - conditions:
-              - type: is_temperature
-                condition: device
-                device_id: ae52f9cc6167e7050a6e865cf51140ee
-                entity_id: sensor.openweathermap_forecast_temperature
-                domain: sensor
-                below: -5
-                alias: Forecast temp < -5
-              sequence:
-              - service: input_number.set_value
-                data_template:
-                  entity_id: input_number.setpoint_varmepumpe
-                  value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
-                alias: Set varmepumpe setpoint to Norm temp
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.night_mode
-            state: 'off'
-          sequence:
-          - choose:
-            - conditions:
-              - condition: state
-                entity_id: person.rob
-                state: home
-              sequence:
-              - service: input_number.set_value
-                data_template:
-                  entity_id: input_number.setpoint_varmepumpe
-                  value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
-                alias: Set varmepumpe setpoint to Norm temp
-            - conditions:
-              - condition: state
-                entity_id: person.rob
-                state: not_home
-              sequence:
-              - service: input_number.set_value
-                data_template:
-                  entity_id: input_number.setpoint_varmepumpe
-                  value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
-                alias: Set varmepumpe setpoint to Min  temp
-    - conditions:
-      - condition: trigger
-        id: forecast
-      - condition: state
-        entity_id: person.rob
-        state: home
+        id:
+        - magnor
+        - home
       sequence:
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
-        alias: Set varmepumpe setpoint to Norm temp
-      - choose:
-        - conditions:
-          - type: is_temperature
-            condition: device
-            device_id: ae52f9cc6167e7050a6e865cf51140ee
-            entity_id: sensor.openweathermap_forecast_temperature
-            domain: sensor
-            above: -6
-            alias: Forecast temp > -6
-          sequence:
-          - service: input_number.set_value
-            data_template:
-              entity_id: input_number.setpoint_varmepumpe
-              value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
-            alias: Set varmepumpe setpoint to Min temp
-        - conditions:
-          - type: is_temperature
-            condition: device
-            device_id: ae52f9cc6167e7050a6e865cf51140ee
-            entity_id: sensor.openweathermap_forecast_temperature
-            domain: sensor
-            below: -5
-            alias: Forecast temp < -5
-          sequence:
-          - service: input_number.set_value
-            data_template:
-              entity_id: input_number.setpoint_varmepumpe
-              value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
-            alias: Set varmepumpe setpoint to Norm temp
-    default:
-    - service: input_number.set_value
-      data_template:
-        entity_id: input_number.setpoint_varmepumpe
-        value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
-      alias: Set varmepumpe setpoint to Min temp
+          value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+        alias: Set entrance setpoint to Norm temp
+    - conditions:
+      - condition: trigger
+        id:
+        - sørumsand
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+        alias: Set entrance setpoint to Min temp
+    - conditions:
+      - condition: trigger
+        id:
+        - work
+      - condition: time
+        after: '14:00:00'
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
+        alias: Set entrance setpoint to Norm temp
+    - conditions:
+      - condition: trigger
+        id:
+        - night_mode
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+        alias: Set entrance setpoint to Norm temp
+    default: []
   mode: single
 - id: '1668542656762'
   alias: Update timer.next_event
