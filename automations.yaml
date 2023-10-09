@@ -1797,13 +1797,8 @@
   - platform: state
     entity_id:
     - binary_sensor.bathroom_door_contact
-    id: door-open
-    to: 'on'
-  - platform: state
-    entity_id:
-    - binary_sensor.bathroom_door_contact
-    to: 'off'
-    id: door-closed
+    id: door
+    to:
   - platform: state
     entity_id:
     - sensor.bathroom_climate_sensor_temperature
@@ -1843,7 +1838,8 @@
         data: message "De badkamer temperatuur sensor werkt niet"
     - conditions:
       - condition: trigger
-        id: door-open
+        id:
+        - door
       sequence:
       - choose:
         - conditions:
@@ -1864,6 +1860,34 @@
             data: {}
             target:
               entity_id: timer.door_bathroom
+          - choose:
+            - conditions:
+              - condition: template
+                value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+                  < (states(''input_number.setpoint_bathroom'')|int) }}
+
+                  '
+                alias: Temperature below setpoint
+              - condition: state
+                entity_id: binary_sensor.bathroom_door_contact
+                state: 'off'
+              sequence:
+              - type: turn_on
+                device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+                entity_id: switch.panel_oven_br_relay
+                domain: switch
+            - conditions:
+              - condition: template
+                value_template: '{{ (states(''sensor.bathroom_climate_sensor_temperature'')|int)
+                  >= (states(''input_number.setpoint_bathroom'')|int ) }}
+
+                  '
+                alias: Temperature above setpoint
+              sequence:
+              - type: turn_off
+                device_id: 5a5485fbe5476127f6af5dcd1f41c2ba
+                entity_id: switch.panel_oven_br_relay
+                domain: switch
     - conditions:
       - condition: or
         conditions:
@@ -1871,8 +1895,6 @@
           id: setpoint
         - condition: trigger
           id: temp
-        - condition: trigger
-          id: door-closed
       sequence:
       - choose:
         - conditions:
@@ -2271,18 +2293,12 @@
     entity_id:
     - binary_sensor.entrance_door_contact
     - binary_sensor.kitchen_door_contact
-    id: door-open
-    to: 'on'
+    id: door
+    to:
     for:
       hours: 0
       minutes: 0
       seconds: 0
-  - platform: state
-    entity_id:
-    - binary_sensor.entrance_door_contact
-    - binary_sensor.kitchen_door_contact
-    id: door-closed
-    to: 'off'
   - platform: state
     entity_id:
     - sensor.entrance_climate_sensor_temperature
@@ -2317,12 +2333,67 @@
         data: message "De voordeur temperatuur sensor werkt niet"
     - conditions:
       - condition: trigger
-        id: door-open
+        id:
+        - door
       sequence:
-      - service: timer.start
-        data: {}
-        target:
-          entity_id: timer.timer_doors_entrance
+      - choose:
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.entrance_door_contact
+              state: 'on'
+            - condition: state
+              entity_id: binary_sensor.kitchen_door_contact
+              state: 'on'
+          sequence:
+          - service: timer.start
+            data: {}
+            target:
+              entity_id: timer.timer_doors_entrance
+        - conditions:
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.entrance_door_contact
+              state: 'off'
+            - condition: state
+              entity_id: binary_sensor.kitchen_door_contact
+              state: 'off'
+          sequence:
+          - service: timer.cancel
+            data: {}
+            target:
+              entity_id: timer.timer_doors_entrance
+          - choose:
+            - conditions:
+              - condition: template
+                value_template: '{{ (states(''sensor.entrance_climate_sensor_temperature'')|int)
+                  < (states(''input_number.setpoint_entrance'')|int) }}'
+                alias: Temperature below setpoint
+              - condition: and
+                conditions:
+                - condition: state
+                  entity_id: binary_sensor.entrance_door_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.kitchen_door_contact
+                  state: 'off'
+              sequence:
+              - type: turn_on
+                device_id: ce4c6a6640c4cf45c169e6920fb139d5
+                entity_id: switch.panel_oven_fd
+                domain: switch
+            - conditions:
+              - condition: template
+                value_template: '{{ (states(''sensor.entrance_climate_sensor_temperature'')|int)
+                  >= (states(''input_number.setpoint_entrance'')|int) }}'
+                alias: Temperature above setpoint
+              sequence:
+              - type: turn_off
+                device_id: ce4c6a6640c4cf45c169e6920fb139d5
+                entity_id: switch.panel_oven_fd
+                domain: switch
     - conditions:
       - condition: or
         conditions:
@@ -2330,8 +2401,6 @@
           id: setpoint
         - condition: trigger
           id: temp
-        - condition: trigger
-          id: door-closed
       sequence:
       - choose:
         - conditions:
