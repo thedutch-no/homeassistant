@@ -1671,7 +1671,7 @@
   - platform: state
     entity_id:
     - person.rob
-    enabled: false
+    enabled: true
   - platform: state
     entity_id:
     - input_boolean.take_a_shower
@@ -1690,7 +1690,7 @@
     entity_id:
     - binary_sensor.bathroom_door_contact
     id: Door
-    enabled: false
+    enabled: true
   condition: []
   action:
   - choose:
