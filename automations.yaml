@@ -4386,3 +4386,27 @@
       entity_id: media_player.kitchen_sonos_cloud_speaker
     enabled: true
   mode: single
+- id: '1697278957821'
+  alias: Master Switch - Shoe dryer ON/OFF
+  description: Turn Master Switch - Shoe dryer OFF when Shelly becomes 'unavailable'
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.shoe_dryer
+  condition: []
+  action:
+  - if:
+    - condition: state
+      entity_id: switch.shoe_dryer
+      state: unavailable
+    then:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.master_switch_shoe_dryer
+    else:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.master_switch_shoe_dryer
+  mode: single

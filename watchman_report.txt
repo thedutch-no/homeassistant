@@ -1,33 +1,47 @@
 -== Watchman Report ==- 
 
--== Congratulations, all 37 services from your config are available!
+-== Congratulations, all 57 services from your config are available!
 
--== Missing 20 entity(ies) from 219 found in your config:
+-== Missing 32 entity(ies) from 291 found in your config:
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | Entity ID                                               | State   | Location                                                                         |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
-| sensor.stove                                            | missing | powercalc.yaml:93                                                                |
-| sensor.microwave                                        | missing | powercalc.yaml:97                                                                |
-| sensor.refrigerator                                     | missing | powercalc.yaml:101                                                               |
-| sensor.freezer                                          | missing | powercalc.yaml:105                                                               |
-| sensor.panel_oven_br                                    | missing | powercalc.yaml:109,110                                                           |
-| sensor.varmepumpe                                       | missing | powercalc.yaml:113,114                                                           |
-| sensor.ventilation                                      | missing | powercalc.yaml:118                                                               |
-| sensor.office_equipment                                 | missing | powercalc.yaml:121                                                               |
-| sensor.multi_media_equipment                            | missing | powercalc.yaml:125                                                               |
-| sensor.panel_oven_fd                                    | missing | powercalc.yaml:129,130                                                           |
-| sensor.water_heater                                     | missing | powercalc.yaml:133                                                               |
-| sensor.bathroom_light                                   | missing | powercalc.yaml:137                                                               |
-| sensor.pc_tumble_dryer                                  | missing | powercalc.yaml:147                                                               |
-| sensor.pc_washing_machine                               | missing | powercalc.yaml:151                                                               |
-| sensor.all_appliances                                   | missing | powercalc.yaml:159                                                               |
-| sensor.all_heating                                      | missing | powercalc.yaml:167                                                               |
-| sensor.all_equipment                                    | missing | powercalc.yaml:175                                                               |
-| sensor.refrigerator_climate_sen sor_temperature          | unavail | automations.yaml:2050                                                            |
-| sensor.freezer_smal_climate_sensor_temperature          | unavail | automations.yaml:2058                                                            |
-| sensor.freezer_big_climate_sensor_temperature           | missing | automations.yaml:2118                                                            |
+| media_player.livingroom_sonos_speaker                   | unavail | automations.yaml:570,575,581,1986,2982,2987,4315                                 |
+| media_player.kitchen_sonos_speaker                      | unavail | automations.yaml:1985,2034,2039,2044,2992,2997,4314                              |
+| switch.kupevarme                                        | unavail | automations.yaml:2067,2072,2102,4366                                             |
+| sensor.kupevarme_power                                  | unavail | automations.yaml:2081                                                            |
+| sensor.freezer_big_climate_sensor_temperature           | missing | automations.yaml:2227                                                            |
+| sensor.estimated_illuminance                            | unknown | automations.yaml:2526,2626,2692,2792,2859,2959,3893,3960,4059                    |
+| media_player.sonos_speakers                             | unavail | automations.yaml:3525,3584,3674,3684                                             |
+| light.kitchen_countertop                                | unavail | automations.yaml:3971,4047                                                       |
+| button.varmepumpe_reboot                                | unknown | automations.yaml:4110                                                            |
+| sensor.octoprint_current_state                          | unavail | automations.yaml:4145,4155                                                       |
+| switch.3d_printer_light_switch                          | unavail | automations.yaml:4186,4214                                                       |
+| weather.met_no                                          | missing | sensors.yaml:32                                                                  |
+| sensor.stove                                            | missing | powercalc.yaml:99                                                                |
+| sensor.microwave                                        | missing | powercalc.yaml:103                                                               |
+| sensor.refrigerator                                     | missing | powercalc.yaml:107                                                               |
+| sensor.freezer                                          | missing | powercalc.yaml:111                                                               |
+| sensor.panel_oven_br                                    | missing | powercalc.yaml:115,116                                                           |
+| sensor.varmepumpe                                       | missing | powercalc.yaml:119,120                                                           |
+| sensor.ventilation                                      | missing | powercalc.yaml:124                                                               |
+| sensor.office_equipment                                 | missing | powercalc.yaml:127                                                               |
+| sensor.multi_media_equipment                            | missing | powercalc.yaml:131                                                               |
+| sensor.panel_oven_fd                                    | missing | powercalc.yaml:135,136                                                           |
+| sensor.water_heater                                     | missing | powercalc.yaml:139                                                               |
+| sensor.bathroom_light                                   | missing | powercalc.yaml:143                                                               |
+| sensor.pc_tumble_dryer                                  | missing | powercalc.yaml:156                                                               |
+| sensor.pc_washing_machine                               | missing | powercalc.yaml:160                                                               |
+| sensor.all_appliances                                   | missing | powercalc.yaml:168                                                               |
+| sensor.all_heating                                      | missing | powercalc.yaml:175                                                               |
+| sensor.all_equipment                                    | missing | powercalc.yaml:182                                                               |
+| media_player.my_speakers                                | unavail | scripts.yaml:818,830,842,854,866                                                 |
+| number.match                                            | missing | custom_components/ui_lovelace_minimalist/lovelace/translations/default.yaml:28,3 |
+|                                                         |         | 8                                                                                |
+| climate.hvac                                            | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/popup_templates/ |
+|                                                         |         | popup_buttons/popup_button_airconditionner.yaml:22                               |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Report created on 06 Jan 2023 21:40:11
--== Parsed 40 files in 3.46s., ignored 0 files 
--== Generated in: 0.12s. Validated in: 0.01s.
+-== Report created on 14 Oct 2023 11:00:00
+-== Parsed 399 files in 1.23s., ignored 0 files 
+-== Generated in: 0.01s. Validated in: 0.00s.
