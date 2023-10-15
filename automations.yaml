@@ -4410,3 +4410,101 @@
       target:
         entity_id: input_boolean.master_switch_shoe_dryer
   mode: single
+- id: '1697371127078'
+  alias: Radio Station Selection
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.radio10_live
+    to: 'on'
+    id: radio10_live
+  - platform: state
+    entity_id:
+    - input_boolean.radio10_60s_70s_hits
+    to: 'on'
+    id: radio10_60s_70s_hits
+  - platform: state
+    entity_id:
+    - input_boolean.radio10_80s_hits
+    to: 'on'
+    id: radio10_80s_hits
+  - platform: state
+    entity_id:
+    - input_boolean.radio10_disco_classics
+    to: 'on'
+    id: radio10_disco_classics
+  - platform: state
+    entity_id:
+    - input_boolean.radio10_love_songs
+    to: 'on'
+    id: radio10_love_songs
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - radio10_live
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.radio10_60s_70s_hits
+          - input_boolean.radio10_80s_hits
+          - input_boolean.radio10_disco_classics
+          - input_boolean.radio10_love_songs
+    - conditions:
+      - condition: trigger
+        id:
+        - radio10_60s_70s_hits
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.radio10_80s_hits
+          - input_boolean.radio10_disco_classics
+          - input_boolean.radio10_love_songs
+          - input_boolean.radio10_live
+    - conditions:
+      - condition: trigger
+        id:
+        - radio10_80s_hits
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.radio10_60s_70s_hits
+          - input_boolean.radio10_disco_classics
+          - input_boolean.radio10_love_songs
+          - input_boolean.radio10_live
+    - conditions:
+      - condition: trigger
+        id:
+        - radio10_disco_classics
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.radio10_60s_70s_hits
+          - input_boolean.radio10_80s_hits
+          - input_boolean.radio10_love_songs
+          - input_boolean.radio10_live
+    - conditions:
+      - condition: trigger
+        id:
+        - radio10_love_songs
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.radio10_60s_70s_hits
+          - input_boolean.radio10_80s_hits
+          - input_boolean.radio10_disco_classics
+          - input_boolean.radio10_live
+  mode: single
