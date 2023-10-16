@@ -4508,3 +4508,17 @@
           - input_boolean.radio10_disco_classics
           - input_boolean.radio10_live
   mode: single
+- id: '1697449957161'
+  alias: 'Alarm: Electricity Meter Unavailable'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.electricity_meter
+    to: unavailable
+  condition: []
+  action:
+  - service: script.send_notification_to_phone
+    data:
+      message: Electricity meter is Unavailable
+  mode: single
