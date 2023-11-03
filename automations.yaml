@@ -647,13 +647,6 @@
       fan_mode: quiet
     target:
       entity_id: climate.livingroom
-  - service: light.turn_on
-    data:
-      brightness_pct: 100
-    target:
-      entity_id:
-      - light.livingroom_ceiling
-    enabled: true
   - service: input_boolean.turn_on
     data: {}
     target:
@@ -663,6 +656,22 @@
     enabled: true
   - service: script.worktime_log
     data: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.frontdoor_lights_to_on_100_250_duplicate
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.kitchen_lights_to_on_100
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.hallway_lights_to_on_100_250
+    metadata: {}
+  - service: scene.turn_on
+    target:
+      entity_id: scene.livingroom_lights_to_on_100_250
+    metadata: {}
   mode: single
 - id: '1661967233221'
   alias: Location - Enter or Leave Work zone - weekdays
