@@ -4699,6 +4699,10 @@
     entity_id:
     - sensor.electricity_meter
     to: unavailable
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
   condition: []
   action:
   - service: script.send_notification_to_phone
