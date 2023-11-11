@@ -2078,6 +2078,11 @@
         - condition: state
           entity_id: switch.kupevarme
           state: unavailable
+      - condition: not
+        conditions:
+        - condition: template
+          value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
+            }}'
       sequence:
       - type: turn_on
         device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
