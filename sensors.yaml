@@ -89,3 +89,20 @@
     minutes: 15
   entities:
     sensor.tumble_dryer_power_module_power
+
+#
+# Sensors in the REST Platform
+#
+- platform: rest
+  scan_interval: 7200
+  name: ice warning
+  unique_id: b68ce24a-4150-4185-89bb-67ee95d2256d
+  resource: https://api.eiswarnung.de?key=c000f6617d7cff3826cbd91533608be6&lat=59.97761&lng=11.24198
+  json_attributes:
+    - success
+    - message
+    - callsLeft
+    - callsDailyLimit
+    - callsResetInSeconds
+    - result
+  value_template: "{{ value_json.result.forecastId }}"

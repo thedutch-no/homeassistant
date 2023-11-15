@@ -4997,3 +4997,45 @@
     target:
       entity_id: media_player.livingroom_sonos_speaker
   mode: single
+- id: '1700070472198'
+  alias: Ice Warning
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.ice_warning
+    id: ice
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.ice_warning
+        state: '0'
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:00:00
+        target:
+          entity_id: input_datetime.prep_time_car
+    - conditions:
+      - condition: state
+        entity_id: sensor.ice_warning
+        state: '1'
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:15:00
+        target:
+          entity_id: input_datetime.prep_time_car
+    - conditions:
+      - condition: state
+        entity_id: sensor.ice_warning
+        state: '2'
+      sequence:
+      - service: input_datetime.set_datetime
+        data:
+          time: 00:10:00
+        target:
+          entity_id: input_datetime.prep_time_car
+  mode: single
