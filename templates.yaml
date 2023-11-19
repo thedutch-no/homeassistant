@@ -25,6 +25,10 @@ binary_sensor:
       {% endif %}
 
 
+
+
+
+
 sensor:
   #########################
   #
