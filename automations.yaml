@@ -2494,11 +2494,11 @@
   alias: Lighting - Bathroom
   description: ''
   trigger:
-  - platform: state
+  - alias: Motion
+    platform: state
     entity_id:
-    - binary_sensor.motion_bathroom
+    - binary_sensor.mm_wave_bathroom_has_target
     id: Motion
-    alias: Motion
   - platform: device
     domain: mqtt
     device_id: fbb6e8159553be4d237cfdd1588c8c83
@@ -2660,11 +2660,11 @@
   alias: Lighting - Hallway
   description: ''
   trigger:
-  - platform: state
+  - alias: Motion
+    platform: state
     entity_id:
-    - binary_sensor.motion_hallway
+    - binary_sensor.mm_wave_hallway_has_target
     id: Motion
-    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 6e27023210b26c48943753f940005249
@@ -2709,7 +2709,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_hallway
       - condition: state
-        entity_id: binary_sensor.motion_hallway
+        entity_id: binary_sensor.mm_wave_hallway_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2741,7 +2741,7 @@
         entity_id: input_boolean.overide_hallway_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.motion_hallway
+        entity_id: binary_sensor.mm_wave_hallway_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -2827,11 +2827,11 @@
   alias: Lighting - Entrance
   description: ''
   trigger:
-  - platform: state
+  - alias: Motion
+    platform: state
     entity_id:
-    - binary_sensor.motion_entrance
+    - binary_sensor.mm_wave_entrance_has_target
     id: Motion
-    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 6c548e3322378ac6dc46c70504abb3f5
@@ -3928,11 +3928,11 @@
   alias: Lighting - Kitchen
   description: ''
   trigger:
-  - platform: state
+  - alias: Motion
+    platform: state
     entity_id:
-    - binary_sensor.motion_kitchen
+    - binary_sensor.mm_wave_kitchen_has_target
     id: Motion
-    alias: Motion
   - platform: device
     domain: mqtt
     device_id: 9c23bbbefc64f218b524eefa84c05136
