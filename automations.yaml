@@ -2543,7 +2543,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_bathroom
       - condition: state
-        entity_id: binary_sensor.motion_bathroom
+        entity_id: binary_sensor.mm_wave_bathroom_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2575,7 +2575,7 @@
         entity_id: input_boolean.overide_bathroom_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.motion_bathroom
+        entity_id: binary_sensor.mm_wave_bathroom_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -2876,7 +2876,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_entrance
       - condition: state
-        entity_id: binary_sensor.motion_entrance
+        entity_id: binary_sensor.mm_wave_entrance_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2908,7 +2908,7 @@
         entity_id: input_boolean.overide_entrance_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.motion_entrance
+        entity_id: binary_sensor.mm_wave_entrance_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -3977,7 +3977,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_kitchen
       - condition: state
-        entity_id: binary_sensor.motion_kitchen
+        entity_id: binary_sensor.mm_wave_kitchen_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -4008,7 +4008,7 @@
         entity_id: input_boolean.overide_kitchen_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.motion_kitchen
+        entity_id: binary_sensor.mm_wave_kitchen_has_target
         state: 'off'
       sequence:
       - service: timer.start
