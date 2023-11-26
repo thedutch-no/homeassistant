@@ -5023,11 +5023,18 @@
         entity_id: sensor.ice_warning
         state: '1'
       sequence:
-      - service: input_datetime.set_datetime
-        data:
-          time: 00:15:00
-        target:
-          entity_id: input_datetime.prep_time_car
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_boolean.kupevarme_connected
+            state: 'on'
+          sequence: []
+        default:
+        - service: input_datetime.set_datetime
+          data:
+            time: 00:15:00
+          target:
+            entity_id: input_datetime.prep_time_car
     - conditions:
       - condition: state
         entity_id: sensor.ice_warning
@@ -5038,4 +5045,16 @@
           time: 00:10:00
         target:
           entity_id: input_datetime.prep_time_car
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_boolean.kupevarme_connected
+            state: 'on'
+          sequence: []
+        default:
+        - service: input_datetime.set_datetime
+          data:
+            time: 00:10:00
+          target:
+            entity_id: input_datetime.prep_time_car
   mode: single
