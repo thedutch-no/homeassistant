@@ -1680,10 +1680,26 @@
   alias: Heating - Bathroom Setpoint
   description: Set the temp setpoint for the bathroom heater
   trigger:
-  - platform: state
-    entity_id:
-    - person.rob
-    enabled: true
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.home
+    event: enter
+    id: home
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.magnor
+    event: leave
+    id: magnor
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.sorumsand
+    event: leave
+    id: sørumsand
+  - platform: zone
+    entity_id: person.rob
+    zone: zone.work
+    event: leave
+    id: work
   - platform: state
     entity_id:
     - input_boolean.take_a_shower
