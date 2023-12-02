@@ -141,8 +141,8 @@ create_local_announcement_file:
   sequence:
   - service: tts.cloud_say
     data:
-      language: en-US
-      message: De oven staat nog aan
+      language: nl-NL
+      message: De voordeur is ge-opend
       entity_id: media_player.livingroom_sonos_speaker
   mode: single
 check_alarm_clock:
@@ -977,4 +977,34 @@ media_play_radio10_selected_station:
         entity_id:
         - media_player.livingroom_sonos_speaker
         - media_player.kitchen_sonos_speaker
+  mode: single
+send_notification_to_phone_testing:
+  alias: Send Notification to Phone (TESTING)
+  sequence:
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 1
+      title: URGENT
+      message: Eerste bericht
+    enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 100
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      message: De voordeur is geopend
+      title: URGENT
+      data:
+        push:
+          sound:
+            name: de_voordeur_is_geopend_nl-nl_cloud.wav
+            critical: 1
+            volume: 1
   mode: single

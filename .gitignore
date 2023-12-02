@@ -2,6 +2,14 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=homeassistant
 
 ### HomeAssistant ###
+
+# allowed files
+!*.yaml
+!.gitignore
+!*.md
+!*.sh
+!*.js*
+
 # Files with personal details
 *.crt
 *.csr
@@ -35,6 +43,7 @@ www/community/
 # Log files
 *.log*
 home-assistant.log
+home_assistant_v2
 
 # Development files
 blueprints/
@@ -45,6 +54,8 @@ node-red/
 themes/
 ui_lovelace_minimalist/
 zigbee2mqtt/
+
+
 
 # End of https://www.toptal.com/developers/gitignore/api/homeassistant
 

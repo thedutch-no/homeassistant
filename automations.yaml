@@ -2127,6 +2127,7 @@
                 critical: 1
                 volume: 1
     default: []
+    enabled: false
   - choose:
     - conditions:
       - condition: trigger
@@ -2143,6 +2144,7 @@
             - condition: template
               value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
                 }}'
+            enabled: false
           sequence:
           - service: script.check_kupevame_connected
             data: {}
@@ -2150,7 +2152,13 @@
             - condition: state
               entity_id: input_boolean.kupevarme_connected
               state: 'off'
-            then: []
+            then:
+            - service: notify.mobile_app_robs_iphone_11
+              data:
+                message: Kupevarme is niet aangesloten
+                data:
+                  push:
+                    sound: de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.wav
         - conditions:
           - condition: state
             entity_id: person.rob
