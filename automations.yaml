@@ -512,7 +512,7 @@
         volume: 40
     target:
       entity_id:
-      - media_player.livingroom_sonos_cloud_speaker
+      - media_player.livingroom_sonos_speaker
   mode: single
 - id: '1659974516452'
   alias: Tumble Dryer - Done
@@ -989,7 +989,7 @@
         volume: 35
     target:
       entity_id:
-      - media_player.livingroom_sonos_cloud_speaker
+      - media_player.livingroom_sonos_speaker
     enabled: true
   - delay:
       hours: 0
@@ -1012,7 +1012,7 @@
         volume: 35
     target:
       entity_id:
-      - media_player.livingroom_sonos_cloud_speaker
+      - media_player.livingroom_sonos_speaker
   mode: single
 - id: '1663689955137'
   alias: Timer - Prepare for Bed
@@ -1046,7 +1046,8 @@
       extra:
         volume: 35
     target:
-      entity_id: media_player.livingroom_sonos_cloud_speaker
+      entity_id:
+      - media_player.livingroom_sonos_speaker
   mode: single
 - id: '1663948844908'
   alias: Stove - Status and Warnings
@@ -1102,7 +1103,7 @@
             volume: 40
         target:
           entity_id:
-          - media_player.livingroom_sonos_cloud_speaker
+          - media_player.livingroom_sonos_speaker
     - conditions:
       - condition: and
         conditions:
@@ -1183,7 +1184,8 @@
         enabled: true
         alias: 'Announce: Je eten in de oven is klaar'
         target:
-          entity_id: media_player.sonos_cloud_speakers
+          entity_id:
+          - media_player.livingroom_sonos_speaker
       - service: timer.start
         data:
           duration: 0
@@ -1199,7 +1201,8 @@
             entity_id: input_boolean.stove_baking
             state: 'on'
           sequence:
-          - service: media_player.play_media
+          - alias: 'Announce: Je eten in de oven is klaar'
+            service: media_player.play_media
             data:
               media_content_id: http://192.168.28.110:8123/local/sounds/je_eten_in_de_oven_is_klaar_nl-nl_cloud.mp3
               media_content_type: music
@@ -1208,9 +1211,8 @@
                 volume: 40
             target:
               entity_id:
-              - media_player.livingroom_sonos_cloud_speaker
+              - media_player.livingroom_sonos_speaker
             enabled: true
-            alias: 'Announce: Je eten in de oven is klaar'
           - service: timer.start
             data:
               duration: 0
@@ -1240,7 +1242,7 @@
                 volume: 40
             target:
               entity_id:
-              - media_player.livingroom_sonos_cloud_speaker
+              - media_player.livingroom_sonos_speaker
             enabled: true
             alias: 'Announce: De oven staat nog aan'
           - service: timer.start
@@ -1344,7 +1346,7 @@
       extra:
         volume: 35
     target:
-      entity_id: media_player.livingroom_sonos_cloud_speaker
+      entity_id: media_player.livingroom_sonos_speaker
   - service: script.send_notification_to_phone_non_urgent
     data:
       message: Prepare to leave
@@ -2082,6 +2084,13 @@
     device_id: a974d0b22cc6384df44bb848ac2edfbc
     entity_id: binary_sensor.entrance_door_contact
     domain: binary_sensor
+    id: open
+  - type: not_opened
+    platform: device
+    device_id: a974d0b22cc6384df44bb848ac2edfbc
+    entity_id: b08dd52436d3a7c62fbc431659fa7526
+    domain: binary_sensor
+    id: closed
   condition: []
   action:
   - choose:
@@ -2100,40 +2109,8 @@
           value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
             }}'
       sequence:
-      - type: turn_on
-        device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
-        entity_id: switch.kupevarme
-        domain: switch
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 5
-          milliseconds: 0
-      - if:
-        - condition: numeric_state
-          entity_id: sensor.kupevarme_power
-          above: 100
-        then:
-        - service: input_boolean.turn_on
-          data: {}
-          target:
-            entity_id: input_boolean.kupevarme_connected
-        else:
-        - service: input_boolean.turn_off
-          data: {}
-          target:
-            entity_id: input_boolean.kupevarme_connected
-        - service: notify.mobile_app_robs_iphone_11
-          data:
-            message: Auto verwarming niet aangesloten.
-            title: Warm your car
-            data:
-              push:
-                sound: de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.wav
-      - type: turn_off
-        device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
-        entity_id: switch.kupevarme
-        domain: switch
+      - service: script.check_kupevame_connected
+        data: {}
     - conditions:
       - condition: state
         entity_id: person.rob
@@ -2150,6 +2127,55 @@
                 critical: 1
                 volume: 1
     default: []
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - open
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: person.rob
+            state: home
+          - condition: not
+            conditions:
+            - condition: template
+              value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
+                }}'
+          sequence:
+          - service: script.check_kupevame_connected
+            data: {}
+          - if:
+            - condition: state
+              entity_id: input_boolean.kupevarme_connected
+              state: 'off'
+            then: []
+        - conditions:
+          - condition: state
+            entity_id: person.rob
+            state: not_home
+          sequence:
+          - service: notify.mobile_app_robs_iphone_11
+            data:
+              message: 'De voordeur is geopend '
+              title: URGENT
+              data:
+                push:
+                  sound:
+                    name: default
+                    critical: 1
+                    volume: 1
+    - conditions:
+      - condition: trigger
+        id:
+        - closed
+      - condition: state
+        entity_id: person.rob
+        state: home
+      sequence:
+      - service: script.check_kupevame_connected
+        data: {}
   mode: single
 - id: '1667048656790'
   alias: Entrance door opened
@@ -3463,7 +3489,7 @@
             volume: 40
         target:
           entity_id:
-          - media_player.livingroom_sonos_cloud_speaker
+          - media_player.livingroom_sonos_speaker
         alias: 'Announce: Oven is op temperatuur'
     - conditions:
       - type: is_power

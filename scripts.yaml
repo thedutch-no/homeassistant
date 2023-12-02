@@ -124,6 +124,9 @@ tts_washing_machine_done_via_file:
   alias: 'Announce: De wasmachine is klaar (mp3)'
   sequence:
   - service: media_player.play_media
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_speaker
     data:
       media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
       media_content_type: music
@@ -131,8 +134,6 @@ tts_washing_machine_done_via_file:
       extra:
         volume: 50
         play_on_bonded: true
-    target:
-      entity_id: media_player.livingroom_sonos_cloud_speaker
   mode: single
   icon: mdi:bullhorn-variant-outline
 create_local_announcement_file:
