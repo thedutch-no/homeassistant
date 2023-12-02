@@ -775,6 +775,7 @@ github_upload:
   sequence:
   - service: shell_command.push_upload_git
     data: {}
+    response_variable: push_upload_git_return_code
   mode: single
   icon: mdi:script-text-outline
 trigger_3d_printer_control:
