@@ -773,7 +773,7 @@ trigger_lighting_hallway:
 github_upload:
   alias: Github - Upload
   sequence:
-  - service: shell_command.upload_to_git
+  - service: shell_command.push_upload_git
     data: {}
   mode: single
   icon: mdi:script-text-outline

@@ -60,7 +60,7 @@ climate:
 
 # Shell commands
 shell_command:
-  upload_to_git: /bin/bash push_upload_git.sh
+  push_upload_git: /bin/bash push_upload_git.sh
 
   
 # Sonos
