@@ -1812,7 +1812,7 @@
     at: '23:23:23'
   condition: []
   action:
-  - service: shell_command.upload_to_git
+  - service: shell_command.push_upload_git
     data: {}
   mode: single
 - id: '1666522979870'
@@ -2257,8 +2257,9 @@
     domain: switch
     id: relais
   - platform: numeric_state
-    entity_id: sensor.refrigirator_avg_power
-    below: 9
+    entity_id:
+    - sensor.refrigirator_avg_power
+    below: 6
     id: power
   condition: []
   action:
@@ -2278,6 +2279,9 @@
     - conditions:
       - condition: trigger
         id: power
+      - condition: state
+        entity_id: person.rob
+        state: not_home
       sequence:
       - service: script.send_notification_to_phone
         data:
@@ -2331,6 +2335,9 @@
     - conditions:
       - condition: trigger
         id: power
+      - condition: state
+        entity_id: person.rob
+        state: not_home
       sequence:
       - service: script.send_notification_to_phone
         data:
@@ -5107,4 +5114,22 @@
             time: 00:10:00
           target:
             entity_id: input_datetime.prep_time_car
+  mode: single
+- id: '1701547711264'
+  alias: Push Upload to Github every 24h
+  description: Push Upload to Github
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    id: timer
+    event_data:
+      entity_id: timer.push_upload_git
+  condition: []
+  action:
+  - service: shell_command.push_upload_git
+    data: {}
+  - service: timer.start
+    data: {}
+    target:
+      entity_id: timer.push_upload_git
   mode: single
