@@ -37,7 +37,7 @@ git remote add origin git@github.com:thedutch-no/homeassistant.git
 #git config core.sshCommand "ssh -i /root/config/.ssh/id_rsa -F /dev/null"
 
 # Tell Git where to find the KnowHostFIle and the Private key
-git config core.sshCommand "ssh -o UserKnownHostsFile=/root/config/.ssh/known_hosts -i /root/config/.ssh/id_rsa -F /dev/null"
+git config core.sshCommand "ssh -o UserKnownHostsFile=/config/.ssh/known_hosts -i /config/.ssh/id_rsa -F /dev/null"
 
 # Push the local repository to Github
 git push -u origin main
