@@ -1009,3 +1009,143 @@ send_notification_to_phone_testing:
             critical: 1
             volume: 1
   mode: single
+keypad_input:
+  alias: Keypad Input
+  sequence:
+  - service: input_text.set_value
+    data_template:
+      entity_id: input_text.keypad_input
+      value: "{% set current_value = states('input_text.keypad_input') %} {% if current_value
+        != 'None' and current_value != 'unknown' %}\n  {{ current_value ~ number |
+        string }}\n{% else %}\n  {{ number | string }}\n{% endif %}\n"
+  mode: single
+log_truck_diesel:
+  alias: Log Truck Diesel
+  sequence:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.keypad_input
+        state: '0'
+      sequence: []
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 1 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_1
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 2 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_2
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 3 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_3
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 4 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_4
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 5 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_5
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 6 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_6
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+    - conditions:
+      - condition: template
+        value_template: '{{ now().isoweekday() == 7 }}'
+      sequence:
+      - service: input_number.set_value
+        data:
+          value: '{{states(''sensor.keypad_input'')}}'
+        target:
+          entity_id: input_number.diesel_7
+      - service: input_text.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: input_text.keypad_input
+  mode: single
+  icon: mdi:fuel
+log_diesel_weekly_reset:
+  alias: Log Truck Diesel - Weekly Reset
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''sensor.diesel_todo'') | int }}'
+    target:
+      entity_id: input_number.diesel_rest
+  - service: input_number.set_value
+    data:
+      value: 0
+    target:
+      entity_id:
+      - input_number.diesel_1
+      - input_number.diesel_2
+      - input_number.diesel_3
+      - input_number.diesel_4
+      - input_number.diesel_5
+      - input_number.diesel_6
+      - input_number.diesel_7
+  mode: single

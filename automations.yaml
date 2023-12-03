@@ -613,6 +613,14 @@
       entity_id: input_number.setpoint_bathroom
       value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
     alias: Set bathroom setpoint to Min temp
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.kupevarme_connected
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.kupevarme
   - service: script.turn_off_all_lights_and_mediaplayers
     data: {}
   mode: single
@@ -1632,6 +1640,12 @@
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.bathroom_heating
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.timer_kupevarme
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
@@ -3222,8 +3236,8 @@
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
-        alias: Set entrance setpoint to Norm temp
+          value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+        alias: Set entrance setpoint to Min temp
     default: []
   mode: single
 - id: '1668542656762'
@@ -5132,4 +5146,22 @@
     data: {}
     target:
       entity_id: timer.push_upload_git
+  mode: single
+- id: '1701630082353'
+  alias: 'Heating: Kupevarme Control'
+  description: ''
+  trigger:
+  - alias: Timer.bathroom_heating finished
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.timer_kupevarme
+    id: timer
+    enabled: true
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.kupevarme
   mode: single

@@ -364,6 +364,23 @@ sensor:
 
   #########################
   #
+  # Calculate Kupevarme Heating time based on:
+  # - wake-up time
+  # - Kupevarme connected
+  #   - prep time kupevarme
+  #
+  #########################
+  - name: "kupevarme Time"
+    unique_id: 7ee572ba-ba5f-4d9a-b8eb-cfae822f18da
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set kp = states('input_datetime.prep_time_kupevarme') %}
+      {% set kvt = bt - timedelta(hours = kp.split(':')[0] | int, minutes = kp.split(':')[1] | int) %}
+      {{ kvt }}
+
+  #########################
+  #
   # Convert Date/Time sensor values to Time sensors:
   # - sensor.prepare_for_bed
   # - sensor.bed_time
@@ -442,6 +459,11 @@ sensor:
     icon: mdi:clock-alert-outline
     state: >
       {{ as_timestamp(states('sensor.night_mode_off_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-kupevarme_time
+    unique_id: 55331122-27c1-47f4-ba1c-bc6748521a9f
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.kupevarme_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
 
   #  - name: hhmm-
   #    unique_id:
@@ -561,3 +583,97 @@ sensor:
   # - All entities in domain light
   #
   #########################
+
+
+  #########################
+  #
+  # Diesel logboek
+  # - Totaal getankte liters diesel deze week
+  # - Nog te tanken liters diesel deze week
+  #
+  #########################
+  - name: "keypad_input"
+    unique_id: 2bf5849a-a10d-4c21-9e74-29e84e4f1f5b
+    state: >
+      {% set kim = states('input_text.keypad_input') | int %}
+      {{ kim }}
+
+  - name: "diesel_target"
+    unique_id: c6c16882-562e-4e54-a0e9-94127cfe3128
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_target') | int %}
+      {{ di }}
+
+  - name: "diesel_rest"
+    unique_id: ddf25a20-3549-4cd8-83a6-e1cb1590e4b6
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_rest') | int %}
+      {{ di }}
+
+  - name: "diesel_day"
+    unique_id: 357ef4fc-dac9-4e8c-ae8f-10867917c01b
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_text.diesel_input') | int %}
+      {{ di }}
+
+  - name: "diesel_week"
+    unique_id: 24f9890a-e1d8-4ea9-b044-770eb79557aa
+    icon: mdi:fuel
+    state: >
+      {% set d1 =  states('input_number.diesel_1') | int %}
+      {% set d2 =  states('input_number.diesel_2') | int %}
+      {% set d3 =  states('input_number.diesel_3') | int %}
+      {% set d4 =  states('input_number.diesel_4') | int %}
+      {% set d5 =  states('input_number.diesel_5') | int %}
+      {% set d6 =  states('input_number.diesel_6') | int %}
+      {% set d7 =  states('input_number.diesel_7') | int %}
+      {% set dw = (d1 + d2 + d3 + d4 + d5 + d6 + d7) | int %}
+      {{ dw }}
+
+  - name: "diesel_todo"
+    unique_id: c527fa64-5133-4cdb-8f40-a5e64d3ad4f0
+    icon: mdi:fuel
+    state: >
+      {% set dt =  states('sensor.diesel_target') | int %}
+      {% set dw =  states('sensor.diesel_week') | int %}
+      {% set dr =  states('sensor.diesel_rest') | int %}
+      {% set dtg = (dt - dw + dr) | int %}
+      {{ dtg }}
+
+  - name: "diesel_1"
+    unique_id: a1d58d75-6103-433b-83f4-39b2b58fbb60
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_1') | int %}
+      {{ di }}
+
+  - name: "diesel_2"
+    unique_id: 74d2bec4-c625-4128-ab06-ece0a55be2ee
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_2') | int %}
+      {{ di }}
+
+  - name: "diesel_3"
+    unique_id: 7751a39c-da3b-4525-afe0-0b1441892e3f
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_3') | int %}
+      {{ di }}
+
+  - name: "diesel_4"
+    unique_id: a80bb6d0-dc58-47a1-8eff-b1aab46e2ddf
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_4') | int %}
+      {{ di }}
+
+  - name: "diesel_5"
+    unique_id: 9fb01911-d113-44d3-857b-4d9c6e04a743
+    icon: mdi:fuel
+    state: >
+      {% set di =  states('input_number.diesel_5') | int %}
+      {{ di }}
