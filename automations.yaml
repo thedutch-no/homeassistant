@@ -314,38 +314,6 @@
       action_button_up_long:
       - service: ''
         data: {}
-- id: '1658067716628'
-  alias: Livingroom - 4 Button remote Blueprint
-  description: ''
-  use_blueprint:
-    path: EPMatt/ikea_e2001_e2002.yaml
-    input:
-      integration: Zigbee2MQTT
-      controller_entity: sensor.livingroom_4_button_remote_action
-      helper_last_controller_event: input_text.bedroom_4_button_remote_helper
-      action_button_left_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_250
-        metadata: {}
-      action_button_right_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_454
-        metadata: {}
-      action_button_up_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_352
-        metadata: {}
-      action_button_down_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_off
-        metadata: {}
-      action_button_up_long:
-      - service: ''
-        data: {}
 - id: '1658067936137'
   alias: Bedroom - 4 Button remote Blueprint
   description: ''
@@ -1397,7 +1365,7 @@
         volume: 30
     target:
       entity_id:
-      - media_player.sonos_cloud_speakers
+      - media_player.sonos_speakers
   - delay:
       hours: 0
       minutes: 5
