@@ -2243,6 +2243,7 @@
     - sensor.refrigirator_avg_power
     below: 6
     id: power
+    enabled: false
   condition: []
   action:
   - choose:
