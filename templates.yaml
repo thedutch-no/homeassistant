@@ -272,8 +272,8 @@ sensor:
       {% set ptl = as_datetime(states('sensor.prepare_to_leave')) %}
       {% set pc = states('input_datetime.prep_time_car') %}
       {% set pe = states('input_datetime.prep_time_entrance') %}
-      {% set h = pe.split(':')[0] | int + pc.split(':')[0] | int %}
-      {% set m = pe.split(':')[1] | int + pc.split(':')[1] | int %}
+      {% set h = pe.split(':')[0] | int %}
+      {% set m = pe.split(':')[1] | int %}
       {% if states('input_select.start_location') == 'Weekend' %}
         {% set ttl = as_datetime(states('sensor.wake_up_time')) %}
       {% else %}
