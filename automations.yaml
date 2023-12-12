@@ -1555,6 +1555,7 @@
           - timer.next_event
           - timer.bathroom_heating
           - timer.varmepumpe_wake_up_mode
+          - timer.timer_kupevarme
     - conditions:
       - condition: state
         entity_id: input_boolean.alarm_clock_on

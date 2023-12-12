@@ -410,6 +410,18 @@ calculate_work_start_datetime:
         }}\n{% endif %}"
     target:
       entity_id: input_datetime.datetime_work_start
+  - service: input_datetime.set_datetime
+    data:
+      datetime: "{% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom(
+        '%H:%M:%S', true) > states('input_datetime.trafic_compensation_start_time_1')
+        %}\n  {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom(
+        '%H:%M:%S', true) > states('input_datetime.trafic_compensation_start_time_2')
+        %}\n    {{ strptime('00:20:00' , '%H:%M:%S') }}\n  {% else %}\n    {{ strptime('00:10:00'
+        , '%H:%M:%S') }}\n  {% endif %}\n{% else %}\n  {{ strptime('00:00:00' , '%H:%M:%S')
+        }}\n{% endif %}"
+    target:
+      entity_id: input_datetime.prep_time_trafic_compensation
+    enabled: true
   mode: single
   icon: mdi:calendar-alert
 send_notification_to_phone_non_urgent:
