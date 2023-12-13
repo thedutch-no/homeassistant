@@ -421,7 +421,7 @@ calculate_work_start_datetime:
         }}\n{% endif %}"
     target:
       entity_id: input_datetime.prep_time_trafic_compensation
-    enabled: true
+    enabled: false
   mode: single
   icon: mdi:calendar-alert
 send_notification_to_phone_non_urgent:

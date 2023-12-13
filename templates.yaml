@@ -216,15 +216,15 @@ sensor:
         {% set pm = states('input_datetime.prep_time_morning') %}
         {% set pe = states('input_datetime.prep_time_entrance') %}
         {% set pc = states('input_datetime.prep_time_car') %}
-        {% set ptc = '00:00:00' %}
+        {% set tct = '00:00:00' %}
         {% if states('input_select.start_location') != 'Manual' %}
           {% set tw = states('input_datetime.travel_time_work') %}
         {% else %}
           {% set tw = '00:00' %}
         {% endif %}
         {% set td = states('input_datetime.travel_time_customer') %}
-        {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pe.split(':')[0] | int + pc.split(':')[0] | int + tw.split(':')[0] | int + td.split(':')[0] | int + ptc.split(':')[0] | int %}
-        {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int + pe.split(':')[1] | int + pc.split(':')[1] | int + tw.split(':')[1] | int + td.split(':')[1] | int + ptc.split(':')[1] | int %}
+        {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pe.split(':')[0] | int + pc.split(':')[0] | int + tw.split(':')[0] | int + td.split(':')[0] | int + tct.split(':')[0] | int %}
+        {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int + pe.split(':')[1] | int + pc.split(':')[1] | int + tw.split(':')[1] | int + td.split(':')[1] | int + tct.split(':')[1] | int %}
         {% set wakeup = ws - timedelta(hours=h, minutes=m) %}
       {% else %}
         {% set wakeup = ws %}
@@ -310,16 +310,16 @@ sensor:
   #   + compenstation start time 1
   #
   #########################
-  - name: "Trafic Compensation time"
-    unique_id: 9bbe1ce2-4f7f-4218-a098-d6d5cdf9e45d
+  - name: "Traffic Compensation time"
+    unique_id: d20f6a09-c70f-4b40-8c22-2c6c2375ba37
     icon: mdi:clock-alert-outline
     state: >
       {% set tlw = as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) %}
-      {% set cst1 = states('input_datetime.trafic_compensation_start_time_1') %}
-      {% set cst2 = states('input_datetime.trafic_compensation_start_time_2') %}
+      {% set cst1 = states('input_datetime.traffic_compensation_start_time_1') %}
+      {% set cst2 = states('input_datetime.traffic_compensation_start_time_2') %}
 
-      {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.trafic_compensation_start_time_1') %}
-        {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.trafic_compensation_start_time_2') %}
+      {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.traffic_compensation_start_time_1') %}
+        {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.traffic_compensation_start_time_2') %}
           {% set tc = '00:20:00' %}
         {% else %}
           {% set tc = '00:10:00' %}
@@ -484,7 +484,7 @@ sensor:
     state: >
       {{ as_timestamp(states('sensor.time_to_leave_home')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
   - name: hhmm-time_to_leave_work
-    unique_id: 5b993e8a-15df-44ea-94ca-22f03d81de29
+    unique_id: 52dbb85f-2eaa-41b7-8f49-d745c4634704
     icon: mdi:clock-alert-outline
     state: >
       {{ as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
@@ -518,11 +518,11 @@ sensor:
     icon: mdi:clock-alert-outline
     state: >
       {{ as_timestamp(states('sensor.kupevarme_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
-  - name: hhmm-trafic_compensation
-    unique_id: e8502a23-42a3-4abf-9889-82e3cc474357
+  - name: hhmm-traffic_compensation
+    unique_id: 2dae19ce-1d8b-4204-ae86-b98dbabfd900
     icon: mdi:clock-alert-outline
     state: >
-      {{ as_timestamp(today_at(states('input_datetime.prep_time_trafic_compensation'))) | int | timestamp_custom('%H:%M', true) }}
+      {{ as_timestamp(today_at(states('sensor.traffic_compensation_time'))) | int | timestamp_custom('%H:%M', true) }}
 
   #  - name: hhmm-
   #    unique_id:

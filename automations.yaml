@@ -5135,3 +5135,17 @@
     target:
       entity_id: switch.kupevarme
   mode: single
+- id: '1702440227824'
+  alias: Log Truck Diesel - Weekly Reset
+  description: ''
+  trigger:
+  - platform: time
+    at: '13:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sun
+  action:
+  - service: script.log_diesel_weekly_reset
+    data: {}
+  mode: single
