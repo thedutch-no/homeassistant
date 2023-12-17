@@ -1550,18 +1550,19 @@
           - timer.time_for_bed
           - timer.wake_up_time
           - timer.prepare_to_leave
-          - timer.time_to_leave
           - timer.varmepumpe_night_mode
           - timer.next_event
           - timer.bathroom_heating
           - timer.varmepumpe_wake_up_mode
           - timer.timer_kupevarme
+          - timer.time_to_leave_home
     - conditions:
       - condition: state
         entity_id: input_boolean.alarm_clock_on
         state: 'on'
       sequence:
-      - if:
+      - alias: 'Timer: Start Timer - Varmepumpe Night mode'
+        if:
         - condition: template
           value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
             - as_timestamp(now()))) | int > 0}}'
@@ -1572,11 +1573,10 @@
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.varmepumpe_night_mode
-        alias: 'Timer: Start Timer - Varmepumpe Night mode'
         else:
         - service: timer.start
           data:
-            duration: 00:00:30
+            duration: 00:00:01
           target:
             entity_id: timer.varmepumpe_night_mode
       - if:
@@ -1615,6 +1615,7 @@
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.timer_kupevarme
+        enabled: false
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
@@ -1645,21 +1646,32 @@
           target:
             entity_id: timer.prepare_to_leave
         alias: 'Timer: Start Timer - Prepare to leave'
-      - if:
+      - alias: 'Timer: Start Timer - Time to leave'
+        if:
         - condition: template
-          value_template: '{{ states(''sensor.time_to_leave'') != states(''sensor.wake_up_time'')
+          value_template: '{{ states(''sensor.time_to_leave_home'') != states(''sensor.wake_up_time'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.time_to_leave
-        alias: 'Timer: Start Timer - Time to leave'
+            entity_id: timer.time_to_leave_home
       - service: script.update_next_timer_entity
         data: {}
         enabled: false
+      - if:
+        - condition: state
+          entity_id: input_boolean.kupevarme_connected
+          state: 'on'
+        then:
+        - service: timer.start
+          data:
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
+              - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+          target:
+            entity_id: timer.timer_kupevarme
   mode: single
 - id: '1666291130997'
   alias: Heating - Bathroom Setpoint
@@ -5121,7 +5133,7 @@
   alias: 'Heating: Kupevarme Control'
   description: ''
   trigger:
-  - alias: Timer.bathroom_heating finished
+  - alias: Timer.kupevarme finished
     platform: event
     event_type: timer.finished
     event_data:
