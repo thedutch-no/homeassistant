@@ -1034,6 +1034,18 @@ keypad_input:
 log_truck_diesel:
   alias: Log Truck Diesel
   sequence:
+  - service: google_sheets.append_sheet
+    data:
+      config_entry: 39e03eeaa42f890ec229fc41218a787e
+      worksheet: HVO100
+      data:
+        Date: '{{ as_timestamp(states(''sensor.date'')) | timestamp_custom(''%d-%m-%Y'')
+          }}'
+        Liters: '{{ states(''sensor.keypad_input'') }}'
+        Month: '{{ as_timestamp(states(''sensor.date'')) | timestamp_custom(''%m'')
+          }}'
+        Week: '{{ as_timestamp(states(''sensor.date'')) | timestamp_custom(''%W'')
+          }}'
   - choose:
     - conditions:
       - condition: state

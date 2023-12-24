@@ -69,9 +69,3 @@ shell_command:
 #      hosts:
 #        - 192.168.10.191
 #        - 192.168.10.192
-
-# Withings
-#withings:
-#  client_id: !secret withings_id
-#  client_secret: !secret withings_secret
-#  use_webhook: true
