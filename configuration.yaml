@@ -69,3 +69,6 @@ shell_command:
 #      hosts:
 #        - 192.168.10.191
 #        - 192.168.10.192
+
+# Battery Notes
+battery_notes:
