@@ -2368,6 +2368,7 @@
       hours: 0
       minutes: 0
       seconds: 0
+    enabled: false
   - platform: state
     entity_id:
     - sensor.entrance_climate_sensor_temperature
@@ -2387,6 +2388,7 @@
     event_data:
       entity_id: timer.timer_doors_entrance
     id: timer
+    enabled: false
   condition: []
   action:
   - choose:
