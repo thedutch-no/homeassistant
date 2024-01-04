@@ -2487,6 +2487,7 @@
             - condition: state
               entity_id: binary_sensor.kitchen_door_contact
               state: 'off'
+            enabled: false
           sequence:
           - type: turn_on
             device_id: ce4c6a6640c4cf45c169e6920fb139d5
