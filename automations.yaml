@@ -386,8 +386,8 @@
         state: 'on'
       sequence:
       - type: turn_on
-        device_id: e8a485a1b9837c7f9c931608217f9586
-        entity_id: switch.sonoff_10013664d8_1
+        device_id: 81b24a4d18bd5f119f0fbf21d001163f
+        entity_id: 1bf17bb55a9994704d56a67857a508d9
         domain: switch
     - conditions:
       - condition: state
@@ -395,8 +395,8 @@
         state: 'off'
       sequence:
       - type: turn_off
-        device_id: e8a485a1b9837c7f9c931608217f9586
-        entity_id: switch.sonoff_10013664d8_1
+        device_id: 81b24a4d18bd5f119f0fbf21d001163f
+        entity_id: 1bf17bb55a9994704d56a67857a508d9
         domain: switch
     default: []
   mode: single
