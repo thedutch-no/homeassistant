@@ -1335,7 +1335,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.time_to_leave
+      entity_id: timer.time_to_leave_home
   condition:
   - condition: zone
     entity_id: person.rob
@@ -3220,8 +3220,8 @@
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_entrance_min'') }}'
-        alias: Set entrance setpoint to Min temp
+          value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
+        alias: Set varmepumpe setpoint to Min temp
     default: []
   mode: single
 - id: '1668542656762'
