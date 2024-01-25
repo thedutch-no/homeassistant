@@ -3253,7 +3253,7 @@
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_to_leave
+      entity_id: timer.time_to_leave_home
   - platform: event
     event_type: timer.cancelled
     event_data:
@@ -3356,13 +3356,13 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(''sensor.hhmm_time_to_leave'')}}'
+          value: '{{states(''sensor.hhmm_time_to_leave_home'')}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
