@@ -215,6 +215,9 @@ check_doors_closed:
 check_kupevame_connected:
   alias: Check Kupevame connected
   sequence:
+  - condition: state
+    entity_id: switch.kupevarme
+    state: 'off'
   - type: turn_on
     device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
     entity_id: switch.kupevarme
