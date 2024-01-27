@@ -1,0 +1,9 @@
+#####
+# Climate Sensors are gathering information about states and conditions.
+#
+# This loads up my climate sensor configurations
+#
+# https://www.home-assistant.io/integrations/climate
+#####
+
+climate: !include_dir_list  ../entities/climate

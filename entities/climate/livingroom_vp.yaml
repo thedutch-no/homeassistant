@@ -1,0 +1,8 @@
+platform: smartir
+name: livingroom_vp
+unique_id: livingroom_vp
+device_code: 1019
+controller_data: remote.rm4_livingroom_remote
+temperature_sensor: sensor.livingroom_climate_sensor_temperature
+humidity_sensor: sensor.livingroom_climate_sensor_humidity
+power_sensor: switch.varmepumpe

@@ -1,0 +1,8 @@
+#####
+# Integration to add battery notes to a device, with automatic discovery via a growing battery library for devices.
+# Track the battery type, when the battery was replaced and also when a battery is low based on device or global thresholds.
+#
+# https://github.com/andrew-codechimp/HA-Battery-Notes
+#####
+
+battery_notes:

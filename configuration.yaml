@@ -4,7 +4,16 @@ default_config:
 
 homeassistant:
   # Load packages
+  packages: !include_dir_named integrations
   
+
+
+
+# Packages that MUST stay in configuration.yaml file
+logbook:
+history:
+frontend:
+  themes: !include_dir_merge_named themes
 
 # Include files
 group: !include groups.yaml
@@ -20,10 +29,10 @@ binary_sensor: !include binary_sensor.yaml
 input_boolean: !include input_boolean.yaml
 input_number: !include input_number.yaml
 input_select: !include input_select.yaml
-template: !include templates.yaml
-frontend:
-  themes: !include_dir_merge_named themes
+#template: !include templates.yaml
 powercalc: !include powercalc.yaml
+
+
 
 # Extra logging options
 logger:
@@ -31,25 +40,19 @@ logger:
   logs:
     custom_components.powercalc: debug
 
-
-
-# Text to speech
-tts:
-  - platform: google_translate
-
 # Smartir
-smartir:
-  check_updates: false
+#smartir:
+#  check_updates: false
   
-climate:
-  - platform: smartir
-    name: livingroom_vp
-    unique_id: livingroom_vp
-    device_code: 1019
-    controller_data: remote.rm4_livingroom_remote
-    temperature_sensor: sensor.livingroom_climate_sensor_temperature
-    humidity_sensor: sensor.livingroom_climate_sensor_humidity
-    power_sensor: switch.varmepumpe
+#climate:
+#  - platform: smartir
+#    name: livingroom_vp
+#    unique_id: livingroom_vp
+#    device_code: 1019
+#    controller_data: remote.rm4_livingroom_remote
+#    temperature_sensor: sensor.livingroom_climate_sensor_temperature
+#    humidity_sensor: sensor.livingroom_climate_sensor_humidity
+#    power_sensor: switch.varmepumpe
 
 # PowerCalc
 #powercalc:
@@ -62,13 +65,5 @@ climate:
 shell_command:
   push_upload_git: /bin/bash push_upload_git.sh
 
-  
-# Sonos
-#sonos:
-#    media_player:
-#      hosts:
-#        - 192.168.10.191
-#        - 192.168.10.192
-
 # Battery Notes
-battery_notes:
+#battery_notes:

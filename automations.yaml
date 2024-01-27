@@ -2348,7 +2348,8 @@
   condition: []
   action:
   - service: script.send_notification_to_phone_non_urgent
-    data: {}
+    data:
+      message: HA finished Starting
   mode: single
 - id: '1667136799601'
   alias: Heating - Entrance Control

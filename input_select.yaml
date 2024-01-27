@@ -8,8 +8,8 @@ start_location:
     - "Moss"
     - "Drammen"
     - "Manual"
-    - "Weekend"
     - "Brumunddal"
+    - "Weekend"
 
 start_time:
   icon: mdi:clock-start

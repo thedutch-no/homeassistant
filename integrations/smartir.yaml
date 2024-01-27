@@ -1,0 +1,9 @@
+#####
+# SmartIR is a custom integration for controlling climate devices, 
+#   media players and fans via infrared controllers.
+#
+# https://github.com/smartHomeHub/SmartIR
+#####
+
+smartir:
+  check_updates: false
