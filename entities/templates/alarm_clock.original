@@ -1,0 +1,397 @@
+  #########################
+  # Calculate prepare for bed time based on:
+  # - bed time
+  #   - prep time evenings
+  #########################
+  - name: "Prepare for Bed"
+    unique_id: cbd391da-f492-4dad-a7bd-69aa150d07b2
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.bed_time')) %}
+      {% set pe = states('input_datetime.prep_time_evening') %}
+      {% set pfb = wu - timedelta(hours = pe.split(':')[0] | int , minutes = pe.split(':')[1] | int) %}
+      {{ pfb }}
+
+  #########################
+  #
+  # Calculate bed time based on:
+  # - wake-up time
+  #   - sleep duration
+  #
+  #########################
+  - name: "Bed Time"
+    unique_id: c03b5681-6cc9-4491-ad98-4d195cc907e3
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% if states('binary_sensor.workday') == 'on' %}
+        {% set sd = states('input_datetime.sleep_duration_workday') %}
+      {% else %}
+        {% set sd = states('input_datetime.sleep_duration_weekend') %}
+      {% endif %}
+      {% set h = sd.split(':')[0] | int %}
+      {% set m = sd.split(':')[1] | int %}
+      {% set bedtime = wu - timedelta(hours=h, minutes=m) %}
+      {{ bedtime }}
+
+  #########################
+  #
+  # Calculate wake-up time based on:
+  # - start time work
+  # - workday / weekend
+  #   - travel time to customer
+  #   - travel time to work
+  #   - prep time trafic compensation
+  #   - prep time car
+  #   - prep time entrance
+  #   - prep time morning
+  #   - prep time shower
+  # if states('binary_sensor.workday') == 'on'
+  #########################
+  - name: "Wake-up time"
+    unique_id: dcdc8922-f511-4837-a686-a43ab4ae4a0a
+    icon: mdi:alarm
+    state: >
+      {% set ws = as_datetime(states('input_datetime.datetime_work_start')) %}
+      {% if states('binary_sensor.workday') == 'on' %}
+        {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %} 
+          {% set ps = states('input_datetime.prep_time_shower') %}
+        {% else %}
+          {% set ps = states('input_datetime.prep_time_no_shower') %}
+        {% endif %}
+        {% set pm = states('input_datetime.prep_time_morning') %}
+        {% set pe = states('input_datetime.prep_time_entrance') %}
+        {% set pc = states('input_datetime.prep_time_car') %}
+        {% set tct = '00:00:00' %}
+        {% if states('input_select.start_location') != 'Manual' %}
+          {% set tw = states('input_datetime.travel_time_work') %}
+        {% else %}
+          {% set tw = '00:00' %}
+        {% endif %}
+        {% set td = states('input_datetime.travel_time_customer') %}
+        {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int + pe.split(':')[0] | int + pc.split(':')[0] | int + tw.split(':')[0] | int + td.split(':')[0] | int + tct.split(':')[0] | int %}
+        {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int + pe.split(':')[1] | int + pc.split(':')[1] | int + tw.split(':')[1] | int + td.split(':')[1] | int + tct.split(':')[1] | int %}
+        {% set wakeup = ws - timedelta(hours=h, minutes=m) %}
+      {% else %}
+        {% set wakeup = ws %}
+      {% endif %}
+      {{ wakeup }}
+
+  #########################
+  #
+  # Calculate prepare to leave based on:
+  # - wake-up time
+  #   + prep time morning
+  #   + prep time shower
+  #
+  #########################
+  - name: "Prepare to leave"
+    unique_id: d3b87483-31e1-4a16-a233-6209f8033bf9
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu = as_datetime(states('sensor.wake_up_time')) %}
+      {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %} 
+        {% set ps = states('input_datetime.prep_time_shower') %}
+      {% else %}
+        {% set ps = states('input_datetime.prep_time_no_shower') %}
+      {% endif %}
+      {% set pm = states('input_datetime.prep_time_morning') %}
+      {% set h = ps.split(':')[0] | int + pm.split(':')[0] | int %}
+      {% set m = ps.split(':')[1] | int + pm.split(':')[1] | int %}
+      {% if states('input_select.start_location') == 'Weekend' %}
+        {% set ptl = wu %}
+      {% else %}
+        {% set ptl = wu + timedelta(hours=h, minutes=m) %}
+      {% endif %}
+      {{ ptl }}
+
+  #########################
+  #
+  # Calculate time to leave home based on:
+  # - prepare to leave
+  #   + prep time entrance
+  #   + prep time car
+  #
+  #########################
+  - name: "Time to leave home"
+    unique_id: 7c5b5af0-5212-415a-993f-158a31340a36
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set ptl = as_datetime(states('sensor.prepare_to_leave')) %}
+      {% set pc = states('input_datetime.prep_time_car') %}
+      {% set pe = states('input_datetime.prep_time_entrance') %}
+      {% set h = pe.split(':')[0] | int %}
+      {% set m = pe.split(':')[1] | int %}
+      {% if states('input_select.start_location') == 'Weekend' %}
+        {% set ttl = as_datetime(states('sensor.wake_up_time')) %}
+      {% else %}
+        {% set ttl = ptl + timedelta(hours=h, minutes=m) %}
+      {% endif %}
+      {{ ttl }}
+
+  #########################
+  #
+  # Calculate time to leave work based on:
+  # - prepare to leave
+  #   + prep time entrance
+  #   + prep time car
+  #
+  #########################
+  - name: "Time to leave work"
+    unique_id: 461b6eb4-a644-46ca-9db0-04d94ce31b15
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tlh = as_datetime(states('sensor.time_to_leave_home')) %}
+      {% set tw = states('input_datetime.travel_time_work') %}
+      {% set h = tw.split(':')[0] | int %}
+      {% set m = tw.split(':')[1] | int %}
+      {% set tlw = tlh + timedelta(hours=h, minutes=m) %}
+      {{ tlw }}
+
+  #########################
+  #
+  # Calculate Trafic Compensation based on:
+  # - time to leave work
+  #   + compenstation start time 1
+  #   + compenstation start time 1
+  #
+  #########################
+  - name: "Traffic Compensation time"
+    unique_id: d20f6a09-c70f-4b40-8c22-2c6c2375ba37
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tlw = as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) %}
+      {% set cst1 = states('input_datetime.traffic_compensation_start_time_1') %}
+      {% set cst2 = states('input_datetime.traffic_compensation_start_time_2') %}
+
+      {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.traffic_compensation_start_time_1') %}
+        {% if as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom( '%H:%M:%S', true) > states('input_datetime.traffic_compensation_start_time_2') %}
+          {% set tc = '00:20:00' %}
+        {% else %}
+          {% set tc = '00:10:00' %}
+        {% endif %}
+      {% else %}
+        {% set tc = '00:00:00' %}
+      {% endif %}
+      {{ tc }}
+
+  #########################
+  #
+  # Calculate Varmepumpe Night time based on:
+  # - bed time
+  #   - prep time varmepumpe offset
+  #
+  #########################
+  - name: "Varmepumpe Night mode Time"
+    unique_id: 539e1b4a-b73d-4cfb-bd84-b02d9921dea7
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.bed_time')) %}
+      {% set vp = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set vnm = bt - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ vnm }}
+
+  #########################
+  #
+  # Calculate Varmepumpe Wale-up time based on:
+  # - wake-up time
+  #   - prep time varmepumpe offset
+  #
+  #########################
+  - name: "Varmepumpe Wake-up mode Time"
+    unique_id: 257acfff-04c6-4e02-a7c7-67e3994ccefa
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set wu =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set vp = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set vwm = wu - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ vwm }}
+
+  #########################
+  #
+  # Calculate Night mode On time based on:
+  # - bed time
+  #   - prep time Night mode on
+  #
+  #########################
+  - name: "Night mode On Time"
+    unique_id: 0ca769e0-d76d-4156-bd4e-25c24efd1bc3
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.bed_time')) %}
+      {% set pnon = states('input_datetime.prep_time_night_mode_on') %}
+      {% set nmon = bt + timedelta(hours = pnon.split(':')[0] | int, minutes = pnon.split(':')[1] | int) %}
+      {{ nmon }}
+
+  #########################
+  #
+  # Calculate Night mode Off time based on:
+  # - wake-up time
+  #   - prep time Night mode off
+  #
+  #########################
+  - name: "Night mode Off Time"
+    unique_id: d01d4c93-97a9-4f02-8643-0fa23d4948d1
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set pnoff = states('input_datetime.prep_time_night_mode_off') %}
+      {% set nmoff = bt - timedelta(hours = pnoff.split(':')[0] | int, minutes = pnoff.split(':')[1] | int) %}
+      {{ nmoff }}
+
+  #########################
+  #
+  # Calculate Bathroom Heating time based on:
+  # - wake-up time
+  # - morning shower activated
+  #   - prep time Bathroom heating
+  #
+  #########################
+  - name: "Bathroom Heating Time"
+    unique_id: ba84a0c3-c823-460d-8321-233f0560eb0e
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set vp = states('input_datetime.prep_time_bathroom_heating') %}
+      {% set bht = bt - timedelta(hours = vp.split(':')[0] | int, minutes = vp.split(':')[1] | int) %}
+      {{ bht }}
+
+  #########################
+  #
+  # Calculate Kupevarme Heating time based on:
+  # - wake-up time
+  # - Kupevarme connected
+  #   - prep time kupevarme
+  #
+  #########################
+  - name: "kupevarme Time"
+    unique_id: 7ee572ba-ba5f-4d9a-b8eb-cfae822f18da
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set bt =  as_datetime(states('sensor.wake_up_time')) %}
+      {% set kp = states('input_datetime.prep_time_kupevarme') %}
+      {% set kvt = bt - timedelta(hours = kp.split(':')[0] | int, minutes = kp.split(':')[1] | int) %}
+      {{ kvt }}
+
+  #########################
+  #
+  # Convert Date/Time sensor values to Time sensors:
+  # - sensor.prepare_for_bed
+  # - sensor.bed_time
+  # - sensor.wake_up_time
+  # - sensor.prepare_to_leave
+  # - sensor.time_to_leave
+  # - sensor.night_mode_on_time
+  # - sensor.night_mode_off_time
+  # - sensor.varmepumpe_night_mode_time
+  # - input_datetime.travel_time_work
+  # - input_datetime.travel_time_customer
+  #
+  #########################
+  - name: hhmm-varmepumpe_night_mode_time
+    unique_id: d5f767c0-356c-42c9-8e6e-0cd390a2793e
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.varmepumpe_night_mode_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prepare_for_bed
+    unique_id: 3ddec425-e926-4ba4-a679-2df086885963
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.prepare_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-bed_time
+    unique_id: 687a8763-ee66-4ad3-9c3b-d39c1ad9408b
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.bed_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-bathroom_heating_time
+    unique_id: d398ebc1-f96b-42c2-bed2-470661e768a8
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.bathroom_heating_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-varmepumpe_wake-up_mode_time
+    unique_id: c7dc949e-5e11-4f9f-bb0c-a5980d405732
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.varmepumpe_wake_up_mode_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-wake_up_time
+    unique_id: 0fcdfff2-2c82-43a4-81a2-cfa02dc15baa
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.wake_up_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prepare_to_leave
+    unique_id: c0f509b7-c90f-4d1b-b2f6-c80d0139d435
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.prepare_to_leave')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-time_to_leave_home
+    unique_id: dc34dca7-4190-4db5-a719-5ef198c0aeef
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.time_to_leave_home')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-time_to_leave_work
+    unique_id: 52dbb85f-2eaa-41b7-8f49-d745c4634704
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.time_to_leave_work')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-prep_time_car
+    unique_id: 02ba41b2-66de-4a0c-ba5a-3f7ddbeee76a
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.prep_time_car'))) | int | timestamp_custom('%H:%M', true)}}
+  - name: hhmm-travel_time_work
+    unique_id: ae09b02f-3645-4673-a919-d2978c91f839
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_work'))) | int | timestamp_custom('%H:%M', true) }}
+  - name: hhmm-travel_time_customer
+    unique_id: 3a1d7d1d-155b-4ed9-aefe-1e2e6d4944c0
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_customer'))) | int | timestamp_custom('%H:%M', true) }}
+  - name: hhmm-night_mode_on_time
+    unique_id: 56c6b7f7-ab76-494d-b663-5f4a42a97182
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.night_mode_on_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-night_mode_off_time
+    unique_id: 635e1c09-2457-496b-965d-a0acb7b2cdeb
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.night_mode_off_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-kupevarme_time
+    unique_id: 55331122-27c1-47f4-ba1c-bc6748521a9f
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.kupevarme_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+  - name: hhmm-traffic_compensation
+    unique_id: 2dae19ce-1d8b-4204-ae86-b98dbabfd900
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('sensor.traffic_compensation_time'))) | int | timestamp_custom('%H:%M', true) }}
+
+  #  - name: hhmm-
+  #    unique_id:
+  #    icon: mdi:clock-alert-outline
+  #    state: >
+  #      {{ as_timestamp(states('sensor.time_to_leave')) | int | timestamp_custom('%M', true)}}
+
+  #########################
+  #
+  # Grouping All alarm clock timers together in 1 sensor
+  # - prepare for bed
+  # - time for bed
+  # - wake-up time
+  # - prepare to leave
+  # - time to leave
+  #
+  #########################
+  - name: "Active Alarm Clock Timers"
+    unique_id: a97f565e-e7c5-4e82-b9bb-c743881dce50
+    state: >-
+      {{
+        is_state('timer.prepare_for_bed', 'active')
+        + is_state('timer.time_for_bed', 'active')
+        + is_state('timer.wake_up_time', 'active')
+        + is_state('timer.prepare_to_leave', 'active')
+        + is_state('timer.time_to_leave_home', 'active')
+      }}

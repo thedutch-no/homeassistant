@@ -1,12 +1,27 @@
-#########################
-#
+##################################################
 # Diesel logbook
 # - Total liters diesel filled this week
 # - Rest liters diesel to fill this week
 # - Overage / Underage liters diesel from last week
 #
-#########################
-
+##################################################
+# Entities used by Diesel Logbook
+# - input_text.keypad_input
+# - input_number.diesel_target
+# - input_number.diesel_rest
+# - input_number.diesel[1-7]
+#
+##################################################
+# Sensors created by Diesel Logbook
+# - sensor.keypad_input
+# - sensor.diesel_target
+# - sensor.diesel_rest
+# - sensor.diesel_day
+# - sensor.diesel_week
+# - sensor.diesel_todo
+# - sensor.diesel_[1-7]
+#
+##################################################
 sensor:
 
   - name: keypad_input

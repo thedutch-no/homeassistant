@@ -1,0 +1,16 @@
+---
+#
+# Small binary sensor to tell me if it is currently weekend or not.
+#
+binary_sensor:
+  - name: "Weekend"
+    unique_id: 0240268d-60b5-4784-b546-5e39c04454e2
+    icon: "mdi:calendar-weekend"
+    state: >-
+      {{ now().weekday() in [5, 6] }}
+
+  - name: "WorkStart Weekend"
+    unique_id: 8e2b7dd9-e5d0-4af4-9e0f-4e64e33e320a
+    icon: "mdi:calendar-week"
+    state: >
+      {{ as_datetime(states('sensor.work_start')).weekday() in[5, 6] }}

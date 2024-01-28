@@ -1,0 +1,21 @@
+---
+#
+# Small binary sensor to tell me if it is currently a workday or not.
+#
+binary_sensor:
+  - name: "Workday"
+    unique_id: 7abc9f81-7cf7-4707-b4bf-17496784fe26
+    icon: "mdi:briefcase"
+    state: >-
+      {{
+        not is_state('binary_sensor.holiday', 'on')
+        and now().weekday() < 5
+      }}
+  - name: "WorkStart Workday"
+    unique_id: 817a617d-0c31-4aa9-b501-4ed571ddc432
+    icon: "mdi:calendar-week"
+    state: >
+      {{
+        not is_state('binary_sensor.holiday', 'on')
+        and as_datetime(states('sensor.work_start')).weekday() < 5
+      }}

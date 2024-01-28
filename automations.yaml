@@ -1555,7 +1555,8 @@
           - timer.bathroom_heating
           - timer.varmepumpe_wake_up_mode
           - timer.timer_kupevarme
-          - timer.time_to_leave_home
+          - timer.time_leave_home
+          - timer.time_leave_work
     - conditions:
       - condition: state
         entity_id: input_boolean.alarm_clock_on
@@ -1591,18 +1592,18 @@
           target:
             entity_id: timer.prepare_for_bed
         alias: 'Timer: Start Timer - Prepare for bed'
-      - if:
+      - alias: 'Timer: Start Timer - Bed time'
+        if:
         - condition: template
-          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
             - as_timestamp(now()))) | int > 0}}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.time_for_bed
-        alias: 'Timer: Start Timer - Bed time'
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bathroom_heating_time''))
@@ -1618,7 +1619,7 @@
         enabled: false
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.wake_up_time
@@ -1634,30 +1635,42 @@
           target:
             entity_id: timer.varmepumpe_wake_up_mode
         alias: 'Timer: Start Timer - Varmepumpe Wake-up mode'
-      - if:
+      - alias: 'Timer: Start Timer - Prepare to leave'
+        if:
         - condition: template
-          value_template: '  {{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+          value_template: '  {{ states(''sensor.prepare_leave_home'') != states(''sensor.time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_to_leave''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.prepare_to_leave
-        alias: 'Timer: Start Timer - Prepare to leave'
-      - alias: 'Timer: Start Timer - Time to leave'
+      - alias: 'Timer: Start Timer - Time to leave Home'
         if:
         - condition: template
-          value_template: '{{ states(''sensor.time_to_leave_home'') != states(''sensor.wake_up_time'')
+          value_template: '{{ states(''sensor.time_leave_home'') != states(''sensor.time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave_home''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.time_to_leave_home
+            entity_id: timer.time_leave_home
+      - alias: 'Timer: Start Timer - Time to leave Work'
+        if:
+        - condition: template
+          value_template: '{{ states(''sensor.time_leave_work'') != states(''sensor.time_wake_up'')
+            }}'
+        then:
+        - service: timer.start
+          data:
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
+              - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+          target:
+            entity_id: timer.time_leave_work
       - service: script.update_next_timer_entity
         data: {}
         enabled: false
