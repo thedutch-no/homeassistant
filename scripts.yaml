@@ -164,7 +164,7 @@ check_alarm_clock:
     - service: tts.cloud_say
       data:
         language: nl-NL
-        message: De wekker is ingesteld op {{as_timestamp(states('sensor.wake_up_time'))
+        message: De wekker is ingesteld op {{as_timestamp(states('sensor.time_wake_up'))
           | int | timestamp_custom('%H:%M', true)}} uur
         entity_id: media_player.bedroom_google_speaker
   mode: single

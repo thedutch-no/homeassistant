@@ -1993,12 +1993,14 @@
     id: double
   condition: []
   action:
-  - choose:
+  - alias: Choose between Single or Double click
+    choose:
     - conditions:
       - condition: trigger
         id: single
       sequence:
-      - choose:
+      - alias: Choose between Google speaker playing or not
+        choose:
         - conditions:
           - condition: device
             device_id: d025b64e201a029004e4ba6c85647f07
@@ -2010,7 +2012,6 @@
             data: {}
             target:
               entity_id: media_player.bedroom_google_speaker
-        alias: Choose between Google speaker playing or not
         default:
         - type: turn_off
           device_id: 6945be442bab645c9f650254bcbf4351
@@ -2029,6 +2030,7 @@
             entity_id: input_boolean.night_mode
         - service: script.check_alarm_clock
           data: {}
+          enabled: true
         - service: script.turn_off_all_lights_and_mediaplayers
           data: {}
         - service: script.check_doors_closed
@@ -2054,7 +2056,6 @@
       sequence:
       - service: script.turn_on_all_lights
         data: {}
-    alias: Choose between Single or Double click
   mode: single
 - id: '1666798507130'
   alias: 'Media: Volume control - Kitchen'
