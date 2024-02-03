@@ -522,36 +522,6 @@
           seconds: 0
           milliseconds: 0
   mode: single
-- id: '1660236736187'
-  alias: 'Media: Volume control - Livingroom'
-  description: ''
-  use_blueprint:
-    path: EPMatt/ikea_e1744.yaml
-    input:
-      integration: Zigbee2MQTT
-      controller_entity: sensor.office_symfonisk_action
-      helper_last_controller_event: input_text.livingroom_symfonisk_remote_helper
-      action_click_short:
-      - service: media_player.media_play_pause
-        data: {}
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-      action_rotate_left:
-      - service: media_player.volume_down
-        data: {}
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-      action_rotate_right:
-      - service: media_player.volume_up
-        data: {}
-        target:
-          entity_id:
-          - media_player.livingroom_sonos_speaker
-      action_click_double: []
-      rotate_left_loop: true
-      rotate_right_loop: true
-      rotate_left_max_loop_repeats: 100
-      rotate_right_max_loop_repeats: 100
 - id: '1661913713702'
   alias: Location - Leaving Sørumsand
   description: ''
@@ -1411,6 +1381,7 @@
         data: {}
         target:
           entity_id: climate.livingroom
+        enabled: false
     - conditions:
       - type: is_temperature
         condition: device
@@ -2068,22 +2039,25 @@
       helper_last_controller_event: input_text.kitchen_symfonisk_remote_helper
       action_click_short:
       - service: media_player.media_play_pause
+        metadata: {}
         data: {}
-        target:
-          entity_id: media_player.kitchen_sonos_speaker
       action_rotate_left:
       - service: media_player.volume_down
+        metadata: {}
         data: {}
         target:
-          entity_id: media_player.kitchen_sonos_speaker
+          device_id: 599e67bc8cbac7fdb4c2618b1688d35e
       action_rotate_right:
       - service: media_player.volume_up
+        metadata: {}
         data: {}
         target:
-          entity_id: media_player.kitchen_sonos_speaker
+          device_id: 599e67bc8cbac7fdb4c2618b1688d35e
       action_click_double: []
       rotate_left_loop: true
       rotate_right_loop: true
+      rotate_left_max_loop_repeats: 2
+      rotate_right_max_loop_repeats: 2
 - id: '1667044154408'
   alias: Entrance door opens - incl check kupevarme connected
   description: ''
@@ -5178,3 +5152,40 @@
   - service: script.log_diesel_weekly_reset
     data: {}
   mode: single
+- id: '1706955081616'
+  alias: 'Media: Volume control - Livingroom'
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e1744.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_device: d8286f740c1f9d9cde8d8b3eb64d4308
+      controller_entity: sensor.office_symfonisk_action
+      helper_last_controller_event: input_text.livingroom_symfonisk_remote_helper
+      action_rotate_left:
+      - service: media_player.volume_down
+        metadata: {}
+        data: {}
+        target:
+          device_id: 87314f3a82c2f6b75644a1ce1cccbe53
+      action_rotate_right:
+      - service: media_player.volume_up
+        metadata: {}
+        data: {}
+        target:
+          device_id: 87314f3a82c2f6b75644a1ce1cccbe53
+      rotate_left_loop: true
+      rotate_right_loop: true
+      rotate_left_max_loop_repeats: 2
+      rotate_right_max_loop_repeats: 2
+      action_click_short:
+      - service: media_player.media_play_pause
+        metadata: {}
+        data: {}
+        target:
+          device_id: 87314f3a82c2f6b75644a1ce1cccbe53
+      action_click_double:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.radio10_live
+        data: {}
