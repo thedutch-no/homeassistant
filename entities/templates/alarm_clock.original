@@ -386,12 +386,13 @@
   #
   #########################
   - name: "Active Alarm Clock Timers"
-    unique_id: a97f565e-e7c5-4e82-b9bb-c743881dce50
+    unique_id: 490a1064-a2d0-4c1c-ae16-dd35ae945c8b
     state: >-
       {{
         is_state('timer.prepare_for_bed', 'active')
         + is_state('timer.time_for_bed', 'active')
         + is_state('timer.wake_up_time', 'active')
         + is_state('timer.prepare_to_leave', 'active')
-        + is_state('timer.time_to_leave_home', 'active')
+        + is_state('timer.time_leave_home', 'active')
+        + is_state('timer.time_leave_work', 'active')
       }}

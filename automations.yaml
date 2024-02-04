@@ -1293,19 +1293,23 @@
         volume: 35
     target:
       entity_id: media_player.livingroom_sonos_speaker
-  - service: script.send_notification_to_phone_non_urgent
+  - service: notify.mobile_app_robs_iphone_11
+    metadata: {}
     data:
-      message: Prepare to leave
+      message: Bijna tijd om te vertrekken
+      data:
+        push:
+          sound: het_is_bijna_tijd_om_te_vertrekken_nl-nl_cloud.wav
   mode: single
 - id: '1664214890559'
-  alias: Timer - Time to Leave
+  alias: Timer - Time to Leave Home
   description: ''
   trigger:
   - platform: event
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.time_to_leave_home
+      entity_id: timer.time_leave_home
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1332,10 +1336,16 @@
       media_content_type: music
       announce: true
       extra:
-        volume: 30
+        volume: 35
     target:
-      entity_id:
-      - media_player.sonos_speakers
+      entity_id: media_player.livingroom_sonos_speaker
+  - service: notify.mobile_app_robs_iphone_11
+    metadata: {}
+    data:
+      message: Tijd om te vertrekken
+      data:
+        push:
+          sound: het_is_tijd_om_te_vertrekken_nl-nl_cloud.wav
   - delay:
       hours: 0
       minutes: 5
@@ -3219,11 +3229,6 @@
     timer with date/time from the next scheduled event
   trigger:
   - platform: event
-    event_type: timer.started
-    event_data:
-      entity_id: timer.wake_up_time
-    id: started
-  - platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.prepare_for_bed
@@ -3244,12 +3249,26 @@
     event_data:
       entity_id: timer.time_to_leave_home
   - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.time_to_leave_work
+  - platform: event
     event_type: timer.cancelled
     event_data:
       entity_id: timer.wake_up_time
     id: cancelled
+    enabled: false
   - platform: homeassistant
     event: start
+  - platform: numeric_state
+    entity_id:
+    - sensor.active_alarm_clock_timers
+    above: 0
+  - platform: numeric_state
+    entity_id:
+    - sensor.active_alarm_clock_timers
+    below: 1
+    id: cancelled
   condition: []
   action:
   - choose:
@@ -3282,13 +3301,13 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(''sensor.hhmm_bed_time'')}}'
+          value: '{{states(''sensor.hhmm_time_for_bed'')}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
@@ -3303,13 +3322,13 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(''sensor.hhmm_wake_up_time'')}}'
+          value: '{{states(''sensor.hhmm_time_wake_up'')}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
@@ -3324,13 +3343,13 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_to_leave''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(''sensor.hhmm_prepare_to_leave'')}}'
+          value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
@@ -3340,29 +3359,46 @@
           entity_id: input_text.name_next_timer
     - conditions:
       - condition: state
-        entity_id: timer.time_to_leave
+        entity_id: timer.time_leave_home
         state: active
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave_home''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(''sensor.hhmm_time_to_leave_home'')}}'
+          value: '{{states(''sensor.hhmm_time_leave_home'')}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
         data:
-          value: Time to leave
+          value: Leave Home
         target:
           entity_id: input_text.name_next_timer
     - conditions:
-      - condition: trigger
-        id: started
-      sequence: []
+      - condition: state
+        entity_id: timer.time_leave_work
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_leave_work'')}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Leave Work
+        target:
+          entity_id: input_text.name_next_timer
     - conditions:
       - condition: trigger
         id: cancelled
@@ -3378,6 +3414,11 @@
         data: {}
         target:
           entity_id: timer.next_event
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.alarm_clock_on
   mode: single
 - id: '1668873983113'
   alias: Location - Leaving Magnor
@@ -5189,3 +5230,33 @@
         target:
           entity_id: input_boolean.radio10_live
         data: {}
+- id: '1707040655861'
+  alias: Timer - Time to Leave Work
+  description: ''
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    id: timer
+    event_data:
+      entity_id: timer.time_leave_work
+  condition:
+  - condition: zone
+    entity_id: person.rob
+    zone: zone.work
+    enabled: true
+  - condition: state
+    entity_id: input_boolean.alarm_clock_on
+    state: 'on'
+  - condition: template
+    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+      }}'
+    alias: Wake-up time != alarm time
+  action:
+  - service: notify.mobile_app_robs_iphone_11
+    metadata: {}
+    data:
+      message: Tijd om te vertrekken
+      data:
+        push:
+          sound: het_is_tijd_om_te_vertrekken_nl-nl_cloud.wav
+  mode: single

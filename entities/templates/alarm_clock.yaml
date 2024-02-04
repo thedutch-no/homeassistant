@@ -456,5 +456,6 @@ sensor:
         + is_state('timer.time_for_bed', 'active')
         + is_state('timer.wake_up_time', 'active')
         + is_state('timer.prepare_to_leave', 'active')
-        + is_state('timer.time_to_leave_home', 'active')
+        + is_state('timer.time_leave_home', 'active')
+        + is_state('timer.time_leave_work', 'active')
       }}
