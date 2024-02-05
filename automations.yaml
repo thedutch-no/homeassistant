@@ -1546,12 +1546,12 @@
       - alias: 'Timer: Start Timer - Varmepumpe Night mode'
         if:
         - condition: template
-          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
-            - as_timestamp(now()))) | int > 0}}'
+          value_template: '{{ as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+            > as_timestamp(now()) }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.varmepumpe_night_mode
@@ -1604,18 +1604,18 @@
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.wake_up_time
-      - if:
+      - alias: 'Timer: Start Timer - Varmepumpe Wake-up mode'
+        if:
         - condition: template
           value_template: '  {{ states(''sensor.prepare_to_leave'') == states(''sensor.wake_up_time'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_wake_up_mode_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_wake_up_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.varmepumpe_wake_up_mode
-        alias: 'Timer: Start Timer - Varmepumpe Wake-up mode'
       - alias: 'Timer: Start Timer - Prepare to leave'
         if:
         - condition: template
