@@ -364,7 +364,7 @@ sensor:
   # - input_datetime.prep_time_kupevarme
   #########################
   - name: "Kupevarme Time"
-    unique_id: 7ee572ba-ba5f-4d9a-b8eb-cfae822f18da
+    unique_id: 84ed9a4b-27da-47ab-8c3d-734075563ec1
     icon: mdi:clock-alert-outline
     state: >
       {% set twu =  as_datetime(states('sensor.time_wake_up')) %}
