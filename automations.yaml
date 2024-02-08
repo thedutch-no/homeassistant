@@ -3210,7 +3210,7 @@
         data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
-        alias: Set entrance setpoint to Norm temp
+        alias: Set entrance setpoint to Pre-heat temp
     - conditions:
       - condition: trigger
         id:
