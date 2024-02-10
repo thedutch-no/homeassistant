@@ -362,23 +362,44 @@ update_next_timer_entity:
           entity_id: input_text.name_next_timer
     - conditions:
       - condition: state
-        entity_id: timer.time_to_leave
+        entity_id: timer.time_leave_home
         state: active
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_to_leave''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.next_event
       - service: input_text.set_value
         data:
-          value: '{{states(sensor.hhmm_time_to_leave)}}'
+          value: '{{states(sensor.hhmm_time_leave_home)}}'
         target:
           entity_id: input_text.hhmm_next_timer
       - service: input_text.set_value
         data:
-          value: Time to leave
+          value: Leave Home
+        target:
+          entity_id: input_text.name_next_timer
+    - conditions:
+      - condition: state
+        entity_id: timer.time_leave_work
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(sensor.hhmm_time_leave_work)}}'
+        target:
+          entity_id: input_text.hhmm_next_timer
+      - service: input_text.set_value
+        data:
+          value: Leave Work
         target:
           entity_id: input_text.name_next_timer
   mode: single
@@ -423,7 +444,7 @@ calculate_work_start_datetime:
         , '%H:%M:%S') }}\n  {% endif %}\n{% else %}\n  {{ strptime('00:00:00' , '%H:%M:%S')
         }}\n{% endif %}"
     target:
-      entity_id: input_datetime.prep_time_trafic_compensation
+      entity_id: input_datetime.prep_time_congestion
     enabled: false
   mode: single
   icon: mdi:calendar-alert

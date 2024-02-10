@@ -3247,11 +3247,11 @@
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_to_leave_home
+      entity_id: timer.time_leave_home
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_to_leave_work
+      entity_id: timer.time_leave_work
   - platform: event
     event_type: timer.cancelled
     event_data:
