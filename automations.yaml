@@ -282,38 +282,6 @@
             target:
               entity_id: timer.tumble_dryer_cool_down
   mode: single
-- id: '1658064511110'
-  alias: Bedroom - 4 Button remote Blueprint
-  description: ''
-  use_blueprint:
-    path: EPMatt/ikea_e2001_e2002.yaml
-    input:
-      integration: Zigbee2MQTT
-      controller_entity: sensor.bedroom_4_button_remote_action
-      helper_last_controller_event: input_text.bedroom_4_button_remote_helper
-      action_button_left_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_250
-        metadata: {}
-      action_button_right_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_454
-        metadata: {}
-      action_button_up_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_on_100_352
-        metadata: {}
-      action_button_down_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.bedroom_lights_to_off
-        metadata: {}
-      action_button_up_long:
-      - service: ''
-        data: {}
 - id: '1658067936137'
   alias: Bedroom - 4 Button remote Blueprint
   description: ''
@@ -782,7 +750,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.wake_up_time
+      entity_id: timer.ac_wake_up_time
   condition:
   - condition: zone
     entity_id: person.rob
@@ -914,7 +882,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.time_for_bed
+      entity_id: timer.ac_time_for_bed
   condition:
   - condition: zone
     entity_id: person.rob
@@ -968,7 +936,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.prepare_for_bed
+      entity_id: timer.ac_prepare_for_bed
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1271,7 +1239,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.prepare_to_leave
+      entity_id: timer.ac_prepare_to_leave
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1309,7 +1277,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.time_leave_home
+      entity_id: timer.ac_time_leave_home
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1364,7 +1332,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.varmepumpe_night_mode
+      entity_id: timer.ac_varmepumpe_night_mode
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1465,7 +1433,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.bathroom_heating
+      entity_id: timer.ac_bathroom_heating
   condition:
   - condition: zone
     entity_id: person.rob
@@ -1527,17 +1495,17 @@
         data: {}
         target:
           entity_id:
-          - timer.prepare_for_bed
-          - timer.time_for_bed
-          - timer.wake_up_time
-          - timer.prepare_to_leave
-          - timer.varmepumpe_night_mode
-          - timer.next_event
-          - timer.bathroom_heating
-          - timer.varmepumpe_wake_up_mode
-          - timer.timer_kupevarme
-          - timer.time_leave_home
-          - timer.time_leave_work
+          - timer.ac_prepare_for_bed
+          - timer.ac_time_for_bed
+          - timer.ac_wake_up_time
+          - timer.ac_prepare_to_leave
+          - timer.ac_varmepumpe_night_mode
+          - timer.ac_next_event
+          - timer.ac_bathroom_heating
+          - timer.ac_varmepumpe_wake_up_mode
+          - timer.ac_timer_kupevarme
+          - timer.ac_time_leave_home
+          - timer.ac_time_leave_work
     - conditions:
       - condition: state
         entity_id: input_boolean.alarm_clock_on
@@ -1554,13 +1522,13 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.varmepumpe_night_mode
+            entity_id: timer.ac_varmepumpe_night_mode
         else:
         - service: timer.start
           data:
             duration: 00:00:01
           target:
-            entity_id: timer.varmepumpe_night_mode
+            entity_id: timer.ac_varmepumpe_night_mode
       - if:
         - condition: template
           value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
@@ -1571,7 +1539,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.prepare_for_bed
+            entity_id: timer.ac_prepare_for_bed
         alias: 'Timer: Start Timer - Prepare for bed'
       - alias: 'Timer: Start Timer - Bed time'
         if:
@@ -1584,26 +1552,29 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.time_for_bed
+            entity_id: timer.ac_time_for_bed
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bathroom_heating_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.bathroom_heating
+          entity_id: timer.ac_bathroom_heating
+        alias: 'Time: Start Timer - Bathroom Heating'
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.timer_kupevarme
-        enabled: true
+          entity_id: timer.ac_timer_kupevarme
+        enabled: false
+        alias: 'Timer: Start Timer - Kupevarme'
       - service: timer.start
         data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.wake_up_time
+          entity_id: timer.ac_wake_up_time
+        alias: 'Timer: Start Timer - Wake-up Time'
       - alias: 'Timer: Start Timer - Varmepumpe Wake-up mode'
         if:
         - condition: template
@@ -1615,7 +1586,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_wake_up_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.varmepumpe_wake_up_mode
+            entity_id: timer.ac_varmepumpe_wake_up_mode
       - alias: 'Timer: Start Timer - Prepare to leave'
         if:
         - condition: template
@@ -1627,7 +1598,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.prepare_to_leave
+            entity_id: timer.ac_prepare_to_leave
       - alias: 'Timer: Start Timer - Time to leave Home'
         if:
         - condition: template
@@ -1639,7 +1610,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.time_leave_home
+            entity_id: timer.ac_time_leave_home
       - alias: 'Timer: Start Timer - Time to leave Work'
         if:
         - condition: template
@@ -1651,7 +1622,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.time_leave_work
+            entity_id: timer.ac_time_leave_work
       - service: script.update_next_timer_entity
         data: {}
         enabled: false
@@ -1665,7 +1636,7 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.timer_kupevarme
+            entity_id: timer.ac_timer_kupevarme
   mode: single
 - id: '1666291130997'
   alias: Heating - Bathroom Setpoint
@@ -1698,12 +1669,12 @@
     entity_id:
     - input_boolean.night_mode
     id: night_mode
-  - platform: event
+  - alias: Timer.bathroom_heating finished
+    platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.bathroom_heating
+      entity_id: timer.ac_bathroom_heating
     id: timer
-    alias: Timer.bathroom_heating finished
     enabled: true
   - platform: state
     entity_id:
@@ -2177,66 +2148,6 @@
       sequence:
       - service: script.check_kupevame_connected
         data: {}
-  mode: single
-- id: '1667048656790'
-  alias: Entrance door opened
-  description: ''
-  trigger:
-  - type: opened
-    platform: device
-    device_id: a974d0b22cc6384df44bb848ac2edfbc
-    entity_id: binary_sensor.entrance_door_contact
-    domain: binary_sensor
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: person.rob
-        state: home
-        enabled: true
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: zone.sorumsand
-          attribute: persons
-          state: '1'
-        - condition: state
-          entity_id: zone.home
-          attribute: persons
-          state: '1'
-        enabled: false
-      sequence:
-      - service: script.check_kupevame_connected
-        data: {}
-        enabled: false
-      - if:
-        - condition: state
-          entity_id: input_boolean.kupevarme_connected
-          state: 'off'
-        then:
-        - service: media_player.play_media
-          data:
-            media_content_id: http://192.168.28.110:8123/local/sounds/de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.mp3
-            media_content_type: music
-            announce: true
-            extra:
-              volume: 40
-          target:
-            entity_id: media_player.kitchen_sonos_cloud_speaker
-          enabled: true
-        enabled: false
-    default:
-    - service: notify.mobile_app_robs_iphone_11
-      data:
-        message: 'De voordeur is geopend '
-        title: URGENT
-        data:
-          push:
-            sound:
-              name: default
-              critical: 1
-              volume: 1
   mode: single
 - id: '1667130145506'
   alias: 'Alarm: Refrigerator Temperature or Relais'
@@ -3173,7 +3084,7 @@
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.varmepumpe_night_mode
+      entity_id: timer.ac_varmepumpe_night_mode
     id: night_mode
   condition: []
   action:
@@ -3231,31 +3142,31 @@
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.prepare_for_bed
+      entity_id: timer.ac_prepare_for_bed
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_for_bed
+      entity_id: timer.ac_time_for_bed
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.wake_up_time
+      entity_id: timer.ac_wake_up_time
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.prepare_to_leave
+      entity_id: timer.ac_prepare_to_leave
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_leave_home
+      entity_id: timer.ac_time_leave_home
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.time_leave_work
+      entity_id: timer.ac_time_leave_work
   - platform: event
     event_type: timer.cancelled
     event_data:
-      entity_id: timer.wake_up_time
+      entity_id: timer.ac_wake_up_time
     id: cancelled
     enabled: false
   - platform: homeassistant
@@ -3274,7 +3185,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: timer.prepare_for_bed
+        entity_id: timer.ac_prepare_for_bed
         state: active
       sequence:
       - service: timer.start
@@ -3282,7 +3193,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{ as_timestamp(states(''sensor.prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
@@ -3293,10 +3204,10 @@
         data:
           value: Prepare for bed
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_for_bed
+        entity_id: timer.ac_time_for_bed
         state: active
       sequence:
       - service: timer.start
@@ -3304,7 +3215,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(''sensor.hhmm_time_for_bed'')}}'
@@ -3314,10 +3225,10 @@
         data:
           value: Bed time
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.wake_up_time
+        entity_id: timer.ac_wake_up_time
         state: active
       sequence:
       - service: timer.start
@@ -3325,7 +3236,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(''sensor.hhmm_time_wake_up'')}}'
@@ -3335,10 +3246,10 @@
         data:
           value: Wake-up time
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.prepare_to_leave
+        entity_id: timer.ac_prepare_to_leave
         state: active
       sequence:
       - service: timer.start
@@ -3346,7 +3257,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
@@ -3356,10 +3267,10 @@
         data:
           value: Prepare to leave
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_leave_home
+        entity_id: timer.ac_time_leave_home
         state: active
       sequence:
       - service: timer.start
@@ -3367,7 +3278,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(''sensor.hhmm_time_leave_home'')}}'
@@ -3377,10 +3288,10 @@
         data:
           value: Leave Home
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_leave_work
+        entity_id: timer.ac_time_leave_work
         state: active
       sequence:
       - service: timer.start
@@ -3388,7 +3299,7 @@
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(''sensor.hhmm_time_leave_work'')}}'
@@ -3398,7 +3309,7 @@
         data:
           value: Leave Work
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: trigger
         id: cancelled
@@ -3409,11 +3320,11 @@
         target:
           entity_id:
           - input_text.hhmm_next_timer
-          - input_text.name_next_timer
+          - input_text.ac_next_event_name
       - service: timer.cancel
         data: {}
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_boolean.turn_off
         metadata: {}
         data: {}
@@ -3919,21 +3830,6 @@
           entity_id: switch.shoe_dryer
     default: []
   mode: single
-- id: '1677402851782'
-  alias: Office 5 Button remote
-  description: ''
-  trigger:
-  - platform: device
-    domain: mqtt
-    device_id: 31c7dc07b950f9d86f645b3fe05c7c10
-    type: action
-    subtype: toggle
-    discovery_id: 0xb4e3f9fffece0e7d action_toggle
-  condition: []
-  action:
-  - service: script.trigger_shoe_dryer_control
-    data: {}
-  mode: single
 - id: '1678005389101'
   alias: Lighting - Livingroom
   description: ''
@@ -4359,95 +4255,6 @@
     device_id: 8478713ca354fe3bcf5018e407d53227
     entity_id: switch.3d_printer_switch
     domain: switch
-  mode: single
-- id: '1684058655679'
-  alias: Bedroom - Button New
-  description: 'Single click everything OFF
-
-    Double click everything ON'
-  trigger:
-  - platform: device
-    domain: mqtt
-    device_id: f142428ab4fd02fa19af7a47e856a1da
-    type: action
-    subtype: single
-    discovery_id: 0x00158d0006f39b8e action_single
-    id: single
-  - platform: device
-    domain: mqtt
-    device_id: f142428ab4fd02fa19af7a47e856a1da
-    type: action
-    subtype: double
-    discovery_id: 0x00158d0006f39b8e action_double
-    id: double
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: single
-      sequence:
-      - choose:
-        - conditions:
-          - condition: device
-            device_id: d025b64e201a029004e4ba6c85647f07
-            domain: media_player
-            entity_id: media_player.bedroom_google_speaker
-            type: is_playing
-          sequence:
-          - service: media_player.media_stop
-            data: {}
-            target:
-              device_id: d025b64e201a029004e4ba6c85647f07
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.night_mode
-            state: 'on'
-          sequence: []
-        default:
-        - type: turn_off
-          device_id: 6945be442bab645c9f650254bcbf4351
-          entity_id: fan.ventilation_relay
-          domain: fan
-        - service: media_player.media_stop
-          data: {}
-          target:
-            entity_id:
-            - media_player.kitchen_sonos_speaker
-            - media_player.livingroom_sonos_speaker
-          alias: 'Media player: Stop - Kitchen and Livingroom speakers'
-        - service: input_boolean.turn_on
-          data: {}
-          target:
-            entity_id: input_boolean.night_mode
-        - service: script.check_alarm_clock
-          data: {}
-        - service: script.turn_off_all_lights_and_mediaplayers
-          data: {}
-        - service: script.check_doors_closed
-          data: {}
-          enabled: false
-        - service: automation.trigger
-          data: {}
-          target:
-            entity_id: automation.alarm_varmepumpe_off_time
-        - service: input_boolean.turn_off
-          data: {}
-          target:
-            entity_id:
-            - input_boolean.overide_bathroom_lights
-            - input_boolean.overide_entrance_lights
-            - input_boolean.overide_hallway_lights
-            - input_boolean.overide_kitchen_lights
-            - input_boolean.overide_shower_lights
-            - input_boolean.take_a_shower
-    - conditions:
-      - condition: trigger
-        id: double
-      sequence:
-      - service: script.turn_on_all_lights
-        data: {}
-    alias: Choose between Single or Double click
   mode: single
 - id: '1684062960735'
   alias: Kitchen door opened
@@ -5238,7 +5045,7 @@
     event_type: timer.finished
     id: timer
     event_data:
-      entity_id: timer.time_leave_work
+      entity_id: timer.ac_time_leave_work
   condition:
   - condition: zone
     entity_id: person.rob
@@ -5259,4 +5066,32 @@
       data:
         push:
           sound: het_is_tijd_om_te_vertrekken_nl-nl_cloud.wav
+  mode: single
+- id: '1707643223717'
+  alias: Heating - Livingroom
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      hvac_mode: heat
+      temperature: '{{ states(''input_number.setpoint_varmepumpe'') | float(0) }} '
+    target:
+      entity_id: climate.livingroom
+    alias: 'Set temperature to: setpoint_varmepumpe'
+  - service: climate.set_fan_mode
+    metadata: {}
+    data:
+      fan_mode: '{{ states(''input_select.setpoint_varmepumpe_fan_mode'') }} '
+    target:
+      entity_id: climate.livingroom
+    alias: 'Set fan mode to: setpoint_varmepumpe_fan_mode'
+  - service: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: '{{ states(''input_select.setpoint_varmepumpe_hvac_mode'') }} '
+    target:
+      entity_id: climate.livingroom
+    alias: 'Set fan mode to: setpoint_varmepumpe_hvac_mode'
   mode: single

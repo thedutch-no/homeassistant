@@ -277,7 +277,7 @@ update_next_timer_entity:
   - choose:
     - conditions:
       - condition: state
-        entity_id: timer.prepare_for_bed
+        entity_id: timer.ac_prepare_for_bed
         state: active
       sequence:
       - service: timer.start
@@ -285,7 +285,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value:
@@ -296,10 +296,10 @@ update_next_timer_entity:
         data:
           value: Prepare for bed
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_for_bed
+        entity_id: timer.ac_time_for_bed
         state: active
       sequence:
       - service: timer.start
@@ -307,7 +307,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bed_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(sensor.hhmm_bed_time)}}'
@@ -317,10 +317,10 @@ update_next_timer_entity:
         data:
           value: Bed time
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.wake_up_time
+        entity_id: timer.ac_wake_up_time
         state: active
       sequence:
       - service: timer.start
@@ -328,7 +328,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.wake_up_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(sensor.hhmm_wake_up_time)}}'
@@ -338,10 +338,10 @@ update_next_timer_entity:
         data:
           value: Wake-up time
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.prepare_to_leave
+        entity_id: timer.ac_prepare_to_leave
         state: active
       sequence:
       - service: timer.start
@@ -349,7 +349,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_to_leave''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(sensor.hhmm_prepare_to_leave)}}'
@@ -359,10 +359,10 @@ update_next_timer_entity:
         data:
           value: Prepare to leave
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_leave_home
+        entity_id: timer.ac_time_leave_home
         state: active
       sequence:
       - service: timer.start
@@ -370,7 +370,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(sensor.hhmm_time_leave_home)}}'
@@ -380,10 +380,10 @@ update_next_timer_entity:
         data:
           value: Leave Home
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
     - conditions:
       - condition: state
-        entity_id: timer.time_leave_work
+        entity_id: timer.ac_time_leave_work
         state: active
       sequence:
       - service: timer.start
@@ -391,7 +391,7 @@ update_next_timer_entity:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
-          entity_id: timer.next_event
+          entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
           value: '{{states(sensor.hhmm_time_leave_work)}}'
@@ -401,7 +401,7 @@ update_next_timer_entity:
         data:
           value: Leave Work
         target:
-          entity_id: input_text.name_next_timer
+          entity_id: input_text.ac_next_event_name
   mode: single
 mushroom_datetime_minus:
   alias: Mushroom datetime minus

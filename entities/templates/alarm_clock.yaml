@@ -452,10 +452,10 @@ sensor:
     unique_id: a97f565e-e7c5-4e82-b9bb-c743881dce50
     state: >-
       {{
-        is_state('timer.prepare_for_bed', 'active')
-        + is_state('timer.time_for_bed', 'active')
-        + is_state('timer.wake_up_time', 'active')
-        + is_state('timer.prepare_to_leave', 'active')
-        + is_state('timer.time_leave_home', 'active')
-        + is_state('timer.time_leave_work', 'active')
+        is_state('timer.ac_prepare_for_bed', 'active')
+        + is_state('timer.ac_time_for_bed', 'active')
+        + is_state('timer.ac_wake_up_time', 'active')
+        + is_state('timer.ac_prepare_to_leave', 'active')
+        + is_state('timer.ac_time_leave_home', 'active')
+        + is_state('timer.ac_time_leave_work', 'active')
       }}
