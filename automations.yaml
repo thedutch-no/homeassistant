@@ -4976,7 +4976,7 @@
     platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.timer_kupevarme
+      entity_id: timer.ac_timer_kupevarme
     id: timer
     enabled: true
   condition: []
