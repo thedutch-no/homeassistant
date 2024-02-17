@@ -1197,3 +1197,22 @@ log_diesel_weekly_reset:
       - input_number.diesel_6
       - input_number.diesel_7
   mode: single
+esphome_update_all_esphome_devices:
+  alias: 'ESPHome: Update all ESPHome devices'
+  sequence:
+  - repeat:
+      for_each: '{{ states.update | selectattr(''state'', ''eq'', ''on'') | map(attribute=''entity_id'')
+        | select(''in'', integration_entities(''esphome'')) | list }}'
+      sequence:
+      - service: update.install
+        data: {}
+        target:
+          entity_id: '{{ repeat.item }}'
+      - wait_template: '{{ is_state(repeat.item, ''off'') }}'
+        continue_on_timeout: true
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.esphome_update_all_esphome_devices
+    data: {}
+  mode: single
+  icon: mdi:download-multiple-outline

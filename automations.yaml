@@ -316,27 +316,6 @@
         target:
           entity_id: scene.bedroom_lights_to_on_100_352
         metadata: {}
-- id: '1658067975601'
-  alias: Livingroom - 4 Button remote Blueprint
-  description: ''
-  use_blueprint:
-    path: EPMatt/ikea_e2001_e2002.yaml
-    input:
-      integration: Zigbee2MQTT
-      controller_entity: sensor.livingroom_4_button_remote_action
-      helper_last_controller_event: input_text.livingroom_4_button_remote_helper
-      action_button_left_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.livingroom_lights_to_on_100_250
-        metadata: {}
-      action_button_right_short:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.livingroom_lights_to_on_100_454
-        metadata: {}
-      action_button_up_short: []
-      action_button_down_short: []
 - id: '1658564012685'
   alias: iPad Charging Control
   description: ''
@@ -400,13 +379,13 @@
     domain: switch
   mode: single
 - id: '1658654143967'
-  alias: Waterleak Detected
+  alias: 'Alarm: Waterleak Detected'
   description: Turn off washing machine when waterless is detected
   trigger:
   - type: moist
     platform: device
-    device_id: cf391231520170be5563c5aad99f08db
-    entity_id: binary_sensor.eve_water_guard
+    device_id: eac243e17fa7d5c876daad23fc907941
+    entity_id: f3eaae8304ecd1417e12d0373aef5aae
     domain: binary_sensor
   condition: []
   action:
@@ -414,9 +393,13 @@
     device_id: cbf534da6c764a45913dbffa197bb083
     entity_id: switch.washing_machine_power_module_relay
     domain: switch
-  - service: script.send_notification_to_phone
+  - service: notify.mobile_app_robs_iphone_11
+    metadata: {}
     data:
-      message: Er is een waterlek in de keuken
+      message: ER IS EEN WATERLEK IN DE KEUKEN
+      data:
+        push:
+          sound: Water_Alarm.wav
   mode: single
 - id: '1659958835456'
   alias: Washing machine - Done
@@ -641,7 +624,7 @@
             entity_id: climate.livingroom
   mode: single
 - id: '1663248731397'
-  alias: Change start location detected
+  alias: 'Alarm Clock: Change start location detected'
   description: ''
   trigger:
   - platform: state
@@ -720,6 +703,21 @@
           time: 00:00:00
         target:
           entity_id: input_datetime.travel_time_customer
+      - service: input_select.select_option
+        data:
+          option: Manual
+        target:
+          entity_id: input_select.start_time
+      - service: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.datetime_work_start
+        data:
+          time: '{{ states(''input_datetime.time_wake_up_weekend'') }}'
+      - service: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.time_work_start
+        data:
+          time: '{{ states(''input_datetime.time_wake_up_weekend'') }}'
     - conditions:
       - condition: state
         entity_id: input_select.start_location
@@ -805,7 +803,7 @@
       alias: Set varmepumpe setpoint to Norm temp
   mode: single
 - id: '1663689046568'
-  alias: Change start time detected
+  alias: 'Alarm Clock: Change start time detected'
   description: ''
   trigger:
   - platform: state
@@ -3086,6 +3084,11 @@
     event_data:
       entity_id: timer.ac_varmepumpe_night_mode
     id: night_mode
+  - alias: When Varmepumpe Temperature changes
+    platform: template
+    value_template: '{{ state_attr(''climate.livingroom'',''temperature'') != states(''input_number.setpoint_varmepumpe'')
+      | int }}'
+    id: varmepumpe
   condition: []
   action:
   - choose:
@@ -3132,6 +3135,16 @@
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
         alias: Set varmepumpe setpoint to Min temp
+    - conditions:
+      - condition: trigger
+        id:
+        - varmepumpe
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ state_attr(''climate.livingroom'',''temperature'') }}'
+        alias: Set varmepumpe setpoint to varmepumpe actual temp
     default: []
   mode: single
 - id: '1668542656762'
@@ -3508,36 +3521,6 @@
     target:
       entity_id: light.bedroom_ceiling
   mode: single
-- id: '1673172170903'
-  alias: Magic Cube - Radio station selection
-  description: ''
-  use_blueprint:
-    path: brent/zha-aqara-magic-cube-57-actions.yaml
-    input:
-      remote: f6dd0fecf519955931c264a5baf094ee
-      flip_any: true
-      cube_flip_1:
-      - service: script.radio10_live
-        data: {}
-      cube_flip_2:
-      - service: script.radio10_60s_and_70s_hits
-        data: {}
-      cube_flip_3:
-      - service: script.radio10_80s_hits
-        data: {}
-      cube_flip_4:
-      - service: script.radio10_disco_clasics
-        data: {}
-      cube_flip_5:
-      - service: script.radio10_love_songs
-        data: {}
-      cube_flip_6:
-      - service: media_player.media_stop
-        data: {}
-        target:
-          entity_id: media_player.sonos_speakers
-      rotate_right: []
-      rotate_left: []
 - id: '1673176422678'
   alias: Aqara Cube - Radio station Selection
   description: ''
@@ -4255,45 +4238,6 @@
     device_id: 8478713ca354fe3bcf5018e407d53227
     entity_id: switch.3d_printer_switch
     domain: switch
-  mode: single
-- id: '1684062960735'
-  alias: Kitchen door opened
-  description: ''
-  trigger:
-  - type: opened
-    platform: device
-    device_id: 5fdee7b781300c48c89db1ce99e464a0
-    entity_id: binary_sensor.kitchen_door_contact
-    domain: binary_sensor
-  condition:
-  - condition: state
-    entity_id: person.rob
-    state: home
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: switch.kupevarme
-      state: unavailable
-  - condition: template
-    value_template: '{{ (as_timestamp(now()) - as_timestamp(states.binary_sensor.entrance_door_contact.last_changed))
-      < 60 }}
-
-      '
-    alias: Entrance door opened <60 sec ago
-  - condition: state
-    entity_id: input_boolean.kupevarme_connected
-    state: 'off'
-  action:
-  - service: media_player.play_media
-    data:
-      media_content_id: http://192.168.28.110:8123/local/sounds/de_auto_verwarming_is_niet_aangesloten_nl-nl_cloud.mp3
-      media_content_type: music
-      announce: true
-      extra:
-        volume: 40
-    target:
-      entity_id: media_player.kitchen_sonos_cloud_speaker
-    enabled: true
   mode: single
 - id: '1697278957821'
   alias: Master Switch - Shoe dryer ON/OFF
@@ -5067,31 +5011,23 @@
         push:
           sound: het_is_tijd_om_te_vertrekken_nl-nl_cloud.wav
   mode: single
-- id: '1707643223717'
-  alias: Heating - Livingroom
-  description: ''
-  trigger: []
+- id: '1708167374053'
+  alias: 'ESPHome: Update All ESPHome Devices'
+  description: 'Check for ESPHome devices that needs updating and then run the ESPHome
+    update script
+
+    https://www.youtube.com/watch?v=XqctgLyj2cs'
+  trigger:
+  - platform: template
+    value_template: '{{ integration_entities(''esphome'') | select(''match'', ''^update.'')
+      | select(''is_state'', ''on'') | list | count > 0 }}'
+  - platform: state
+    entity_id:
+    - input_boolean.esphome_update_all_esphome_devices
+    to: 'on'
   condition: []
   action:
-  - service: climate.set_temperature
-    data:
-      hvac_mode: heat
-      temperature: '{{ states(''input_number.setpoint_varmepumpe'') | float(0) }} '
-    target:
-      entity_id: climate.livingroom
-    alias: 'Set temperature to: setpoint_varmepumpe'
-  - service: climate.set_fan_mode
+  - service: script.esphome_update_all_esphome_devices
     metadata: {}
-    data:
-      fan_mode: '{{ states(''input_select.setpoint_varmepumpe_fan_mode'') }} '
-    target:
-      entity_id: climate.livingroom
-    alias: 'Set fan mode to: setpoint_varmepumpe_fan_mode'
-  - service: climate.set_hvac_mode
-    metadata: {}
-    data:
-      hvac_mode: '{{ states(''input_select.setpoint_varmepumpe_hvac_mode'') }} '
-    target:
-      entity_id: climate.livingroom
-    alias: 'Set fan mode to: setpoint_varmepumpe_hvac_mode'
+    data: {}
   mode: single

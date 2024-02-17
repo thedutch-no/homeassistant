@@ -12,18 +12,6 @@ binary_sensor:
     state: >
       {{ states('sensor.varmepumpe_power')|float > 5 }}
 
-#  - name: workday
-#    unique_id: 83bb15fe-f15f-49d8-8c34-9808365ce250
-#    state: >
-#      {% if as_datetime(states('input_datetime.datetime_work_start')).isoweekday() < 6 %}
-#        {% if states('input_select.start_location') == 'Weekend' %}
-#          {{ false }}
-#        {% else %}
-#          {{ true }}
-#        {% endif %}
-#      {% else %}
-#        {{ false }}
-#      {% endif %}
 
 sensor:
   #########################
