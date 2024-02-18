@@ -1,0 +1,29 @@
+#########################
+# Calculate: Time to leave work based on
+# - sensor.ac_work_start
+# - input_datetime.travel_time_customer
+# - sensor.travel_time_congestion
+#########################
+
+sensor:
+  - name: "ac_time_leave_work"
+    unique_id: 44f3b6b5-87c7-4fa0-9935-591e9c5c66c7
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tws = as_datetime(states('sensor.ac_work_start')) %}
+      {% set ttc = states('input_datetime.travel_time_customer') %}
+      {% set ct = states('sensor.ac_congestion_time') %}
+      {% set h = ttc.split(':')[0] | int + ct.split(':')[0] | int %}
+      {% set m = ttc.split(':')[1] | int + ct.split(':')[1] | int %}
+      {% set ret = tws - timedelta(hours=h, minutes=m) %}
+      {% if states('binary_sensor.workstart_workday') == 'on' %}
+        {{ as_local(ret).isoformat() }}
+      {% else %}
+        {{ states('sensor.ac_work_start') }}
+      {% endif %}
+
+  - name: hhmm_time_leave_work
+    unique_id: 02c52c7a-4155-4069-ab81-92694de22148
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_time_leave_work')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

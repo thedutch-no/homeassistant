@@ -1,0 +1,37 @@
+#########################
+# Calculate: Time for Night mode On/Off based on:
+# - sensor.ac_time_for_bed
+# - sensor.ac_time_wake_up
+# - input_datetime.prep_time_night_mode_on
+#########################
+
+sensor:
+  - name: "ac_night-mode_on"
+    unique_id: fe9d0b91-a1d3-409a-a3bf-f3423b1fed36
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tfb =  as_datetime(states('sensor.ac_time_for_bed')) %}
+      {% set ptn = states('input_datetime.prep_time_night_mode_on') %}
+      {% set ret = tfb + timedelta(hours = ptn.split(':')[0] | int, minutes = ptn.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_night_mode_on
+    unique_id: ebc46bb2-18b8-4b17-8208-3fc25471d903
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_night_mode_on')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+
+  - name: "ac_night_mode_off"
+    unique_id: d5ff9ccb-cf0c-49a0-a0a3-1c0e7de6aeb4
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set twu =  as_datetime(states('sensor.ac_time_wake_up')) %}
+      {% set ptn = states('input_datetime.prep_time_night_mode_off') %}
+      {% set ret = twu - timedelta(hours = ptn.split(':')[0] | int, minutes = ptn.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_night_mode_off
+    unique_id: dec3a9b1-88df-4a7f-8d78-ccf5a1e9bc4c
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_night_mode_off')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

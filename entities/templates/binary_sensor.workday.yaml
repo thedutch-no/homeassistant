@@ -14,6 +14,14 @@ binary_sensor:
     unique_id: 817a617d-0c31-4aa9-b501-4ed571ddc432
     icon: "mdi:calendar-week"
     state: >
-      {{
-        states('input_boolean.workday') or (not is_state('binary_sensor.holiday', 'on') and as_datetime(states('sensor.work_start')).weekday() < 5)
-      }}
+      {% if states('input_boolean.workday') == 'on' %}
+        {{ states('input_boolean.workday') }}
+      {% else %}
+        {{ (not is_state('binary_sensor.holiday', 'on') and as_datetime(states('sensor.ac_work_start')).weekday() < 5) }}
+      {% endif %}
+
+
+
+#    {{
+#        states('input_boolean.workday') or (not is_state('binary_sensor.holiday', 'on') and as_datetime(states('sensor.work_start')).weekday() < 5)
+#    }}

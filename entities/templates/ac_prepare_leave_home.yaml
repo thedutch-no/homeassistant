@@ -1,0 +1,30 @@
+#########################
+# Calculate: Time to prepare to leave home based on
+# - sensor.ac_time_leave_home
+# - Input_datetime.prep_time_lenses
+# - input_datetiem.prep_time_entrance
+#########################
+
+sensor:
+  - name: "ac_prepare_leave_home"
+    unique_id: 7e8be971-5f24-47c6-bbd1-79282af9e4bd
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tlh = as_datetime(states('sensor.ac_time_leave_home')) %}
+      {% set ptl = states('input_datetime.prep_time_lenses') %}
+      {% set pte = states('input_datetime.prep_time_entrance') %}
+      {% set h = ptl.split(':')[0] | int + pte.split(':')[0] | int %}
+      {% set m = ptl.split(':')[1] | int + pte.split(':')[1] | int %}
+      {% set ret = tlh - timedelta(hours=h, minutes=m) %}
+      {% if states('binary_sensor.workstart_workday') == 'on' %}
+        {{ as_local(ret).isoformat() }}
+      {% else %}
+        {{ states('sensor.ac_work_start') }}
+      {% endif %}
+
+  - name: hhmm_prepare_leave_home
+    unique_id: 9b6f79cf-948b-4c66-995a-b41dc37c85c5
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_prepare_leave_home')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+

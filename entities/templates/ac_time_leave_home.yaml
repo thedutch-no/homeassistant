@@ -1,0 +1,31 @@
+#########################
+# Calculate: Time out of the front door based on
+# - sensor.ac_time_leave_work
+# - input_datetime.travel_time_work
+# - input_datetime.prep_time_truck
+# - input_datetime.prep_time_car
+#########################
+
+sensor:
+  - name: "ac_time_leave_home"
+    unique_id: 12db3c59-4620-4218-9454-ceeeb995c1f0
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tlw = as_datetime(states('sensor.ac_time_leave_work')) %}
+      {% set ttw = states('input_datetime.travel_time_work') %}
+      {% set ptt = states('input_datetime.prep_time_truck') %}
+      {% set ptc = states('input_datetime.prep_time_car') %}
+      {% set h = ttw.split(':')[0] | int + ptt.split(':')[0] | int + ptc.split(':')[0] | int %}
+      {% set m = ttw.split(':')[1] | int + ptt.split(':')[1] | int + ptc.split(':')[1] | int %}
+      {% set ret = tlw - timedelta(hours=h, minutes=m) %}
+      {% if states('binary_sensor.workstart_workday') == 'on' %}
+        {{ as_local(ret).isoformat() }}
+      {% else %}
+        {{ states('sensor.ac_work_start') }}
+      {% endif %}
+
+  - name: hhmm_time_leave_home
+    unique_id: c46c719c-0c71-478f-a78b-3a7b6d9c01b5
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_time_leave_home')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

@@ -1,0 +1,23 @@
+#########################
+#
+# Grouping All alarm clock timers together in 1 sensor
+# - prepare for bed
+# - time for bed
+# - wake-up time
+# - prepare to leave
+# - time to leave
+#
+#########################
+
+sensor:
+  - name: "ac_active_timers"
+    unique_id: 6da313b9-3c06-43b1-9986-603cfe746544
+    state: >-
+      {{
+        is_state('timer.ac_prepare_for_bed', 'active')
+        + is_state('timer.ac_time_for_bed', 'active')
+        + is_state('timer.ac_wake_up_time', 'active')
+        + is_state('timer.ac_prepare_to_leave', 'active')
+        + is_state('timer.ac_time_leave_home', 'active')
+        + is_state('timer.ac_time_leave_work', 'active')
+      }}

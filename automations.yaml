@@ -399,7 +399,10 @@
       message: ER IS EEN WATERLEK IN DE KEUKEN
       data:
         push:
-          sound: Water_Alarm.wav
+          sound:
+            name: Water_Alarm.wav
+            critical: 1
+            volume: 1
   mode: single
 - id: '1659958835456'
   alias: Washing machine - Done
@@ -1465,22 +1468,13 @@
   - platform: state
     entity_id:
     - input_boolean.alarm_clock_on
-    id: Alarm On/Off
-  - platform: state
-    entity_id:
+    - input_boolean.kupevarme_connected
     - input_boolean.take_a_shower_tomorrow
-    id: shower
-  - platform: state
-    entity_id:
     - input_datetime.time_work_start
-    id: time
-  - platform: state
-    entity_id:
     - input_datetime.travel_time_customer
-    id: customer
-  - platform: state
-    entity_id:
     - input_datetime.time_work_start
+    - input_boolean.workday
+    id: changes
   condition: []
   action:
   - choose:
@@ -1512,12 +1506,12 @@
       - alias: 'Timer: Start Timer - Varmepumpe Night mode'
         if:
         - condition: template
-          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_time''))
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_varmepumpe_night_time''))
             - as_timestamp(now()))) | int > 0}}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_night_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_varmepumpe_night_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_varmepumpe_night_mode
@@ -1529,12 +1523,12 @@
             entity_id: timer.ac_varmepumpe_night_mode
       - if:
         - condition: template
-          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
             - as_timestamp(now()))) | int > 0}}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_prepare_for_bed
@@ -1542,25 +1536,25 @@
       - alias: 'Timer: Start Timer - Bed time'
         if:
         - condition: template
-          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
+          value_template: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
             - as_timestamp(now()))) | int > 0}}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_time_for_bed
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.bathroom_heating_time''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_bathroom_heating_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_bathroom_heating
         alias: 'Time: Start Timer - Bathroom Heating'
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_kupevarme_time''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_timer_kupevarme
@@ -1568,7 +1562,7 @@
         alias: 'Timer: Start Timer - Kupevarme'
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_wake_up_time
@@ -1576,48 +1570,48 @@
       - alias: 'Timer: Start Timer - Varmepumpe Wake-up mode'
         if:
         - condition: template
-          value_template: '  {{ states(''sensor.prepare_leave_home'') == states(''sensor.time_wake_up'')
+          value_template: '  {{ states(''sensor.ac_prepare_leave_home'') == states(''sensor.ac_time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.varmepumpe_wake_up_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_varmepumpe_wake_up_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_varmepumpe_wake_up_mode
       - alias: 'Timer: Start Timer - Prepare to leave'
         if:
         - condition: template
-          value_template: '  {{ states(''sensor.prepare_leave_home'') != states(''sensor.time_wake_up'')
+          value_template: '  {{ states(''sensor.ac_prepare_leave_home'') != states(''sensor.ac_time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_prepare_to_leave
       - alias: 'Timer: Start Timer - Time to leave Home'
         if:
         - condition: template
-          value_template: '{{ states(''sensor.time_leave_home'') != states(''sensor.time_wake_up'')
+          value_template: '{{ states(''sensor.ac_time_leave_home'') != states(''sensor.ac_time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_time_leave_home
       - alias: 'Timer: Start Timer - Time to leave Work'
         if:
         - condition: template
-          value_template: '{{ states(''sensor.time_leave_work'') != states(''sensor.time_wake_up'')
+          value_template: '{{ states(''sensor.ac_time_leave_work'') != states(''sensor.ac_time_wake_up'')
             }}'
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_time_leave_work
@@ -1631,10 +1625,15 @@
         then:
         - service: timer.start
           data:
-            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.kupevarme_time''))
+            duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_kupevarme_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_timer_kupevarme
+        else:
+        - service: timer.cancel
+          target:
+            entity_id: timer.ac_timer_kupevarme
+          data: {}
   mode: single
 - id: '1666291130997'
   alias: Heating - Bathroom Setpoint
@@ -3186,11 +3185,11 @@
     event: start
   - platform: numeric_state
     entity_id:
-    - sensor.active_alarm_clock_timers
+    - sensor.ac_active_timers
     above: 0
   - platform: numeric_state
     entity_id:
-    - sensor.active_alarm_clock_timers
+    - sensor.ac_active_timers
     below: 1
     id: cancelled
   condition: []
@@ -3203,13 +3202,13 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_for_bed''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event
       - service: input_text.set_value
         data:
-          value: '{{ as_timestamp(states(''sensor.prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
+          value: '{{ as_timestamp(states(''sensor.ac_prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
             true)}}'
         target:
           entity_id: input_text.hhmm_next_timer
@@ -3225,7 +3224,7 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_for_bed''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event
@@ -3246,7 +3245,7 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_wake_up''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event
@@ -3267,7 +3266,7 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.prepare_leave_home''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event
@@ -3288,7 +3287,7 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_home''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event
@@ -3309,7 +3308,7 @@
       sequence:
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.time_leave_work''))
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
           entity_id: timer.ac_next_event

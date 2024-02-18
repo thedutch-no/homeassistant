@@ -1,0 +1,34 @@
+#########################
+# Calculate: Time to wake-up based on
+# - sensor.ac_prepare_leave_home
+# - input_datetime.prep_time_shower
+# - input_datetime.prep_time_breakfast
+# - input_boolean.take_a_shower_tomorrow
+#########################
+
+sensor:
+  - name: "ac_time_wake_up"
+    unique_id: 12d114ed-5b76-4bef-9b89-7f33a8b3597c
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set plh = as_datetime(states('sensor.ac_prepare_leave_home')) %}
+      {% set ptb = states('input_datetime.prep_time_breakfast') %}
+      {% if states('input_boolean.take_a_shower_tomorrow') == 'on' %}
+        {% set pts = states('input_datetime.prep_time_shower') %}
+      {% else %}
+        {% set pts = '00:00:00' %}
+      {% endif %}
+      {% set h = ptb.split(':')[0] | int + pts.split(':')[0] | int %}
+      {% set m = ptb.split(':')[1] | int + pts.split(':')[1] | int %}
+      {% set ret = plh - timedelta(hours=h, minutes=m) %}
+      {% if states('binary_sensor.workstart_workday') == 'on' %}
+        {{ as_local(ret).isoformat() }}
+      {% else %}
+        {{ states('sensor.ac_work_start') }}
+      {% endif %}
+
+  - name: hhmm_time_wake_up
+    unique_id: df598229-fc76-4d74-b022-f9387c3f8b6a
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_time_wake_up')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

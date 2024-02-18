@@ -1,0 +1,30 @@
+#########################
+# Calculate: Congestion Time
+# - Time Work Start
+#########################
+
+sensor:
+  - name: "ac_congestion_time"
+    unique_id: ebef52ff-3727-4f31-9af9-af0923ea8bb7
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tws = states('input_datetime.time_work_start') %}
+      {% set cst1 = states('input_datetime.traffic_compensation_start_time_1') %}
+      {% set cst2 = states('input_datetime.traffic_compensation_start_time_2') %}
+
+      {% if states('input_datetime.time_work_start') > states('input_datetime.congestion_start_time_1') %}
+        {% if states('input_datetime.time_work_start') > states('input_datetime.congestion_start_time_2') %}
+          {% set ret = '00:20:00' %}
+        {% else %}
+          {% set ret = '00:10:00' %}
+        {% endif %}
+      {% else %}
+        {% set ret = '00:00:00' %}
+      {% endif %}
+      {{ ret }}
+  #########################
+  - name: hhmm_congestion_time
+    unique_id: 4e0139f3-a476-48ab-80fd-5d728d469166
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(strptime(states('sensor.ac_congestion_time'), '%H:%M:%S')) | timestamp_custom('%H:%M') }}

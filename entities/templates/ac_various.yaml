@@ -1,0 +1,26 @@
+#########################
+# Convert Date/Time sensor values to Time sensors:
+# - input_datetime.prep_time_car
+# - input_datetime.travel_time_work
+# - input_datetime.travel_time_customer
+#########################
+
+sensor:
+  - name: hhmm_prep_time_car
+    unique_id: 77319ebd-f266-417e-801c-388462083f83
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.prep_time_car'))) | int | timestamp_custom('%H:%M', true)}}
+
+  - name: hhmm_travel_time_work
+    unique_id: 91f2e19e-1e49-4529-9dc7-4871ece919e5
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_work'))) | int | timestamp_custom('%H:%M', true) }}
+
+  - name: hhmm_travel_time_customer
+    unique_id: 0246a935-a342-4637-947c-eaeb1a3e5a9c
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(today_at(states('input_datetime.travel_time_customer'))) | int | timestamp_custom('%H:%M', true) }}
+

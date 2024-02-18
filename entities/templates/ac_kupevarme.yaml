@@ -1,0 +1,22 @@
+#########################
+# Calculate Kupevarme Heating time based on:
+# - sensor.time_wake_up
+# - Kupevarme connected
+# - input_datetime.prep_time_kupevarme
+#########################
+
+sensor:
+  - name: "ac_kupevarme_time"
+    unique_id: da61cdfa-e591-4770-86d0-a0db640ce4e9
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set twu =  as_datetime(states('sensor.ac_time_wake_up')) %}
+      {% set ptk = states('input_datetime.prep_time_kupevarme') %}
+      {% set ret = twu - timedelta(hours = ptk.split(':')[0] | int, minutes = ptk.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_kupevarme_time
+    unique_id: 3bc62c99-35f6-43a5-a3dc-4f00c5f68fcd
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_kupevarme_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

@@ -13,4 +13,4 @@ binary_sensor:
     unique_id: e30e5968-a156-4d04-add4-9111f19dba90
     icon: "mdi:calendar-week"
     state: >
-      {{ as_datetime(states('sensor.work_start')).weekday() < 5 }}
+      {{ as_datetime(states('sensor.ac_work_start')).weekday() < 5 }}

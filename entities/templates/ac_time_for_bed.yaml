@@ -1,0 +1,28 @@
+#########################
+# Calculate: Time to be in bed based on
+# - sensor.ac_time_wake_up
+# - input_datetime.sleep_duration_weekend
+# - input_datetime.sleep_duration_workday
+#########################
+
+sensor:
+  - name: "ac_time_for_bed"
+    unique_id: 77b7f8b5-bb2a-4386-b378-c446eb083e5f
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tfb = as_datetime(states('sensor.ac_time_wake_up')) %}
+      {% if states('binary_sensor.workstart_workday') == 'on' %}
+        {% set dur = states('input_datetime.sleep_duration_workday') %}
+      {% else %}
+        {% set dur = states('input_datetime.sleep_duration_weekend') %}
+      {% endif %}
+      {% set h = dur.split(':')[0] | int %}
+      {% set m = dur.split(':')[1] | int %}
+      {% set ret = tfb - timedelta(hours=h, minutes=m) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_time_for_bed
+    unique_id: 8b53af66-6f7f-427f-9f00-22f13d7d3678
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_time_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

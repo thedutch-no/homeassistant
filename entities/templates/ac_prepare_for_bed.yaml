@@ -1,0 +1,23 @@
+#########################
+# Calculate: Time to prepare for bed based on
+# - sensor.ac_time_for_bed
+# - input_datetime.prep_time_evening
+#########################
+
+sensor:
+  - name: "ac_prepare_for_bed"
+    unique_id: a94cf4d1-f753-45f5-bd56-95994e5b28a1
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set pfb = as_datetime(states('sensor.ac_time_for_bed')) %}
+      {% set pte = states('input_datetime.prep_time_evening') %}
+      {% set h = pte.split(':')[0] | int %}
+      {% set m = pte.split(':')[1] | int %}
+      {% set ret = pfb - timedelta(hours=h, minutes=m) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_prepare_for_bed
+    unique_id: 1f6468a7-8fb9-4b31-b54e-25a57f6bd8bc
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_prepare_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

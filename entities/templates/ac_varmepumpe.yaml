@@ -1,0 +1,41 @@
+sensor:
+
+  #########################
+  # Calculate: Varmepumpe Night time based on:
+  # - sensor.ac_time_for_bed
+  # - input_datetime.prep_time_varmepumpe_offset
+  #########################
+  - name: "ac_varmepumpe_night_time"
+    unique_id: f7b48e67-e0f0-46e5-bea0-e69615ad4fdb
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tfb =  as_datetime(states('sensor.ac_time_for_bed')) %}
+      {% set ptv = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set ret = tfb - timedelta(hours = ptv.split(':')[0] | int, minutes = ptv.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_varmepumpe_night_time
+    unique_id: eb24a1b7-58ae-48d7-8cdc-a9838901fab9
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_varmepumpe_night_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+
+  #########################
+  # Calculate: Varmepumpe Wake-up time based on:
+  # - sensor.ac_time_wake_up
+  # - input_datetime.prep_time_varmepumpe_offset
+  #########################
+  - name: "ac_varmepumpe_wake_up_time"
+    unique_id: f0d61cc9-0ee1-410a-8abe-9317332c5d09
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set twu =  as_datetime(states('sensor.ac_time_wake_up')) %}
+      {% set ptv = states('input_datetime.prep_time_varmepumpe_offset') %}
+      {% set ret = twu - timedelta(hours = ptv.split(':')[0] | int, minutes = ptv.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_varmepumpe_wake_up_time
+    unique_id: fd3d0e13-f0b1-4aa5-9cbd-e1d3cab15e53
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_varmepumpe_wake_up_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}

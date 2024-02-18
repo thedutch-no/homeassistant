@@ -1,0 +1,24 @@
+#########################
+# Calculate Bathroom Heating time based on:
+# - sensor.time_wake_up
+# - morning shower activated
+# - prep time Bathroom heating
+#########################
+
+sensor:
+
+  - name: "ac_bathroom_heating_time"
+    unique_id: ff976084-d0f1-4d28-b7ce-5d07609e4dda
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set twu =  as_datetime(states('sensor.ac_time_wake_up')) %}
+      {% set pth = states('input_datetime.prep_time_bathroom_heating') %}
+      {% set ret = twu - timedelta(hours = pth.split(':')[0] | int, minutes = pth.split(':')[1] | int) %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_bathroom_heating_time
+    unique_id: 1d56d736-63e7-41e6-896f-318878b57448
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp(states('sensor.ac_bathroom_heating_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+

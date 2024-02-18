@@ -1,0 +1,26 @@
+#########################
+# Calculate: Work Start Date and Time
+#   Add a date to the Work Start Time, if the time is before curent time add totay,
+#   if the time is after curent time add today + 24h
+# - input_datetime.time_work_start
+#########################
+
+sensor:
+  - name: ac_work_start
+    unique_id: 4debb4f7-eeb5-4607-8fb2-2036e18e47e8
+    icon: mdi:clock-alert-outline
+    state: >
+      {% set tws = as_timestamp(today_at(states('input_datetime.time_work_start'))) | int %}
+      {% set cur = as_timestamp(now()) | int %}
+      {% if cur > tws %}
+        {% set ret = as_datetime(tws) + timedelta(hours=24) %}
+      {% else %}
+        {% set ret = as_datetime(tws) %}
+      {% endif %}
+      {{ as_local(ret).isoformat() }}
+
+  - name: hhmm_work_start
+    unique_id: 64659f96-8f07-40f9-9aa1-7e209f14b9ef
+    icon: mdi:clock-alert-outline
+    state: >
+      {{ as_timestamp((states('sensor.ac_work_start'))) | int | timestamp_custom('%d-%m - %H:%M', true) }}
