@@ -1248,10 +1248,10 @@
   - condition: state
     entity_id: input_boolean.alarm_clock_on
     state: 'on'
-  - condition: template
-    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+  - alias: Wake-up time != alarm time
+    condition: template
+    value_template: '{{ states(''sensor.ac_prepare_leave_home'') != states(''sensor.ac_time_wake_up'')
       }}'
-    alias: Wake-up time != alarm time
   action:
   - service: media_player.play_media
     data:
@@ -1287,7 +1287,7 @@
     entity_id: input_boolean.alarm_clock_on
     state: 'on'
   - condition: template
-    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+    value_template: '{{ states(''sensor.ac_prepare_leave_home'') != states(''sensor.ac_time_wake_up'')
       }}'
     alias: Wake-up time != alarm time
   action:
@@ -1339,7 +1339,7 @@
     entity_id: person.rob
     zone: zone.home
   - condition: template
-    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.varmepumpe_night_mode_time''))
+    value_template: '{{ states(''sensor.time'') >= (as_timestamp(states(''sensor.ac_varmepumpe_night_time''))
       | int  | timestamp_custom(''%H:%M'', false))}}'
   - condition: device
     type: is_on
@@ -1361,6 +1361,7 @@
         target:
           entity_id: climate.livingroom
         enabled: false
+      alias: When Outside temp > 5 then Varmepumpe to Off
     - conditions:
       - type: is_temperature
         condition: device
@@ -1379,17 +1380,27 @@
           fan_mode: auto
         target:
           entity_id: climate.livingroom
-    default:
-    - service: input_number.set_value
-      data_template:
-        entity_id: input_number.setpoint_varmepumpe
-        value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
-      alias: Set varmepumpe setpoint to Min temp
-    - service: climate.set_fan_mode
-      data:
-        fan_mode: quiet
-      target:
-        entity_id: climate.livingroom
+      alias: When Outside temp < -8 Varmepumpe temp=norm / fan=auto
+    - conditions:
+      - type: is_temperature
+        condition: device
+        device_id: ae52f9cc6167e7050a6e865cf51140ee
+        entity_id: sensor.openweathermap_forecast_temperature
+        domain: sensor
+        above: -9
+        below: 6
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
+        alias: Set varmepumpe setpoint to Min temp
+      - service: climate.set_fan_mode
+        data:
+          fan_mode: quiet
+        target:
+          entity_id: climate.livingroom
+      alias: When Outside temp >= 5 or <= -8 then Varmepumpe temp=min / fan=quiet
   mode: single
 - id: '1664386674506'
   alias: Time - Toggle Night mode On/Off
@@ -1495,7 +1506,7 @@
           - timer.ac_next_event
           - timer.ac_bathroom_heating
           - timer.ac_varmepumpe_wake_up_mode
-          - timer.ac_timer_kupevarme
+          - timer.ac_kupevarme
           - timer.ac_time_leave_home
           - timer.ac_time_leave_work
     - conditions:
@@ -1554,14 +1565,6 @@
         alias: 'Time: Start Timer - Bathroom Heating'
       - service: timer.start
         data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_kupevarme_time''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_timer_kupevarme
-        enabled: false
-        alias: 'Timer: Start Timer - Kupevarme'
-      - service: timer.start
-        data:
           duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
             - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
         target:
@@ -1615,9 +1618,6 @@
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
             entity_id: timer.ac_time_leave_work
-      - service: script.update_next_timer_entity
-        data: {}
-        enabled: false
       - if:
         - condition: state
           entity_id: input_boolean.kupevarme_connected
@@ -1628,12 +1628,16 @@
             duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_kupevarme_time''))
               - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
           target:
-            entity_id: timer.ac_timer_kupevarme
+            entity_id: timer.ac_kupevarme
         else:
         - service: timer.cancel
           target:
-            entity_id: timer.ac_timer_kupevarme
+            entity_id: timer.ac_kupevarme
           data: {}
+        alias: 'Timer: Start Timer - Kupevarme'
+      - service: script.update_next_timer_entity
+        data: {}
+        enabled: false
   mode: single
 - id: '1666291130997'
   alias: Heating - Bathroom Setpoint
@@ -1989,6 +1993,7 @@
           data: {}
           target:
             entity_id: automation.alarm_varmepumpe_off_time
+          enabled: true
         - service: input_boolean.turn_off
           data: {}
           target:
@@ -4919,7 +4924,7 @@
     platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.ac_timer_kupevarme
+      entity_id: timer.ac_kupevarme
     id: timer
     enabled: true
   condition: []
@@ -4990,15 +4995,11 @@
     event_data:
       entity_id: timer.ac_time_leave_work
   condition:
-  - condition: zone
-    entity_id: person.rob
-    zone: zone.work
-    enabled: true
   - condition: state
     entity_id: input_boolean.alarm_clock_on
     state: 'on'
   - condition: template
-    value_template: '{{ states(''sensor.prepare_to_leave'') != states(''sensor.wake_up_time'')
+    value_template: '{{ states(''sensor.ac_prepare_leave_home'') != states(''sensor.ac_time_wake_up'')
       }}'
     alias: Wake-up time != alarm time
   action:
