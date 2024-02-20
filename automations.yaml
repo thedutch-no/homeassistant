@@ -790,8 +790,7 @@
       entity_id:
       - input_boolean.overide_kitchen_lights
       - input_boolean.overide_hallway_lights
-      - input_boolean.overide_bathroom_lights
-    enabled: false
+    enabled: true
   - service: script.trigger_shoe_dryer_control
     data: {}
   - if:
@@ -1315,15 +1314,6 @@
       data:
         push:
           sound: het_is_tijd_om_te_vertrekken_nl-nl_cloud.wav
-  - delay:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.alarm_clock_on
   mode: single
 - id: '1664298114210'
   alias: Timer - Varmepumpe Night mode
@@ -1407,11 +1397,11 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.night_mode_off_time''))
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.ac_night_mode_off''))
       | int  | timestamp_custom(''%H:%M'', true))}}'
     id: night_mode_off
   - platform: template
-    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.night_mode_on_time''))
+    value_template: '{{ states(''sensor.time'') == (as_timestamp(states(''sensor.ac_night_mode_on''))
       | int  | timestamp_custom(''%H:%M'', true))}}'
     id: night_mode_on
   condition:
