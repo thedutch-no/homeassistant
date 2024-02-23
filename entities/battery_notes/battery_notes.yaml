@@ -5,5 +5,11 @@
 # https://github.com/andrew-codechimp/HA-Battery-Notes
 #####
 
-
-battery_notes: !include_dir_list  ../entities/battery_notes
+battery_notes:
+  enable_autodiscovery: true
+  show_all_devices: false
+  enable_replaced: true
+  default_battery_low_threshold: 10
+  battery_increase_threshold: 25
+  hide_battery: false
+  round_battery: false

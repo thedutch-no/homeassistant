@@ -1756,7 +1756,7 @@
       alias: Set bathroom setpoint to Min temp
   mode: single
 - id: '1666436695112'
-  alias: Nightly build upload to Github
+  alias: 'Scheduled: Nightly build upload to Github'
   description: ''
   trigger:
   - platform: time
@@ -5021,3 +5021,80 @@
     metadata: {}
     data: {}
   mode: single
+- id: '1708715627609'
+  alias: 'Alarm: Battery Low Notification'
+  description: Battery Low Notification with auto dismiss
+  trigger:
+  - platform: event
+    event_type: battery_notes_battery_threshold
+    event_data:
+      battery_low: true
+    id: low
+    alias: Battery went low
+  - platform: event
+    event_type: battery_notes_battery_threshold
+    event_data:
+      battery_low: false
+    id: high
+    alias: Battery went high
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - low
+      sequence:
+      - service: persistent_notification.create
+        data:
+          title: '{{ trigger.event.data.device_name }} Battery Low
+
+            '
+          notification_id: '{{ trigger.event.data.device_id }}'
+          message: 'The device has a battery level of {{ trigger.event.data.battery_level
+            }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity }}×
+            {{ trigger.event.data.battery_type }}
+
+            '
+    - conditions:
+      - condition: trigger
+        id:
+        - high
+      sequence:
+      - service: persistent_notification.dismiss
+        data:
+          notification_id: '{{ trigger.event.data.device_id }}'
+  mode: queued
+- id: '1708715895066'
+  alias: 'Scheduled: Daily Battery Not Reported Check'
+  description: Check whether a battery has reported
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - service: battery_notes.check_battery_last_reported
+    data:
+      days_last_reported: 2
+  mode: single
+- id: '1708715983408'
+  alias: 'Alarm: Battery Not Reported'
+  description: Battery not reported
+  trigger:
+  - platform: event
+    event_type: battery_notes_battery_not_reported
+  condition: []
+  action:
+  - service: persistent_notification.create
+    data:
+      title: '{{ trigger.event.data.device_name }} Battery Not Reported
+
+        '
+      message: 'The device has not reported its battery level for {{ trigger.event.data.battery_last_reported_days
+        }} days {{ ''\n'' -}} Its last reported level was {{ trigger.event.data.battery_last_reported_level
+        }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity }}× {{ trigger.event.data.battery_type
+        }}
+
+        '
+  mode: queued
+  max: 30
