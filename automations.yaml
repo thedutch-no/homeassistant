@@ -3077,7 +3077,12 @@
     event_type: timer.finished
     event_data:
       entity_id: timer.ac_varmepumpe_night_mode
-    id: night_mode
+    id: night_mode_on
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.ac_varmepumpe_wake_up_mode
+    id: night_mode_off
   - alias: When Varmepumpe Temperature changes
     platform: template
     value_template: '{{ state_attr(''climate.livingroom'',''temperature'') != states(''input_number.setpoint_varmepumpe'')
@@ -3122,13 +3127,23 @@
     - conditions:
       - condition: trigger
         id:
-        - night_mode
+        - night_mode_on
       sequence:
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
         alias: Set varmepumpe setpoint to Min temp
+    - conditions:
+      - condition: trigger
+        id:
+        - night_mode_off
+      sequence:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.setpoint_varmepumpe
+          value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
+        alias: Set varmepumpe setpoint to Norm temp
     - conditions:
       - condition: trigger
         id:

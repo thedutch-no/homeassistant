@@ -1,10 +1,11 @@
-sensor:
-
   #########################
   # Calculate: Varmepumpe Night time based on:
   # - sensor.ac_time_for_bed
+  # - sensor.ac_time_wake_up
   # - input_datetime.prep_time_varmepumpe_offset
   #########################
+
+sensor:
   - name: "ac_varmepumpe_night_time"
     unique_id: f7b48e67-e0f0-46e5-bea0-e69615ad4fdb
     icon: mdi:clock-alert-outline
@@ -20,11 +21,6 @@ sensor:
     state: >
       {{ as_timestamp(states('sensor.ac_varmepumpe_night_time')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
 
-  #########################
-  # Calculate: Varmepumpe Wake-up time based on:
-  # - sensor.ac_time_wake_up
-  # - input_datetime.prep_time_varmepumpe_offset
-  #########################
   - name: "ac_varmepumpe_wake_up_time"
     unique_id: f0d61cc9-0ee1-410a-8abe-9317332c5d09
     icon: mdi:clock-alert-outline

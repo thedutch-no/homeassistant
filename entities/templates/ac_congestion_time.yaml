@@ -1,6 +1,8 @@
 #########################
 # Calculate: Congestion Time
 # - Time Work Start
+# - input_datetime.traffic_compensation_start_time_1
+# - input_datetime.traffic_compensation_start_time_2
 #########################
 
 sensor:

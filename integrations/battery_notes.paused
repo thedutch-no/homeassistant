@@ -6,4 +6,4 @@
 #####
 
 
-battery_notes: !include_dir_list  ../entities/battery_notes
+battery_notes: !include_dir_list ../entities/battery_notes

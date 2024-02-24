@@ -1,12 +1,10 @@
 #########################
-#
 # Grouping All alarm clock timers together in 1 sensor
 # - prepare for bed
 # - time for bed
 # - wake-up time
 # - prepare to leave
 # - time to leave
-#
 #########################
 
 sensor:

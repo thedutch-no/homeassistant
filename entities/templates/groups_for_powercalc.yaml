@@ -1,0 +1,93 @@
+sensor:
+
+  #########################
+  #
+  # Grouping All appliances together in 1 power sensor
+  # - micorwave
+  # - washing machine
+  # - tumble dryer
+  # - refrigerator
+  # - freezer
+  # - water heater
+  #
+  #########################
+  - name: "All Appliances power"
+    unique_id: 7d24a22f-2cd7-4474-a9d9-14f8e8653693
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.microwave_power')|float(0)
+        + states('sensor.washing_machine_power_module_power')|float(0)
+        + states('sensor.tumble_dryer_power_module_power')|float(0)
+        + states('sensor.refrigerator_power')|float(0)
+        + states('sensor.freezer_power')|float(0)
+        + states('sensor.water_heater_power')|float(0)
+        + states('sensor.stove_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All heating devices together in 1 power sensor
+  # - varmepumpe
+  # - panel oven - bathroom
+  # - panel oven - frontdoor
+  # - ventilation - bedroom
+  #
+  #########################
+  - name: "All Heating power"
+    unique_id: 3ece76ea-d270-4d67-800c-53bbfe256ad7
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.varmepumpe_power')|float(0)
+        + states('sensor.panel_oven_br_power')|float(0)
+        + states('sensor.panel_oven_fd_power')|float(0)
+        + states('sensor.ventilation_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All equipment together in 1 power sensor
+  # - office equipment
+  # - multi-media equipment
+  #
+  #########################
+  - name: "All Equipment power"
+    unique_id: 49f53fac-bc88-459a-a042-634a25399a7a
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.office_equipment_power')|float(0)
+        + states('sensor.multi_media_equipment_power')|float(0)
+      }}
+
+  #########################
+  #
+  # Grouping All lights together in 1 power sensor
+  # - All entities in domain light
+  #
+  #########################
+  - name: "Bedroom lights"
+    unique_id: a31b0016-3db7-4262-a0b2-68c35612666e
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{
+        states('sensor.bedroom_ceiling_1_power')|float(0)
+        + states('sensor.bedroom_ceiling_2_power')|float(0)
+      }}
+
+
+
+
+
+
+
+

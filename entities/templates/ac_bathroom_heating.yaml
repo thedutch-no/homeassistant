@@ -1,12 +1,11 @@
 #########################
 # Calculate Bathroom Heating time based on:
-# - sensor.time_wake_up
+# - sensor.ac_time_wake_up
 # - morning shower activated
 # - prep time Bathroom heating
 #########################
 
 sensor:
-
   - name: "ac_bathroom_heating_time"
     unique_id: ff976084-d0f1-4d28-b7ce-5d07609e4dda
     icon: mdi:clock-alert-outline

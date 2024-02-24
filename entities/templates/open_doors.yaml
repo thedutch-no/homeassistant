@@ -1,0 +1,38 @@
+  #########################
+  # Number of Doors Open
+  # - Count the number of open doors (exept washer and dryer)
+  # - List the open doors (exept washer and dryer)
+  #########################
+
+sensor:
+  - name: number_open_doors
+    unique_id: 102c4c10-c1d6-4a52-a313-10b8a7aaa154
+    icon: mdi:door-open
+    state: >
+      {%- set ns = namespace(doorsensors=[]) -%}
+      {%- set ns.doorsensors = states.binary_sensor
+                | selectattr('attributes.device_class', 'defined')
+                | selectattr('attributes.device_class', '==', 'door')
+                | selectattr('state', 'eq', 'on')
+                | rejectattr('attributes.friendly_name', 'in' , 'Washing machine - Door Door')
+                | rejectattr('attributes.friendly_name', 'in' , 'Tumble Dryer - Door Door')
+                | map(attribute='name') | list -%}
+      {{ ns.doorsensors | count }}
+
+  - name: "What Doors Are Open"
+    unique_id: da619118-2e69-45fd-ae14-1c9c68edf6c6
+    icon: mdi:door-open
+    state: >
+      {%- set ns = namespace(doorsensors=[]) -%}
+      {%- set ns.doorsensors = states.binary_sensor
+                | selectattr('attributes.device_class', 'defined')
+                | selectattr('attributes.device_class', '==', 'door')
+                | selectattr('state', 'eq', 'on')
+                | rejectattr('attributes.friendly_name', 'eq' , 'Washing machine - Door Door')
+                | rejectattr('attributes.friendly_name', 'eq' , 'Tumble Dryer - Door Door')
+                | map(attribute='name') | list -%}
+      {%- if (ns.doorsensors | count > 0) -%}
+        {{ ns.doorsensors | list | join('/n') }}
+      {%- else -%}
+        unavailable
+      {%- endif -%}
