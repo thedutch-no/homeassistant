@@ -3100,7 +3100,7 @@
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
+          value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
         alias: Set entrance setpoint to Norm temp
     - conditions:
       - condition: trigger
@@ -3110,7 +3110,7 @@
       - service: input_number.set_value
         data_template:
           entity_id: input_number.setpoint_varmepumpe
-          value: '{{ states(''input_number.setpoint_entrance_min'') }}'
+          value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
         alias: Set entrance setpoint to Min temp
     - conditions:
       - condition: trigger
