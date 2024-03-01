@@ -2051,41 +2051,6 @@
   action:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: person.rob
-        state: home
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: switch.kupevarme
-          state: unavailable
-      - condition: not
-        conditions:
-        - condition: template
-          value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
-            }}'
-      sequence:
-      - service: script.check_kupevame_connected
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: person.rob
-        state: not_home
-      sequence:
-      - service: notify.mobile_app_robs_iphone_11
-        data:
-          message: 'De voordeur is geopend '
-          title: URGENT
-          data:
-            push:
-              sound:
-                name: default
-                critical: 1
-                volume: 1
-    default: []
-    enabled: false
-  - choose:
-    - conditions:
       - condition: trigger
         id:
         - open
@@ -2095,12 +2060,10 @@
           - condition: state
             entity_id: person.rob
             state: home
-          - condition: not
-            conditions:
-            - condition: template
-              value_template: '{{ now() - states.person.rob.last_changed > timedelta(minutes=5)
-                }}'
-            enabled: false
+          - condition: template
+            value_template: '{{(now() - states.person.rob.last_changed).total_seconds()
+              < 600 }}'
+            alias: Home less than 10 min.
           sequence:
           - service: script.check_kupevame_connected
             data: {}
