@@ -1,8 +1,8 @@
-  #########################
-  # Number of Doors Open
-  # - Count the number of open doors (exept washer and dryer)
-  # - List the open doors (exept washer and dryer)
-  #########################
+#########################
+# Number of Doors Open
+# - Count the number of open doors (exept washer and dryer)
+# - List the open doors (exept washer and dryer)
+#########################
 
 sensor:
   - name: number_open_doors

@@ -2523,18 +2523,31 @@
       - condition: trigger
         id: Switch - off
       sequence:
-      - service: timer.cancel
-        data: {}
-        target:
-          entity_id: timer.light_bathroom
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.overide_bathroom_lights
-      - service: scene.turn_on
-        data: {}
-        target:
-          entity_id: scene.bathroom_off
+      - choose:
+        - conditions:
+          - type: is_on
+            condition: device
+            device_id: d4bd474df41f85799cd411b24b6f7a6c
+            entity_id: c6b4a149f5137d515f29b2c9b79f4f8d
+            domain: binary_sensor
+          sequence:
+          - service: input_boolean.turn_off
+            data: {}
+            target:
+              entity_id: input_boolean.overide_bathroom_lights
+        default:
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id: input_boolean.overide_bathroom_lights
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.light_bathroom
+        - service: scene.turn_on
+          data: {}
+          target:
+            entity_id: scene.bathroom_off
     - conditions:
       - condition: trigger
         id: Timer
@@ -2689,18 +2702,31 @@
       - condition: trigger
         id: Switch - off
       sequence:
-      - service: timer.cancel
-        data: {}
-        target:
-          entity_id: timer.light_hallway
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.overide_hallway_lights
-      - service: scene.turn_on
-        data: {}
-        target:
-          entity_id: scene.livingroom_lights_to_off
+      - choose:
+        - conditions:
+          - type: is_on
+            condition: device
+            device_id: f9798fb6e7fc591e689b3669f6aa516c
+            entity_id: d22dd8e9fe21ad2390ed77b7cdbb3d6d
+            domain: binary_sensor
+          sequence:
+          - service: input_boolean.turn_off
+            data: {}
+            target:
+              entity_id: input_boolean.overide_hallway_lights
+        default:
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id: input_boolean.overide_hallway_lights
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.light_hallway
+        - service: scene.turn_on
+          data: {}
+          target:
+            entity_id: scene.livingroom_lights_to_off
     - conditions:
       - condition: trigger
         id: Timer
@@ -2856,18 +2882,31 @@
       - condition: trigger
         id: Switch - off
       sequence:
-      - service: timer.cancel
-        data: {}
-        target:
-          entity_id: timer.light_entrance
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.overide_entrance_lights
-      - service: scene.turn_on
-        data: {}
-        target:
-          entity_id: scene.livingroom_lights_to_off_2
+      - choose:
+        - conditions:
+          - type: is_on
+            condition: device
+            device_id: 33cb46c4b164237168a9fc81b6be7564
+            entity_id: 57bccd1162395ef0cbddcbe1fed9dc6a
+            domain: binary_sensor
+          sequence:
+          - service: input_boolean.turn_off
+            data: {}
+            target:
+              entity_id: input_boolean.overide_entrance_lights
+        default:
+        - service: input_boolean.turn_off
+          data: {}
+          target:
+            entity_id: input_boolean.overide_entrance_lights
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.light_entrance
+        - service: scene.turn_on
+          data: {}
+          target:
+            entity_id: scene.livingroom_lights_to_off_2
     - conditions:
       - condition: trigger
         id: Timer
@@ -3971,19 +4010,32 @@
       - condition: trigger
         id: Switch - off
       sequence:
-      - service: timer.cancel
-        data: {}
-        target:
-          entity_id: timer.light_kitchen
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id: input_boolean.overide_kitchen_lights
-      - service: scene.turn_on
-        data:
-          transition: 10
-        target:
-          entity_id: scene.kitchen_lights_to_off
+      - choose:
+        - conditions:
+          - type: is_on
+            condition: device
+            device_id: 861042e17c621a30c121d54e5e0660b5
+            entity_id: 8e6fccc3a83f671f2da41a40af24ef57
+            domain: binary_sensor
+          sequence:
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.overide_kitchen_lights
+            data: {}
+        default:
+        - service: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.overide_kitchen_lights
+          data: {}
+        - service: timer.cancel
+          data: {}
+          target:
+            entity_id: timer.light_kitchen
+        - service: scene.turn_on
+          data:
+            transition: 10
+          target:
+            entity_id: scene.kitchen_lights_to_off
     - conditions:
       - condition: trigger
         id: Timer

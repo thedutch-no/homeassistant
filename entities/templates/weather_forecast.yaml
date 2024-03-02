@@ -1,0 +1,24 @@
+#####
+# Weater forecast new style
+#
+# This template pulls the weather forecast on a hourly basis
+#
+# https://www.home-assistant.io/integrations/template#trigger-based-handling-of-service-response-data
+#####
+
+  - trigger:
+      - platform: time_pattern
+        hours: /1
+    action:
+      - service: weather.get_forecasts
+        data:
+          type: hourly
+        target:
+          entity_id: weather.home
+        response_variable: hourly
+    sensor:
+      - name: Weather Forecast Hourly
+        unique_id: weather_forecast_hourly
+        state: "{{ now().isoformat() }}"
+        attributes:
+          forecast: "{{ hourly['weather.home'].forecast }}"
