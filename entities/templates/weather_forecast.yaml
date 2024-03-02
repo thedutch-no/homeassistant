@@ -6,19 +6,20 @@
 # https://www.home-assistant.io/integrations/template#trigger-based-handling-of-service-response-data
 #####
 
-  - trigger:
+    trigger:
       - platform: time_pattern
         hours: /1
     action:
-      - service: weather.get_forecasts
-        data:
-          type: hourly
-        target:
-          entity_id: weather.home
+      service: weather.get_forecasts
+      target:
+        entity_id:
+          - weather.home
+      data:
+        type: hourly
         response_variable: hourly
     sensor:
       - name: Weather Forecast Hourly
-        unique_id: weather_forecast_hourly
+        unique_id: 58c899a8-da53-4658-9218-9f7d26a0ecea
         state: "{{ now().isoformat() }}"
         attributes:
-          forecast: "{{ hourly['weather.home'].forecast }}"
+          forecast: "{{ hourly['forecast'].forecast }}"
