@@ -1216,3 +1216,21 @@ esphome_update_all_esphome_devices:
     data: {}
   mode: single
   icon: mdi:download-multiple-outline
+trigger_dummy_boolean:
+  alias: Trigger - _Dummy boolean
+  sequence:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.dummy
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 1
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.dummy
+  mode: single
+  icon: mdi:toggle-switch-variant-off

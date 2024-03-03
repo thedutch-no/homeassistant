@@ -18,7 +18,7 @@ action:
     response_variable: my_forecast
 sensor:
 - name: Sprinkler Total Expected Precipitation
-  unique_id: e0e5c10e-f470-4355-92dc-6f9741519a5d
+  unique_id: 0745a614-afa7-41b5-afda-83070456dbbd
   icon: mdi:weather-pouring
   unit_of_measurement: mm
   state: >

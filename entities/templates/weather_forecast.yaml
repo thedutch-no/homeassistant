@@ -11,14 +11,14 @@ trigger:
     hours: /1
 action:
   - service: weather.get_forecasts
+    target:
+      entity_id: weather.openweathermap
     data:
       type: hourly
-    target:
-      entity_id: weather.home
-    response_variable: hourly
+    response_variable: my_forecast
 sensor:
   - name: Weather Forecast Hourly
     unique_id: weather_forecast_hourly
     state: "{{ now().isoformat() }}"
     attributes:
-      forecast: "{{ hourly['weather.home'].forecast }}"
+      forecast: "{{ my_forecast['weather.openweathermap'].forecast }}"
