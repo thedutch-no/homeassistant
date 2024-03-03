@@ -1,0 +1,35 @@
+
+
+
+# https://youtu.be/zrWqDjaRBf0
+# https://ko-fi.com/s/bf6b252838
+
+
+##### Expected Precipitation ##################################
+trigger:
+  - platform: time_pattern
+    hours: /1
+action:
+  - service: weather.get_forecasts
+    target:
+      entity_id: weather.openweathermap
+    data:
+      type: hourly
+    response_variable: my_forecast
+sensor:
+- name: Sprinkler Total Expected Precipitation
+  unique_id: e0e5c10e-f470-4355-92dc-6f9741519a5d
+  icon: mdi:weather-pouring
+  unit_of_measurement: mm
+  state: >
+    {% set ns = namespace() %} 
+    {% set ns.totalprecipitation = 0 %}
+    {% for daypart in range(0, 7) %}
+      {% set precipitation = my_forecast['weather.openweathermap'].forecast[daypart].precipitation %} 
+      {% set precipitation_probability = my_forecast['weather.openweathermap'].forecast[daypart].precipitation_probability / 100 %}
+      {% if precipitation_probability > 0 %}
+        {% set precipitation = precipitation * precipitation_probability %}
+      {% endif %}
+      {% set ns.totalprecipitation = ns.totalprecipitation + precipitation %}
+    {% endfor %}
+    {{ ns.totalprecipitation | float(0) | round(2) }}
