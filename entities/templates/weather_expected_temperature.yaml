@@ -1,0 +1,30 @@
+#########################
+# Calculating Min, Max, Avg and expected temperature at time of wake-up
+# - sensor.weather_forecast_hourly
+# - sensor.ac_time_for_bed
+# - sensor.ac_time_wake_up
+#########################
+
+sensor:
+  - name: night_min
+    unique_id: 7b8f5037-cf5a-44b6-94c3-1aa652675aee
+    state: >-
+      {% set ns = namespace(min=state_attr('sensor.weather_forecast_hourly','forecast')[0]['temperature']) %}
+      {% for condition in state_attr('sensor.weather_forecast_hourly','forecast') %}
+        {% if (condition['datetime'] | as_datetime).day == now().day and condition['temperature'] < ns.min %}
+          {% set ns.min = condition['temperature'] %}
+        {% endif %}
+      {% endfor %}
+      {{ ns.min }}
+
+  - name: night_max
+    unique_id: 7726ba78-d96a-4bbe-a375-75485d7dfc23
+    state: >-
+      {% set ns = namespace(max=state_attr('sensor.weather_forecast_hourly','forecast')[0]['temperature']) %}
+      {% for condition in state_attr('sensor.weather_forecast_hourly','forecast') %}
+        {% if (condition['datetime'] | as_datetime).day == now().day and condition['temperature'] > ns.max %}
+          {% set ns.max = condition['temperature'] %}
+        {% endif %}
+      {% endfor %}
+      {{ ns.max }}
+
