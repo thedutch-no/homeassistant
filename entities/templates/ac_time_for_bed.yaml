@@ -25,4 +25,4 @@ sensor:
     unique_id: 8b53af66-6f7f-427f-9f00-22f13d7d3678
     icon: mdi:clock-alert-outline
     state: >
-      {{ as_timestamp(states('sensor.ac_time_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true)}}
+      {{ as_timestamp(states('sensor.ac_time_for_bed')) | int | timestamp_custom('%d-%m - %H:%M', true) }}
