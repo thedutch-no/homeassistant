@@ -1469,7 +1469,6 @@
   - platform: state
     entity_id:
     - input_boolean.alarm_clock_on
-    - input_boolean.kupevarme_connected
     - input_boolean.take_a_shower_tomorrow
     - input_datetime.time_work_start
     - input_datetime.travel_time_customer
