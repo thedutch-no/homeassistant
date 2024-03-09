@@ -12,9 +12,10 @@
 
 # PowerCalc Global settings
 enable_autodiscovery: false
+create_energy_sensors: true
 create_utility_meters: true
-power_sensor_naming: "{} Powersensor"
-energy_sensor_naming: "{} Energysensor"
+power_sensor_naming: "{} power"
+energy_sensor_naming: "{} energy"
 
 sensors:
 ######
@@ -28,6 +29,7 @@ sensors:
 - entity_id: light.bedroom_ceiling_2
   manufacturer: ikea
   model: LED2003G10
+
 # Livingroom Lights
 - entity_id: light.livingroom_ceiling_1
   manufacturer: ikea
@@ -38,6 +40,7 @@ sensors:
 - entity_id: light.livingroom_ceiling_3
   manufacturer: ikea
   model: LED1537R6
+
 # Hallway Lights
 - entity_id: light.hallway_ceiling_1
   manufacturer: ikea
@@ -48,6 +51,7 @@ sensors:
 - entity_id: light.hallway_ceiling_3
   manufacturer: ikea
   model: LED1835C6
+
 # Kitchen Lights  
 - entity_id: light.kitchen_countertop
   linear:
@@ -62,6 +66,7 @@ sensors:
       - 203 -> 12.9
       - 229 -> 17.5
       - 255 -> 23.7
+
 # Frontdoor Lights
 - entity_id: light.entrance_ceiling_1
   manufacturer: ikea
@@ -79,6 +84,7 @@ sensors:
       entities:
         - entity_id: light.bedroom_ceiling_1
         - entity_id: light.bedroom_ceiling_2
+
     # Livingroom lights
     - create_group: Livingroom lights
       unique_id: fc4bf448-ac2d-4455-9676-4cfc242e1d15
@@ -86,6 +92,7 @@ sensors:
         - entity_id: light.livingroom_ceiling_1
         - entity_id: light.livingroom_ceiling_2
         - entity_id: light.livingroom_ceiling_3
+
     # Hallway lights
     - create_group: Hallway lights
       unique_id: 5c01d682-ea14-487d-b28d-787c1f088c15
@@ -93,11 +100,13 @@ sensors:
         - entity_id: light.hallway_ceiling_1
         - entity_id: light.hallway_ceiling_2
         - entity_id: light.hallway_ceiling_3
+
     # Kitchen lights
     - create_group: Kitchen lights
       unique_id: 92a1c040-5edf-43d1-ae28-8cda0a231dde
       entities:
         - entity_id: light.kitchen_countertop
+
     # Entrance lights
     - create_group: Entrance lights
       unique_id: 619733af-3291-403f-8740-4c7145c820c9
@@ -117,58 +126,85 @@ sensors:
 - entity_id: sensor.stove
   power_sensor_id: sensor.stove_power
   standby_power: 1
+  force_energy_sensor_creation: true
+
 # Microwave - Shelly Plus 1PM
 - entity_id: sensor.microwave
   power_sensor_id: sensor.microwave_power
   standby_power: 1
+  force_energy_sensor_creation: true
+
 # Refigirator - Shelly Plus 1PM
 - entity_id: sensor.refrigerator
   power_sensor_id: sensor.refrigerator_power
   standby_power: 1
+  force_energy_sensor_creation: true
+
 # Freezer - Shelly Plus 1PM
 - entity_id: sensor.freezer
   power_sensor_id: sensor.freezer_power
   standby_power: 1
-# Panel oven Bathroom - Shelly Plus 1PM
-- entity_id: sensor.panel_oven_br
-  power_sensor_id: sensor.panel_oven_br
-  standby_power: 1
-# Varmepumpe Livingroom - Shelly Plus 1PM
-- entity_id: sensor.varmepumpe
-  power_sensor_id: sensor.varmepumpe
-  standby_power: 1
-# Ventilation - Shelly Plus 1PM
-- entity_id: sensor.ventilation
-  power_sensor_id: sensor.ventilation_power
-  standby_power: 1
-# 3D Printer - Shelly Plus 1PM
-- entity_id: sensor.3d_printer
-  power_sensor_id: sensor.3d_printer_power
-  standby_power: 1
-# Bedroom - Shelly Plug S
-- entity_id: sensor.bedroom
-  power_sensor_id: sensor.bedroom_power
-  standby_power: 1
-  # Office equipment - Shelly Plug S
-- entity_id: sensor.office_equipment
-  power_sensor_id: sensor.office_equipment_power
-  standby_power: 1
-# TV-Audio equipment - Shelly Plug S
-- entity_id: sensor.multi_media_equipment
-  power_sensor_id: sensor.multi_media_equipment_power
-  standby_power: 1
-# Panel oven Frontdoor - Shelly Plug S
-- entity_id: sensor.panel_oven_fd
-  power_sensor_id: sensor.panel_oven_fd
-  standby_power: 1
+  force_energy_sensor_creation: true
+
 # Water heater - Shelly Plug S
 - entity_id: sensor.water_heater
   power_sensor_id: sensor.water_heater_power
   standby_power: 1
+  force_energy_sensor_creation: true
+
+# Varmepumpe Livingroom - Shelly Plus 1PM
+- entity_id: sensor.varmepumpe
+  power_sensor_id: sensor.varmepumpe_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# 3D Printer - Shelly Plus 1PM
+- entity_id: sensor.3d_printer
+  power_sensor_id: sensor.3d_printer_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# Bedroom - Shelly Plug S
+- entity_id: sensor.bedroom
+  power_sensor_id: sensor.bedroom_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# Ventilation - Shelly Plus 1PM
+- entity_id: sensor.ventilation
+  power_sensor_id: sensor.ventilation_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# Office equipment - Shelly Plug S
+- entity_id: sensor.office_equipment
+  power_sensor_id: sensor.office_equipment_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# TV-Audio equipment - Shelly Plug S
+- entity_id: sensor.multi_media_equipment
+  power_sensor_id: sensor.multi_media_equipment_power
+  standby_power: 1
+  force_energy_sensor_creation: true
+
+# Panel oven Frontdoor - Shelly Plug S
+- entity_id: sensor.panel_oven_fd_power
+  power_sensor_id: sensor.panel_oven_fd
+  standby_power: 1
+  force_energy_sensor_creation: true
+
 # Bathroom - Shelly Dimmer 2
 - entity_id: sensor.bathroom_light
-  power_sensor_id: sensor.bathroom_dimmer_power
+  power_sensor_id: sensor.bathroom_light_power
   standby_power: 1
+  force_energy_sensor_creation: true
+
+# Panel oven Bathroom - Shelly Plus 1PM
+- entity_id: sensor.panel_oven_br_power
+  power_sensor_id: sensor.panel_oven_br
+  standby_power: 1
+  force_energy_sensor_creation: true
 
 #####
 # Creating energy sensor and utility meters for these sonoff pow r2 sensors
@@ -182,10 +218,13 @@ sensors:
 - entity_id: sensor.pc_tumble_dryer
   power_sensor_id: sensor.tumble_dryer_power_module_power
   standby_power: 0.5
+  force_energy_sensor_creation: true
+
 # Washing machine - Sonoff Pow R2 - Tasmota
 - entity_id: sensor.pc_washing_machine
   power_sensor_id: sensor.washing_machine_power_module_power
   standby_power: 0.5
+  force_energy_sensor_creation: true
 
 #
 # Creating energy sensor and utility meters for 'all appliances' sensor

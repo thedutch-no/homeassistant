@@ -36,18 +36,18 @@ sensor:
   # - ventilation - bedroom
   #
   #########################
-  - name: "All Heating power"
-    unique_id: 3ece76ea-d270-4d67-800c-53bbfe256ad7
-    unit_of_measurement: W
-    device_class: power
-    state_class: measurement
-    state: >-
-      {{
-        states('sensor.varmepumpe_power')|float(0)
-        + states('sensor.panel_oven_br_power')|float(0)
-        + states('sensor.panel_oven_fd_power')|float(0)
-        + states('sensor.ventilation_power')|float(0)
-      }}
+#  - name: "All Heating power"
+#    unique_id: 3ece76ea-d270-4d67-800c-53bbfe256ad7
+#    unit_of_measurement: W
+#    device_class: power
+#    state_class: measurement
+#    state: >-
+#      {{
+#        states('sensor.varmepumpe_power')|float(0)
+#        + states('sensor.panel_oven_br_power')|float(0)
+#        + states('sensor.panel_oven_fd_power')|float(0)
+#        + states('sensor.ventilation_power')|float(0)
+#      }}
 
   #########################
   #
@@ -65,23 +65,6 @@ sensor:
       {{
         states('sensor.office_equipment_power')|float(0)
         + states('sensor.multi_media_equipment_power')|float(0)
-      }}
-
-  #########################
-  #
-  # Grouping All lights together in 1 power sensor
-  # - All entities in domain light
-  #
-  #########################
-  - name: "Bedroom lights"
-    unique_id: a31b0016-3db7-4262-a0b2-68c35612666e
-    unit_of_measurement: W
-    device_class: power
-    state_class: measurement
-    state: >-
-      {{
-        states('sensor.bedroom_ceiling_1_power')|float(0)
-        + states('sensor.bedroom_ceiling_2_power')|float(0)
       }}
 
 

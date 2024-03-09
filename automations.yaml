@@ -2470,7 +2470,7 @@
         target:
           entity_id: timer.light_bathroom
       - condition: state
-        entity_id: light.bathroom_dimmer
+        entity_id: light.bathroom_light
         state: 'off'
       - if:
         - condition: state
@@ -2560,7 +2560,7 @@
       - condition: trigger
         id: Overide
       - condition: state
-        entity_id: light.bathroom_dimmer
+        entity_id: light.bathroom_light
         state: 'on'
       sequence:
       - service: timer.start
