@@ -48,7 +48,7 @@ sensor:
     unique_id: 56aa7004-d50d-41cf-812f-5e57fcf1d7f7
     icon: mdi:fuel
     state: >
-      {% set di =  states('input_text.diesel_input') | int %}
+      {% set di =  states('input_number.diesel_input') | int %}
       {{ di }}
 
   - name: diesel_week

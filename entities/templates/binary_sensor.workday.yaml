@@ -17,11 +17,5 @@ binary_sensor:
       {% if states('input_boolean.workday') == 'on' %}
         {{ states('input_boolean.workday') }}
       {% else %}
-        {{ (not is_state('binary_sensor.holiday', 'on') and as_datetime(states('sensor.ac_work_start')).weekday() < 5) }}
+        {{ (not is_state('input_boolean.holiday', 'on') and as_datetime(states('sensor.ac_work_start')).weekday() < 5) }}
       {% endif %}
-
-
-
-#    {{
-#        states('input_boolean.workday') or (not is_state('binary_sensor.holiday', 'on') and as_datetime(states('sensor.work_start')).weekday() < 5)
-#    }}

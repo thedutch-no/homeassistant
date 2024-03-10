@@ -50,7 +50,7 @@ binary_sensor: !include binary_sensor.yaml
 input_boolean: !include input_boolean.yaml
 input_number: !include input_number.yaml
 input_select: !include input_select.yaml
-powercalc: !include powercalc.yaml
+#powercalc: !include powercalc.yaml
 
 
 battery_notes: 

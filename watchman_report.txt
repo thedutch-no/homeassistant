@@ -1,47 +1,31 @@
 -== Watchman Report ==- 
 
--== Congratulations, all 57 services from your config are available!
+-== Congratulations, all 65 services from your config are available!
 
--== Missing 32 entity(ies) from 291 found in your config:
+-== Missing 16 entity(ies) from 307 found in your config:
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | Entity ID                                               | State   | Location                                                                         |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
-| media_player.livingroom_sonos_speaker                   | unavail | automations.yaml:570,575,581,1986,2982,2987,4315                                 |
-| media_player.kitchen_sonos_speaker                      | unavail | automations.yaml:1985,2034,2039,2044,2992,2997,4314                              |
-| switch.kupevarme                                        | unavail | automations.yaml:2067,2072,2102,4366                                             |
-| sensor.kupevarme_power                                  | unavail | automations.yaml:2081                                                            |
-| sensor.freezer_big_climate_sensor_temperature           | missing | automations.yaml:2227                                                            |
-| sensor.estimated_illuminance                            | unknown | automations.yaml:2526,2626,2692,2792,2859,2959,3893,3960,4059                    |
-| media_player.sonos_speakers                             | unavail | automations.yaml:3525,3584,3674,3684                                             |
-| light.kitchen_countertop                                | unavail | automations.yaml:3971,4047                                                       |
-| button.varmepumpe_reboot                                | unknown | automations.yaml:4110                                                            |
-| sensor.octoprint_current_state                          | unavail | automations.yaml:4145,4155                                                       |
-| switch.3d_printer_light_switch                          | unavail | automations.yaml:4186,4214                                                       |
-| weather.met_no                                          | missing | sensors.yaml:32                                                                  |
-| sensor.stove                                            | missing | powercalc.yaml:99                                                                |
-| sensor.microwave                                        | missing | powercalc.yaml:103                                                               |
-| sensor.refrigerator                                     | missing | powercalc.yaml:107                                                               |
-| sensor.freezer                                          | missing | powercalc.yaml:111                                                               |
-| sensor.panel_oven_br                                    | missing | powercalc.yaml:115,116                                                           |
-| sensor.varmepumpe                                       | missing | powercalc.yaml:119,120                                                           |
-| sensor.ventilation                                      | missing | powercalc.yaml:124                                                               |
-| sensor.office_equipment                                 | missing | powercalc.yaml:127                                                               |
-| sensor.multi_media_equipment                            | missing | powercalc.yaml:131                                                               |
-| sensor.panel_oven_fd                                    | missing | powercalc.yaml:135,136                                                           |
-| sensor.water_heater                                     | missing | powercalc.yaml:139                                                               |
-| sensor.bathroom_light                                   | missing | powercalc.yaml:143                                                               |
-| sensor.pc_tumble_dryer                                  | missing | powercalc.yaml:156                                                               |
-| sensor.pc_washing_machine                               | missing | powercalc.yaml:160                                                               |
-| sensor.all_appliances                                   | missing | powercalc.yaml:168                                                               |
-| sensor.all_heating                                      | missing | powercalc.yaml:175                                                               |
-| sensor.all_equipment                                    | missing | powercalc.yaml:182                                                               |
-| media_player.my_speakers                                | unavail | scripts.yaml:818,830,842,854,866                                                 |
-| number.match                                            | missing | custom_components/ui_lovelace_minimalist/lovelace/translations/default.yaml:28,3 |
-|                                                         |         | 8                                                                                |
+| sensor.washing_machine_power_button_action              | unavail | automations.yaml:9                                                               |
+| timer.next_event                                        | missing | automations.yaml:3161                                                            |
+| button.varmepumpe_reboot                                | unknown | automations.yaml:4113                                                            |
+| sensor.octoprint_current_state                          | unavail | automations.yaml:4148,4158                                                       |
+| switch.3d_printer_light_switch                          | unavail | automations.yaml:4189,4217                                                       |
+| remote.livingroom_apple_tv                              | missing | scripts.yaml:8,20,40                                                             |
+| media_player.livingroom_apple_tv                        | missing | scripts.yaml:23                                                                  |
+| binary_sensor.holiday                                   | missing | entities/templates/binary_sensor.workday.yaml:11                                 |
+| vacuum.toggle                                           | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/card_templates/c |
+|                                                         |         | ards/card_vertical_button.yaml:80                                                |
 | climate.hvac                                            | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/popup_templates/ |
 |                                                         |         | popup_buttons/popup_button_airconditionner.yaml:22                               |
+| light.yeelight_living_e92c                              | missing | custom_components/xiaomi_miot/services.yaml:6                                    |
+| climate.xiaomi_mc5_374e                                 | missing | custom_components/xiaomi_miot/services.yaml:35,64,87                             |
+| media_player.xiaoai_x08c                                | missing | custom_components/xiaomi_miot/services.yaml:122,162,198                          |
+| sensor.xiaomi_lock                                      | missing | custom_components/xiaomi_miot/services.yaml:215                                  |
+| sensor.lywsd03mmc_temperature                           | missing | custom_components/xiaomi_miot/services.yaml:299                                  |
+| sensor.xiaomi_device                                    | missing | custom_components/xiaomi_miot/services.yaml:314                                  |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Report created on 14 Oct 2023 11:00:00
--== Parsed 399 files in 1.23s., ignored 0 files 
+-== Report created on 10 Mar 2024 14:54:34
+-== Parsed 433 files in 1.52s., ignored 0 files 
 -== Generated in: 0.01s. Validated in: 0.00s.

@@ -29,7 +29,7 @@
 #
 - platform: illuminance
   name: Estimated Illuminance
-  entity_id: weather.met_no
+  entity_id: weather.home
 
 #
 # Sensors in the Average platform
