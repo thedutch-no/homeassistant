@@ -10,8 +10,15 @@ sensor:
     unique_id: ebef52ff-3727-4f31-9af9-af0923ea8bb7
     icon: mdi:clock-alert-outline
     state: >
-      {% if (states('input_datetime.time_work_start') > states('input_datetime.congestion_start_time_1')) and (as_datetime(states('sensor.ac_work_start')).weekday() < 4) %}
-        {% if states('input_datetime.time_work_start') > states('input_datetime.congestion_start_time_2') %}
+      {% set tws = as_timestamp(today_at(states('input_datetime.time_work_start'))) | int %}
+      {% set ttc = as_timestamp(today_at(states('input_datetime.travel_time_customer'))) | int %}
+      {% set tto = as_timestamp(today_at(states('input_datetime.travel_time_oslo'))) | int %}
+      {% set cs1 = as_timestamp(today_at(states('input_datetime.congestion_start_time_1'))) | int %}
+      {% set cs2 = as_timestamp(today_at(states('input_datetime.congestion_start_time_2'))) | int %}
+
+
+      {% if ((tws - ttc + tto) > cs1) and (as_datetime(states('sensor.ac_work_start')).weekday() < 4) %}
+        {% if (tws - ttc + tto) > cs2 %}
           {% set ret = '00:20:00' %}
         {% else %}
           {% set ret = '00:10:00' %}
