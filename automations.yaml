@@ -1993,6 +1993,12 @@
             - input_boolean.overide_kitchen_lights
             - input_boolean.overide_shower_lights
             - input_boolean.take_a_shower
+        - service: timer.finish
+          target:
+            entity_id:
+            - timer.ac_prepare_for_bed
+            - timer.ac_time_for_bed
+          data: {}
     - conditions:
       - condition: trigger
         id: double
