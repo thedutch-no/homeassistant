@@ -2019,6 +2019,8 @@
       - service: media_player.media_play_pause
         metadata: {}
         data: {}
+        target:
+          entity_id: media_player.kitchen_sonos_speaker
       action_rotate_left:
       - service: media_player.volume_down
         metadata: {}
@@ -2036,6 +2038,7 @@
       rotate_right_loop: true
       rotate_left_max_loop_repeats: 2
       rotate_right_max_loop_repeats: 2
+      controller_device: 71a5679eafceac3e35865cefa8dd759f
 - id: '1667044154408'
   alias: Entrance door opens - incl check kupevarme connected
   description: ''
