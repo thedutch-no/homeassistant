@@ -9,6 +9,10 @@
 trigger:
   - platform: time_pattern
     hours: /1
+  - platform: state
+    entity_id:
+      - input_button.update_weather_forecast
+    to: null
 action:
   - service: weather.get_forecasts
     target:
@@ -17,8 +21,8 @@ action:
       type: hourly
     response_variable: my_forecast
 sensor:
-  - name: Weather Forecast Hourly
-    unique_id: weather_forecast_hourly
+  - name: OpenWeather Forecast Hourly
+    unique_id: 56be435a-d75c-47eb-a566-67ae041e529e
     state: "{{ now().isoformat() }}"
     attributes:
-      forecast: "{{ my_forecast['weather.openweathermap'].forecast }}"
+      forecast: "{{ my_forecast['weather.openweathermap'].forecast }}" 

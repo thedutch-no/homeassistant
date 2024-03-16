@@ -9,10 +9,10 @@ sensor:
   - name: night_min
     unique_id: 7b8f5037-cf5a-44b6-94c3-1aa652675aee
     state: >-
-      {% set ns = namespace(min=state_attr('sensor.weather_forecast_hourly','forecast')[0]['temperature']) %}
+      {% set ns = namespace(min=state_attr('sensor.openweather_forecast_hourly','forecast')[0]['temperature']) %}
       {% set bt = as_timestamp(states('sensor.ac_time_for_bed')) %}
       {% set wt = as_timestamp(states('sensor.ac_time_wake_up')) %}
-      {% for condition in state_attr('sensor.weather_forecast_hourly','forecast') %}
+      {% for condition in state_attr('sensor.openweather_forecast_hourly','forecast') %}
         {% set dt = condition['datetime'] | as_timestamp %}
         {% if (dt >= bt) and (dt <= wt) and condition['temperature'] < ns.min %}
           {% set ns.min = condition['temperature'] %}
@@ -23,10 +23,10 @@ sensor:
   - name: night_max
     unique_id: 7726ba78-d96a-4bbe-a375-75485d7dfc23
     state: >-
-      {% set ns = namespace(max=state_attr('sensor.weather_forecast_hourly','forecast')[0]['temperature']) %}
+      {% set ns = namespace(max=state_attr('sensor.openweather_forecast_hourly','forecast')[0]['temperature']) %}
       {% set bt = as_timestamp(states('sensor.ac_time_for_bed')) %}
       {% set wt = as_timestamp(states('sensor.ac_time_wake_up')) %}
-      {% for condition in state_attr('sensor.weather_forecast_hourly','forecast') %}
+      {% for condition in state_attr('sensor.openweather_forecast_hourly','forecast') %}
         {% set dt = condition['datetime'] | as_timestamp %}
         {% if (dt >= bt) and (dt <= wt) and condition['temperature'] > ns.max %}
           {% set ns.max = condition['temperature'] %}

@@ -324,6 +324,22 @@
     entity_id:
     - input_boolean.charge_ipad
     id: charge_ipad
+  - type: battery_level
+    platform: device
+    device_id: 69e9d50cc713fc17401a344690a7c00a
+    entity_id: 4390e89a1206e179c713448767d71f46
+    domain: sensor
+    below: 20
+    id: below_20
+    alias: Battery level below 20%
+  - type: battery_level
+    platform: device
+    device_id: 69e9d50cc713fc17401a344690a7c00a
+    entity_id: 4390e89a1206e179c713448767d71f46
+    domain: sensor
+    above: 80
+    id: above_80
+    alias: Battery level above 80%
   condition: []
   action:
   - choose:
@@ -333,8 +349,8 @@
         state: 'on'
       sequence:
       - type: turn_on
-        device_id: 81b24a4d18bd5f119f0fbf21d001163f
-        entity_id: 1bf17bb55a9994704d56a67857a508d9
+        device_id: e8a485a1b9837c7f9c931608217f9586
+        entity_id: a98db3e299bf7309fe14d011cf5bbbda
         domain: switch
     - conditions:
       - condition: state
@@ -342,9 +358,14 @@
         state: 'off'
       sequence:
       - type: turn_off
-        device_id: 81b24a4d18bd5f119f0fbf21d001163f
-        entity_id: 1bf17bb55a9994704d56a67857a508d9
+        device_id: e8a485a1b9837c7f9c931608217f9586
+        entity_id: a98db3e299bf7309fe14d011cf5bbbda
         domain: switch
+    - conditions:
+      - condition: trigger
+        id:
+        - below_20
+      sequence: []
     default: []
   mode: single
 - id: '1658580860745'
@@ -3167,7 +3188,7 @@
   mode: single
 - id: '1668542656762'
   alias: Update timer Next Event
-  description: When one of the Alarm clock timer finishes start the 'timer.next_event'
+  description: When one of the Alarm clock timer finishes start the 'timer next_event'
     timer with date/time from the next scheduled event
   trigger:
   - platform: event
