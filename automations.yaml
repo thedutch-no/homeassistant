@@ -344,28 +344,25 @@
   action:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: input_boolean.charge_ipad
-        state: 'on'
+      - condition: trigger
+        id:
+        - below_20
       sequence:
       - type: turn_on
         device_id: e8a485a1b9837c7f9c931608217f9586
         entity_id: a98db3e299bf7309fe14d011cf5bbbda
         domain: switch
+      alias: Below 20% or Charge iPad=on
     - conditions:
-      - condition: state
-        entity_id: input_boolean.charge_ipad
-        state: 'off'
+      - condition: trigger
+        id:
+        - above_80
       sequence:
       - type: turn_off
         device_id: e8a485a1b9837c7f9c931608217f9586
         entity_id: a98db3e299bf7309fe14d011cf5bbbda
         domain: switch
-    - conditions:
-      - condition: trigger
-        id:
-        - below_20
-      sequence: []
+      alias: Above 80% or Charge iPad=off
     default: []
   mode: single
 - id: '1658580860745'
