@@ -5157,12 +5157,10 @@
   alias: 'Media: Stop speakers when TV turns on'
   description: ''
   trigger:
-  - type: power
-    platform: device
-    device_id: 8bf7bc25e86848e9817ae6a51ebd8e20
-    entity_id: bd985b962956312215d477cac440c0b6
-    domain: sensor
-    above: 100
+  - platform: state
+    entity_id:
+    - media_player.plex_plex_for_apple_tv_apple_tv
+    to: playing
   condition:
   - condition: state
     entity_id: media_player.sonos_speakers
