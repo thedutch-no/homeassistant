@@ -324,14 +324,14 @@
     entity_id:
     - input_boolean.charge_ipad
     id: charge_ipad
-  - type: battery_level
+  - alias: Battery level below 20%
+    type: battery_level
     platform: device
     device_id: 69e9d50cc713fc17401a344690a7c00a
     entity_id: 4390e89a1206e179c713448767d71f46
     domain: sensor
-    below: 20
+    below: 30
     id: below_20
-    alias: Battery level below 20%
   - type: battery_level
     platform: device
     device_id: 69e9d50cc713fc17401a344690a7c00a
