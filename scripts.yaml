@@ -1,43 +1,30 @@
 livingroom_apple_tv_on:
   alias: Livingroom - Apple TV - ON
   sequence:
-  - service: remote.send_command
-    data:
-      command: wakeup
+  - service: media_player.turn_on
+    data: {}
+    enabled: true
     target:
-      entity_id: remote.livingroom_apple_tv
+      entity_id: media_player.apple_tv_livingroom
   mode: single
 livingroom_apple_tv_off:
   alias: Livingroom - Apple TV - OFF
   sequence:
-  - service: remote.send_command
-    data:
-      delay_secs: 1
-      command:
-      - home_hold
-      - select
-    target:
-      entity_id: remote.livingroom_apple_tv
   - service: media_player.turn_off
+    data: {}
+    enabled: true
     target:
-      entity_id: media_player.livingroom_apple_tv
+      entity_id: media_player.apple_tv_livingroom
   mode: single
 livingroom_apple_tv_plex:
   alias: Livingroom - Apple TV - Plex
   sequence:
-  - service: remote.send_command
+  - service: media_player.select_source
+    metadata: {}
     data:
-      delay_secs: 1
-      command:
-      - home
-      - home
-      - select
-      - down
-      - down
-      - left
-      - select
+      source: Plex
     target:
-      entity_id: remote.livingroom_apple_tv
+      entity_id: media_player.apple_tv_livingroom
   mode: single
 turn_off_all_lights_and_mediaplayers:
   alias: Turn Off ALL Lights
@@ -437,10 +424,10 @@ calculate_work_start_datetime:
   - service: input_datetime.set_datetime
     data:
       datetime: "{% if as_timestamp(states('sensor.ac_time_leave_work')) | int | timestamp_custom(
-        '%H:%M:%S', true) > states('input_datetime.congestion_start_time_1')
-        %}\n  {% if as_timestamp(states('sensor.ac_time_leave_work')) | int | timestamp_custom(
-        '%H:%M:%S', true) > states('input_datetime.congestion_start_time_2')
-        %}\n    {{ strptime('00:20:00' , '%H:%M:%S') }}\n  {% else %}\n    {{ strptime('00:10:00'
+        '%H:%M:%S', true) > states('input_datetime.congestion_start_time_1') %}\n
+        \ {% if as_timestamp(states('sensor.ac_time_leave_work')) | int | timestamp_custom(
+        '%H:%M:%S', true) > states('input_datetime.congestion_start_time_2') %}\n
+        \   {{ strptime('00:20:00' , '%H:%M:%S') }}\n  {% else %}\n    {{ strptime('00:10:00'
         , '%H:%M:%S') }}\n  {% endif %}\n{% else %}\n  {{ strptime('00:00:00' , '%H:%M:%S')
         }}\n{% endif %}"
     target:
@@ -1234,3 +1221,13 @@ trigger_dummy_boolean:
       entity_id: input_boolean.dummy
   mode: single
   icon: mdi:toggle-switch-variant-off
+livingroom_apple_tv_infuse:
+  alias: Livingroom - Apple TV - Infuse
+  sequence:
+  - service: media_player.select_source
+    metadata: {}
+    data:
+      source: Infuse
+    target:
+      entity_id: media_player.apple_tv_livingroom
+  mode: single

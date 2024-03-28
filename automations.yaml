@@ -344,9 +344,14 @@
   action:
   - choose:
     - conditions:
-      - condition: trigger
-        id:
-        - below_20
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_boolean.charge_ipad
+          state: 'on'
+        - condition: trigger
+          id:
+          - below_20
       sequence:
       - type: turn_on
         device_id: e8a485a1b9837c7f9c931608217f9586
@@ -354,9 +359,14 @@
         domain: switch
       alias: Below 20% or Charge iPad=on
     - conditions:
-      - condition: trigger
-        id:
-        - above_80
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_boolean.charge_ipad
+          state: 'off'
+        - condition: trigger
+          id:
+          - above_80
       sequence:
       - type: turn_off
         device_id: e8a485a1b9837c7f9c931608217f9586
@@ -1977,13 +1987,19 @@
           device_id: 6945be442bab645c9f650254bcbf4351
           entity_id: switch.ventilation
           domain: switch
-        - service: media_player.media_stop
+        - service: input_boolean.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.apple_tv
+        - alias: 'Media player: Stop - Kitchen and Livingroom speakers'
+          service: media_player.media_stop
           data: {}
           target:
             entity_id:
             - media_player.kitchen_sonos_speaker
             - media_player.livingroom_sonos_speaker
-          alias: 'Media player: Stop - Kitchen and Livingroom speakers'
+            - media_player.apple_tv_livingroom
         - service: input_boolean.turn_on
           data: {}
           target:
@@ -5161,6 +5177,10 @@
     entity_id:
     - media_player.plex_plex_for_apple_tv_apple_tv
     to: playing
+  - platform: state
+    entity_id:
+    - media_player.apple_tv_livingroom
+    to: playing
   condition:
   - condition: state
     entity_id: media_player.sonos_speakers
@@ -5171,4 +5191,43 @@
     data: {}
     target:
       entity_id: media_player.sonos_speakers
+  - service: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.hallway_ceiling
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.livingroom_lights_to_on_50_352
+  mode: single
+- id: '1711640685733'
+  alias: 'Mediaplayer: Apple TV On/Off'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.apple_tv
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.apple_tv
+        state: 'on'
+      sequence:
+      - service: media_player.turn_on
+        target:
+          device_id: a4e26019ed35224a8b8ac62218b23bd2
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.apple_tv
+        state: 'off'
+      sequence:
+      - service: media_player.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: a4e26019ed35224a8b8ac62218b23bd2
   mode: single
