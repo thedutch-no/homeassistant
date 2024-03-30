@@ -1,0 +1,56 @@
+
+################### MQTT ###################
+mqtt:
+  enabled: True
+  host: 192.168.28.110
+  port: 1883
+  topic_prefix: frigate
+  client_id: frigate
+  user: Admin
+  password: 197ak0801
+  stats_interval: 60
+
+################### GO2RTC ###################
+go2rtc:
+  streams:
+    reolink:
+        - rtsp://frigate:reoFrigatelink@192.168.28.99:554/h264Preview_01_sub
+        - ffmpeg:rtsp://frigate:reoFrigatelink@192.168.28.99:554/h264Preview_01_sub#audio=pc#audio=volume
+
+  ffmpeg:
+    bin: ffmpeg
+    volume: "-af \"volume=30db\""
+    
+################### CAMERAS ###################
+cameras:
+  frontdoor_camera:
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://frigate:reoFrigatelink@192.168.28.99:554/h264Preview_01_sub # <----- The stream you want to use for detection
+          roles:
+            - detect
+            - record
+      output_args:
+        record: preset-record-generic-audio-copy
+      
+################### GLOBAL CAMERA SETTINGS ###################
+detect:
+  enabled: False # <---- disable detection until you have a working camera feed
+
+snapshots:
+  enabled: False
+  timestamp: True
+  bounding_box: True
+  retain:
+    default: 14
+
+record:
+  enabled: False
+  #retain_days: 0
+  events:
+    retain:
+      default: 7
+
+ui:
+  live_mode: webrtc

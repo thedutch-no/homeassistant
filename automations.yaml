@@ -787,6 +787,7 @@
   - condition: state
     entity_id: input_boolean.alarm_clock_on
     state: 'on'
+    enabled: false
   action:
   - service: media_player.volume_set
     data:
