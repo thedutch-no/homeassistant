@@ -36,7 +36,7 @@ cameras:
       
 ################### GLOBAL CAMERA SETTINGS ###################
 detect:
-  enabled: False # <---- disable detection until you have a working camera feed
+  enabled: True # <---- disable detection until you have a working camera feed
 
 snapshots:
   enabled: False
