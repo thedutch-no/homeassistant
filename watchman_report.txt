@@ -2,22 +2,25 @@
 
 -== Congratulations, all 67 services from your config are available!
 
--== Missing 8 entity(ies) from 303 found in your config:
+-== Missing 11 entity(ies) from 303 found in your config:
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | Entity ID                                               | State   | Location                                                                         |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | sensor.washing_machine_power_button_action              | unavail | automations.yaml:9                                                               |
-| switch.shoe_dryer                                       | unavail | automations.yaml:1324,3810,3816,3830,3854,3865,4313,4318                         |
-| button.varmepumpe_reboot                                | unknown | automations.yaml:4156                                                            |
-| sensor.octoprint_current_state                          | unavail | automations.yaml:4191,4201                                                       |
-| switch.3d_printer_light_switch                          | unavail | automations.yaml:4232,4260                                                       |
-| media_player.plex_plex_for_apple_tv_apple_tv            | unavail | automations.yaml:5178                                                            |
+| sensor.washing_machine_power_module_power               | unavail | automations.yaml:45,108,133                                                      |
+| switch.washing_machine_power_module_relay               | unavail | automations.yaml:61,77,92,103,128,153,181,422,448                                |
+| sensor.washing_machine_avg_power                        | unavail | automations.yaml:117,142                                                         |
+| switch.shoe_dryer                                       | missing | automations.yaml:1325,3811,3817,3831,3855,3866,4314,4319                         |
+| button.varmepumpe_reboot                                | unknown | automations.yaml:4157                                                            |
+| sensor.octoprint_current_state                          | unavail | automations.yaml:4192,4202                                                       |
+| switch.3d_printer_light_switch                          | unavail | automations.yaml:4233,4261                                                       |
+| media_player.plex_plex_for_apple_tv_apple_tv            | unavail | automations.yaml:5179                                                            |
 | vacuum.toggle                                           | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/card_templates/c |
 |                                                         |         | ards/card_vertical_button.yaml:80                                                |
 | climate.hvac                                            | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/popup_templates/ |
 |                                                         |         | popup_buttons/popup_button_airconditionner.yaml:22                               |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Report created on 28 Mar 2024 18:13:26
--== Parsed 432 files in 1.37s., ignored 0 files 
+-== Report created on 01 Apr 2024 16:14:23
+-== Parsed 432 files in 1.54s., ignored 0 files 
 -== Generated in: 0.01s. Validated in: 0.00s.
