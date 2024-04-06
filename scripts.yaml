@@ -1231,3 +1231,29 @@ livingroom_apple_tv_infuse:
     target:
       entity_id: media_player.apple_tv_livingroom
   mode: single
+media_sonos_livingroom:
+  alias: 'Media: Sonos - Kitchen'
+  sequence:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ (state_attr("media_player.kitchen_sonos_speaker","group_members")
+          | count) }}'
+      sequence:
+      - service: media_player.join
+        data:
+          group_members:
+          - media_player.kitchen_sonos_speaker
+        target:
+          device_id: 87314f3a82c2f6b75644a1ce1cccbe53
+    - conditions:
+      - condition: template
+        value_template: '{{ (state_attr("media_player.kitchen_sonos_speaker","group_members")
+          | count) }}'
+      sequence:
+      - service: media_player.unjoin
+        target:
+          device_id: 599e67bc8cbac7fdb4c2618b1688d35e
+        data: {}
+  mode: single
+  icon: mdi:speaker
