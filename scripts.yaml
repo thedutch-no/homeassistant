@@ -1234,26 +1234,52 @@ livingroom_apple_tv_infuse:
 media_sonos_livingroom:
   alias: 'Media: Sonos - Kitchen'
   sequence:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ (state_attr("media_player.kitchen_sonos_speaker","group_members")
-          | count) }}'
-      sequence:
-      - service: media_player.join
-        data:
-          group_members:
-          - media_player.kitchen_sonos_speaker
-        target:
-          device_id: 87314f3a82c2f6b75644a1ce1cccbe53
-    - conditions:
-      - condition: template
-        value_template: '{{ (state_attr("media_player.kitchen_sonos_speaker","group_members")
-          | count) }}'
-      sequence:
-      - service: media_player.unjoin
-        target:
-          device_id: 599e67bc8cbac7fdb4c2618b1688d35e
-        data: {}
+  - if:
+    - alias: Are both speakers Joined
+      condition: template
+      value_template: '{{ is_state_attr("media_player.kitchen_sonos_speaker","group_members",
+        ["media_player.livingroom_sonos_speaker", "media_player.kitchen_sonos_speaker"])
+        }}'
+    then:
+    - alias: UnJoin the Kitchen speaker from the Livingroom speaker
+      service: media_player.unjoin
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.kitchen_sonos_speaker
+    else:
+    - alias: Join the Kitchen speaker with the Livingroom speaker
+      service: media_player.join
+      data:
+        group_members:
+        - media_player.kitchen_sonos_speaker
+      target:
+        entity_id: media_player.livingroom_sonos_speaker
+  mode: single
+  icon: mdi:speaker
+media_sonos_livingroom_2:
+  alias: 'Media: Sonos - Livingroom'
+  sequence:
+  - if:
+    - alias: Are both speakers Joined
+      condition: template
+      value_template: '{{ is_state_attr("media_player.livingroom_sonos_speaker","group_members",
+        ["media_player.livingroom_sonos_speaker", "media_player.kitchen_sonos_speaker"])
+        }}'
+    then:
+    - alias: UnJoin the Kitchen speaker from the Livingroom speaker
+      service: media_player.unjoin
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.livingroom_sonos_speaker
+    else:
+    - alias: Join the Kitchen speaker with the Livingroom speaker
+      service: media_player.join
+      data:
+        group_members:
+        - media_player.livingroom_sonos_speaker
+      target:
+        entity_id: media_player.kitchen_sonos_speaker
   mode: single
   icon: mdi:speaker
