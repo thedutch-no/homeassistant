@@ -5237,3 +5237,29 @@
         target:
           device_id: a4e26019ed35224a8b8ac62218b23bd2
   mode: single
+- id: '1713111604647'
+  alias: 'Network: Power Cycle Wifi AP'
+  description: Power Cycle port 8 of the 2nd switch connected to the WiFi AP
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.iot
+    below: 1
+  condition: []
+  action:
+  - service: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id: button.switch_2_8_poe_wifi_ap_power_cycle
+  - service: notify.mobile_app_robs_iphone_11
+    data:
+      message: WiFi AP Restarting
+      title: URGENT
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 1
+  mode: single
