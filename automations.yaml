@@ -5244,7 +5244,7 @@
   - platform: numeric_state
     entity_id:
     - sensor.iot
-    below: 1
+    below: 25
   condition: []
   action:
   - service: button.press
