@@ -115,7 +115,7 @@
             state: idle
           - condition: numeric_state
             entity_id: sensor.washing_machine_avg_power
-            below: 2
+            below: 4
           sequence:
           - service: timer.start
             data: {}
@@ -140,7 +140,7 @@
             state: active
           - condition: numeric_state
             entity_id: sensor.washing_machine_avg_power
-            above: 2
+            above: 4
           sequence:
           - service: timer.cancel
             data: {}
