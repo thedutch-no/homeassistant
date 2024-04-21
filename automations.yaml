@@ -3246,6 +3246,10 @@
     - sensor.ac_active_timers
     below: 1
     id: cancelled
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
   condition: []
   action:
   - choose:
@@ -5238,7 +5242,7 @@
           device_id: a4e26019ed35224a8b8ac62218b23bd2
   mode: single
 - id: '1713111604647'
-  alias: 'Network: Power Cycle Wifi AP'
+  alias: 'UniFi: Power Cycle Wifi AP'
   description: Power Cycle port 8 of the 2nd switch connected to the WiFi AP
   trigger:
   - platform: numeric_state
@@ -5252,14 +5256,26 @@
     data: {}
     target:
       entity_id: button.switch_2_8_poe_wifi_ap_power_cycle
-  - service: notify.mobile_app_robs_iphone_11
-    data:
-      message: WiFi AP Restarting
-      title: URGENT
+    enabled: false
+  - if:
+    - condition: state
+      entity_id: input_boolean.night_mode
+      state: 'off'
+    then:
+    - service: notify.mobile_app_robs_iphone_11
       data:
-        push:
-          sound:
-            name: default
-            critical: 1
-            volume: 1
+        message: WiFi AP is losing connections
+        title: WiFi AP Emergency
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    else: []
+  - service: notify.persistent_notification
+    metadata: {}
+    data:
+      message: WiFi AP is losing connections
+      title: WiFi AP Emergency
   mode: single
