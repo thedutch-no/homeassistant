@@ -2521,8 +2521,7 @@
           state: 'on'
         then:
         - service: scene.turn_on
-          data:
-            transition: 10
+          data: {}
           target:
             entity_id: scene.bathroom_15
         else:
@@ -2595,8 +2594,7 @@
         id: Timer
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 10
+        data: {}
         target:
           entity_id: scene.bathroom_off
     - conditions:
@@ -2700,8 +2698,7 @@
           state: 'on'
         then:
         - service: scene.turn_on
-          data:
-            transition: 10
+          data: {}
           target:
             entity_id: scene.hallway_lights_to_on_night
         else:
@@ -2774,8 +2771,7 @@
         id: Timer
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 10
+        data: {}
         target:
           entity_id: scene.livingroom_lights_to_off
     - conditions:
@@ -2806,8 +2802,7 @@
         target:
           entity_id: input_boolean.overide_hallway_lights
       - service: scene.turn_on
-        data:
-          transition: 30
+        data: {}
         target:
           entity_id: scene.hallway_lights_to_on_100_352
   mode: single
@@ -2880,8 +2875,7 @@
           state: 'on'
         then:
         - service: scene.turn_on
-          data:
-            transition: 10
+          data: {}
           target:
             entity_id: scene.entrance_lights_to_on_night
         else:
@@ -2954,8 +2948,7 @@
         id: Timer
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 10
+        data: {}
         target:
           entity_id: scene.livingroom_lights_to_off_2
     - conditions:
@@ -2986,8 +2979,7 @@
         target:
           entity_id: input_boolean.overide_entrance_lights
       - service: scene.turn_on
-        data:
-          transition: 30
+        data: {}
         target:
           entity_id: scene.frontdoor_lights_to_on_100_352
   mode: single
@@ -3920,8 +3912,7 @@
         id: Switch - off
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 10
+        data: {}
         target:
           entity_id: scene.livingroom_lights_to_off_3
     - conditions:
@@ -3932,8 +3923,7 @@
         below: input_number.min_lux_livingroom
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 30
+        data: {}
         target:
           entity_id: scene.livingroom_lights_to_on_100_352
     - conditions:
@@ -4078,8 +4068,7 @@
           target:
             entity_id: timer.light_kitchen
         - service: scene.turn_on
-          data:
-            transition: 10
+          data: {}
           target:
             entity_id: scene.kitchen_lights_to_off
     - conditions:
@@ -4087,8 +4076,7 @@
         id: Timer
       sequence:
       - service: scene.turn_on
-        data:
-          transition: 10
+        data: {}
         target:
           entity_id: scene.kitchen_lights_to_off
     - conditions:
@@ -4119,8 +4107,7 @@
         target:
           entity_id: input_boolean.overide_kitchen_lights
       - service: scene.turn_on
-        data:
-          transition: 30
+        data: {}
         target:
           entity_id: scene.kitchen_lights_to_on_100
   mode: single
@@ -5256,7 +5243,7 @@
     data: {}
     target:
       entity_id: button.switch_2_8_poe_wifi_ap_power_cycle
-    enabled: false
+    enabled: true
   - if:
     - condition: state
       entity_id: input_boolean.night_mode
