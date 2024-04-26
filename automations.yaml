@@ -555,6 +555,7 @@
   condition: []
   action:
   - type: turn_off
+    continue_on_error: true
     device_id: 6945be442bab645c9f650254bcbf4351
     entity_id: switch.ventilation
     domain: switch
@@ -566,16 +567,19 @@
       entity_id: climate.livingroom
     enabled: false
   - service: input_number.set_value
+    continue_on_error: true
     data_template:
       entity_id: input_number.setpoint_varmepumpe
       value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
     alias: Set Setpoint Heatpumt to Norm temp
   - service: climate.set_fan_mode
+    continue_on_error: true
     data:
       fan_mode: quiet
     target:
       entity_id: climate.livingroom
   - service: input_boolean.turn_on
+    continue_on_error: true
     data: {}
     target:
       entity_id:
@@ -583,20 +587,25 @@
       - input_boolean.overide_hallway_lights
     enabled: true
   - service: script.worktime_log
+    continue_on_error: true
     data: {}
   - service: scene.turn_on
+    continue_on_error: true
     target:
       entity_id: scene.frontdoor_lights_to_on_100_250_duplicate
     metadata: {}
   - service: scene.turn_on
+    continue_on_error: true
     target:
       entity_id: scene.kitchen_lights_to_on_100
     metadata: {}
   - service: scene.turn_on
+    continue_on_error: true
     target:
       entity_id: scene.hallway_lights_to_on_100_250
     metadata: {}
   - service: scene.turn_on
+    continue_on_error: true
     target:
       entity_id: scene.livingroom_lights_to_on_100_250
     metadata: {}
@@ -2107,6 +2116,9 @@
             value_template: '{{(now() - states.person.rob.last_changed).total_seconds()
               < 600 }}'
             alias: Home less than 10 min.
+          - condition: state
+            entity_id: input_boolean.master_switch_cupevarme
+            state: 'on'
           sequence:
           - service: script.check_kupevame_connected
             data: {}
