@@ -3273,7 +3273,7 @@
           value: '{{ as_timestamp(states(''sensor.ac_prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
             true)}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Prepare for bed
@@ -3294,7 +3294,7 @@
         data:
           value: '{{states(''sensor.hhmm_time_for_bed'')}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Bed time
@@ -3315,7 +3315,7 @@
         data:
           value: '{{states(''sensor.hhmm_time_wake_up'')}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Wake-up time
@@ -3336,7 +3336,7 @@
         data:
           value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Prepare to leave
@@ -3357,7 +3357,7 @@
         data:
           value: '{{states(''sensor.hhmm_time_leave_home'')}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Leave Home
@@ -3378,7 +3378,7 @@
         data:
           value: '{{states(''sensor.hhmm_time_leave_work'')}}'
         target:
-          entity_id: input_text.hhmm_next_timer
+          entity_id: input_text.hhmm_ac_next_timer
       - service: input_text.set_value
         data:
           value: Leave Work
@@ -3393,7 +3393,7 @@
           value: '-'
         target:
           entity_id:
-          - input_text.hhmm_next_timer
+          - input_text.hhmm_ac_next_timer
           - input_text.ac_next_event_name
       - service: timer.cancel
         data: {}
