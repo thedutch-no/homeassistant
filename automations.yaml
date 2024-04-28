@@ -1456,6 +1456,10 @@
         data: {}
         target:
           entity_id: input_boolean.night_mode
+      - type: turn_on
+        device_id: 29caca001c22698e1034c56d60b3a3ce
+        entity_id: 2cc302e48aecc17aff8df03d7a9893f6
+        domain: switch
     - conditions:
       - condition: trigger
         id: night_mode_on
@@ -1464,6 +1468,10 @@
         data: {}
         target:
           entity_id: input_boolean.night_mode
+      - type: turn_off
+        device_id: 29caca001c22698e1034c56d60b3a3ce
+        entity_id: 2cc302e48aecc17aff8df03d7a9893f6
+        domain: switch
   mode: single
 - id: '1665941535236'
   alias: Timer - Bathroom heating before shower
@@ -3404,6 +3412,9 @@
         data: {}
         target:
           entity_id: input_boolean.alarm_clock_on
+    enabled: false
+  - service: script.timer_update_next_event_timers
+    data: {}
   mode: single
 - id: '1668873983113'
   alias: Location - Leaving Magnor
@@ -5277,4 +5288,71 @@
     data:
       message: WiFi AP is losing connections
       title: WiFi AP Emergency
+  mode: single
+- id: '1714294318800'
+  alias: Timer - Update Next timer
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.ac_active_timers
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 0 }}'
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{ as_timestamp(states(''sensor.ac_prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
+            true)}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Prepare for bed
+        target:
+          entity_id: input_text.name_ac_next_event
+      alias: Active timers is 0
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 1 }}'
+      sequence: []
+      alias: Active timers is 1
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 2 }}'
+      sequence: []
+      alias: Active timers is 2
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 3 }}'
+      sequence: []
+      alias: Active timers is 3
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 4 }}'
+      sequence: []
+      alias: Active timers is 4
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 5 }}'
+      sequence: []
+      alias: Active timers is 5
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 6 }}'
+      sequence: []
+      alias: Active timers is 6
+  - service: script.timer_update_next_event_timers
+    data: {}
+  - service: script.timer_update_timer_next_event2
+    data: {}
   mode: single

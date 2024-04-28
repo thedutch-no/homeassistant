@@ -258,138 +258,6 @@ test_notification:
     data:
       message: dit is de tekst
   mode: single
-update_next_timer_entity:
-  alias: Update next timer entity
-  sequence:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_prepare_for_bed
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value:
-            '[object Object]':
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Prepare for bed
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_for_bed
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(sensor.hhmm_bed_time)}}'
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Bed time
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_wake_up_time
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(sensor.hhmm_wake_up_time)}}'
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Wake-up time
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_prepare_to_leave
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(sensor.hhmm_prepare_to_leave)}}'
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Prepare to leave
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_leave_home
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(sensor.hhmm_time_leave_home)}}'
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Leave Home
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_leave_work
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(sensor.hhmm_time_leave_work)}}'
-        target:
-          entity_id: input_text.hhmm_next_timer
-      - service: input_text.set_value
-        data:
-          value: Leave Work
-        target:
-          entity_id: input_text.ac_next_event_name
-  mode: single
 mushroom_datetime_minus:
   alias: Mushroom datetime minus
   sequence:
@@ -1283,3 +1151,305 @@ media_sonos_livingroom_2:
         entity_id: media_player.kitchen_sonos_speaker
   mode: single
   icon: mdi:speaker
+timer_update_next_event_timers:
+  alias: Timer - Update Timer Next Event
+  sequence:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_prepare_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{ as_timestamp(states(''sensor.ac_prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
+            true)}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Prepare for bed
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_for_bed'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Bed time
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_wake_up_time
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_wake_up'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Wake-up time
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_prepare_to_leave
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Prepare to leave
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_leave_home
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_leave_home'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Leave Home
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_leave_work
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_leave_work'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event
+      - service: input_text.set_value
+        data:
+          value: Leave Work
+        target:
+          entity_id: input_text.name_ac_next_event
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 0}}'
+      sequence:
+      - service: input_text.set_value
+        data:
+          value: ' '
+        target:
+          entity_id:
+          - input_text.hhmm_ac_next_event
+          - input_text.name_ac_next_event
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.ac_next_event
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.alarm_clock_on
+  mode: single
+'1714299915944':
+  alias: New Script
+  sequence: []
+timer_update_timer_next_event2:
+  alias: Timer - Update Timer Next Event2
+  sequence:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_prepare_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: '{{ as_timestamp(states(''sensor.ac_time_for_bed'')) | int | timestamp_custom(''%H:%M'',
+            true)}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: Time for bed
+        target:
+          entity_id: input_text.name_ac_next_event2
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_for_bed
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_wake_up'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: Wake-up time
+        target:
+          entity_id: input_text.name_ac_next_event2
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_wake_up_time
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: Prepare to leave
+        target:
+          entity_id: input_text.name_ac_next_event2
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_prepare_to_leave
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_leave_home'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: Leave Home
+        target:
+          entity_id: input_text.name_ac_next_event2
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_leave_home
+        state: active
+      sequence:
+      - service: timer.start
+        data:
+          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
+            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: '{{states(''sensor.hhmm_time_leave_work'')}}'
+        target:
+          entity_id: input_text.hhmm_ac_next_event2
+      - service: input_text.set_value
+        data:
+          value: Leave Work
+        target:
+          entity_id: input_text.name_ac_next_event2
+    - conditions:
+      - condition: state
+        entity_id: timer.ac_time_leave_work
+        state: active
+      sequence:
+      - service: input_text.set_value
+        data:
+          value: ' '
+        target:
+          entity_id:
+          - input_text.hhmm_ac_next_event2
+          - input_text.name_ac_next_event2
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.ac_next_event2
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''sensor.ac_active_timers'')|int == 0}}'
+      sequence:
+      - service: input_text.set_value
+        data:
+          value: ' '
+        target:
+          entity_id:
+          - input_text.hhmm_ac_next_event2
+          - input_text.name_ac_next_event2
+      - service: timer.cancel
+        data: {}
+        target:
+          entity_id: timer.ac_next_event2
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.alarm_clock_on
+  mode: single
