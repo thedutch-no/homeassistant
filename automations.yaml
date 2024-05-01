@@ -2018,6 +2018,10 @@
             - media_player.kitchen_sonos_speaker
             - media_player.livingroom_sonos_speaker
             - media_player.apple_tv_livingroom
+        - type: turn_off
+          device_id: 29caca001c22698e1034c56d60b3a3ce
+          entity_id: 2cc302e48aecc17aff8df03d7a9893f6
+          domain: switch
         - service: input_boolean.turn_on
           data: {}
           target:
