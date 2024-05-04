@@ -2010,6 +2010,11 @@
           data: {}
           target:
             entity_id: input_boolean.apple_tv
+        - service: input_number.set_value
+          target:
+            entity_id: input_number.media_selected_radio_station
+          data:
+            value: 0
         - alias: 'Media player: Stop - Kitchen and Livingroom speakers'
           service: media_player.media_stop
           data: {}
@@ -4347,275 +4352,6 @@
       target:
         entity_id: input_boolean.master_switch_shoe_dryer
   mode: single
-- id: '1697371127078'
-  alias: Radio Station Selection
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_live
-    to: 'on'
-    id: radio10_live
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_60s_70s_hits
-    to: 'on'
-    id: radio10_60s_70s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_80s_hits
-    to: 'on'
-    id: radio10_80s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_90s_hits
-    to: 'on'
-    id: radio10_90s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_non_stop
-    to: 'on'
-    id: radio10_non_stop
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_top_4000
-    to: 'on'
-    id: radio10_top_4000
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_disco_classics
-    to: 'on'
-    id: radio10_disco_classics
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_love_songs
-    to: 'on'
-    id: radio10_love_songs
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_off
-    to: 'on'
-    id: 'Off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_live
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://22673.live.streamtheworld.com/RADIO10.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_60s_70s_hits
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://25293.live.streamtheworld.com/TLPSTR18.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_80s_hits
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://25303.live.streamtheworld.com/TLPSTR20.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_90s_hits
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://22343.live.streamtheworld.com/TLPSTR22.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_non_stop
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://22713.live.streamtheworld.com/TLPSTR15.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_top_4000
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://22613.live.streamtheworld.com/TLPSTR24.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_disco_classics
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://22663.live.streamtheworld.com/TLPSTR23.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - radio10_love_songs
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_off
-      - service: media_player.play_media
-        data:
-          media_content_id: https://25233.live.streamtheworld.com/TLPSTR04.mp3?dist=radio10_web&ttag=talpa_consent:1&gdpr=1&gdpr_consent=CPz_bPAPz_bPAAcABBENDcCsAP_AAEPAAChQGgQFwAKgAXABAADIAIkATABPADEAG4APwAgABGADvAIQARaAjgCOgElAJcATsArICKQF5gL2AaABgkAcAC4AMgCEAEcAJ2AlUBggAoSAUABUAEAAMgAiABMACeAH4Ad4BJQF5joBoAFQAQAAyACIAEwAJ4AYgA_ADvAIsAR0AkoC8yEAMAJgAYgB3koAoARAAmABiAHeAvMpAMAAqACAAIgATAAngBiAD8AO8AiwBHQCSgLz.f_gACHgAAAAA
-          media_content_type: Music
-          enqueue: replace
-        target:
-          entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - 'Off'
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-      - service: media_player.media_stop
-        data: {}
-        target:
-          entity_id:
-          - media_player.livingroom_sonos_speaker
-          - media_player.kitchen_sonos_speaker
-    default: []
-  mode: single
 - id: '1697449957161'
   alias: 'Alarm: Electricity Meter Unavailable'
   description: ''
@@ -4639,70 +4375,24 @@
   description: ''
   trigger:
   - platform: state
-    entity_id:
-    - input_boolean.radio10_live
-    to: 'on'
-    id: radio10_live
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_60s_70s_hits
-    to: 'on'
-    id: radio10_60s_70s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_80s_hits
-    to: 'on'
-    id: radio10_80s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_90s_hits
-    to: 'on'
-    id: radio10_90s_hits
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_non_stop
-    to: 'on'
-    id: radio10_non_stop
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_top_4000
-    to: 'on'
-    id: radio10_top_4000
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_disco_classics
-    to: 'on'
-    id: radio10_disco_classics
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_love_songs
-    to: 'on'
-    id: radio10_love_songs
-  - platform: state
-    entity_id:
-    - input_boolean.radio10_off
-    to: 'on'
-    id: 'Off'
+    entity_id: input_number.media_selected_radio_station
   condition: []
   action:
   - choose:
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_live
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 0 }}'
       sequence:
-      - service: input_boolean.turn_off
+      - service: media_player.media_stop
         data: {}
         target:
-          entity_id:
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
+          entity_id: media_player.livingroom_sonos_speaker
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 1 }}'
+      sequence:
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/d227990c-2385-4419-8159-1c73a33a58dd
@@ -4711,22 +4401,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_60s_70s_hits
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 2 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/39874081-8a87-45ca-a67f-52bae3372ae8
@@ -4735,22 +4413,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_80s_hits
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 3 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/641009df-7fe1-498c-8ef1-9b9eaf74bd52
@@ -4759,22 +4425,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_90s_hits
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 4 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/dc1da731-5046-47df-98db-6fc2dbb6d8c5
@@ -4783,22 +4437,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_non_stop
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 5 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/c1c834eb-e84e-43fc-8841-6749e19b4edc
@@ -4807,22 +4449,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_top_4000
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 6 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/54660f01-599c-4781-8fe2-008729962b4b
@@ -4831,22 +4461,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_disco_classics
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 7 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_love_songs
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/5e701918-d755-42c3-9204-8afc7f4e17bc
@@ -4855,22 +4473,10 @@
         target:
           entity_id: media_player.livingroom_sonos_speaker
     - conditions:
-      - condition: trigger
-        id:
-        - radio10_love_songs
+      - condition: template
+        value_template: '{{ states(''input_number.media_selected_radio_station'')
+          | int == 8 }}'
       sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_off
       - service: media_player.play_media
         data:
           media_content_id: media-source://radio_browser/5e701918-d755-42c3-9204-8afc7f4e17bc
@@ -4878,29 +4484,6 @@
           enqueue: replace
         target:
           entity_id: media_player.livingroom_sonos_speaker
-    - conditions:
-      - condition: trigger
-        id:
-        - 'Off'
-      sequence:
-      - service: input_boolean.turn_off
-        data: {}
-        target:
-          entity_id:
-          - input_boolean.radio10_live
-          - input_boolean.radio10_60s_70s_hits
-          - input_boolean.radio10_80s_hits
-          - input_boolean.radio10_90s_hits
-          - input_boolean.radio10_non_stop
-          - input_boolean.radio10_top_4000
-          - input_boolean.radio10_disco_classics
-          - input_boolean.radio10_love_songs
-      - service: media_player.media_stop
-        data: {}
-        target:
-          entity_id:
-          - media_player.livingroom_sonos_speaker
-          - media_player.kitchen_sonos_speaker
     default: []
   mode: single
 - id: '1697895952067'
@@ -5061,10 +4644,11 @@
         target:
           device_id: 87314f3a82c2f6b75644a1ce1cccbe53
       action_click_double:
-      - service: input_boolean.turn_on
+      - service: input_number.set_value
         target:
-          entity_id: input_boolean.radio10_live
-        data: {}
+          entity_id: input_number.media_selected_radio_station
+        data:
+          value: 0
 - id: '1707040655861'
   alias: Timer - Time to Leave Work
   description: ''
