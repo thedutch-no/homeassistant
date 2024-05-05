@@ -4944,3 +4944,45 @@
   - service: script.timer_update_timer_next_event2
     data: {}
   mode: single
+- id: '1714901740121'
+  alias: Offline detection for Z2M devices with last_seen
+  description: Check at 17h if there are Zigbee device that might be offline and send
+    a notification to my phone
+  use_blueprint:
+    path: Mr-Groch/offline-notification-for-sensors-with-last_seen.yaml
+    input:
+      time: '17:00:00'
+      actions:
+      - service: notify.mobile_app_robs_iphone_11
+        metadata: {}
+        data:
+          message: 'These Zigbee devices might be offline: {{sensors}}'
+- id: '1714901879295'
+  alias: 'Zigbee: Check for offline devices at 17h'
+  description: ''
+  use_blueprint:
+    path: Mr-Groch/offline-notification-for-sensors-with-last_seen.yaml
+    input:
+      time: '17:00:00'
+      actions:
+      - service: notify.mobile_app_robs_iphone_11
+        metadata: {}
+        data:
+          message: 'These Zigbee devices might be offline: {{sensors}}'
+- id: '1714902240775'
+  alias: 'ZIgbee: Send Notification for offline devices'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.z2m_offline_devices
+    from:
+    to:
+  condition: []
+  action:
+  - service: notify.mobile_app_robs_iphone_11
+    metadata: {}
+    data:
+      message: The following Zigbee devices are offline {{ states('sensor.z2m_offline_devices')
+        }}
+  mode: single
