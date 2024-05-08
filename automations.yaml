@@ -985,10 +985,6 @@
   - condition: state
     entity_id: input_boolean.night_mode
     state: 'off'
-  - condition: template
-    value_template: '{{ as_timestamp(now()) >= as_timestamp(states(''sensor.ac_prepare_for_bed''))
-      }}'
-    enabled: false
   action:
   - service: media_player.play_media
     data:
