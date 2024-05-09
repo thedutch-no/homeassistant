@@ -2484,7 +2484,7 @@
   - alias: Motion
     platform: state
     entity_id:
-    - binary_sensor.mm_wave_bathroom_has_target
+    - binary_sensor.presence_bathroom_has_target
     id: Motion
   - platform: device
     domain: mqtt
@@ -2530,7 +2530,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_bathroom
       - condition: state
-        entity_id: binary_sensor.mm_wave_bathroom_has_target
+        entity_id: binary_sensor.presence_bathroom_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2561,7 +2561,7 @@
         entity_id: input_boolean.overide_bathroom_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.mm_wave_bathroom_has_target
+        entity_id: binary_sensor.presence_bathroom_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -2661,24 +2661,22 @@
   - alias: Motion
     platform: state
     entity_id:
-    - binary_sensor.mm_wave_hallway_has_target
+    - binary_sensor.presence_hallway_has_target
     id: Motion
-  - platform: device
+  - alias: Switch - On
+    platform: device
     domain: mqtt
     device_id: 6e27023210b26c48943753f940005249
     type: action
     subtype: 'on'
-    discovery_id: 0xb4e3f9fffeb92588 action_on
-    id: Switch - on
-    alias: Switch - On
-  - platform: device
+    id: sw-on
+  - alias: Switch - Off
+    platform: device
     domain: mqtt
     device_id: 6e27023210b26c48943753f940005249
     type: action
     subtype: 'off'
-    discovery_id: 0xb4e3f9fffeb92588 action_off
-    id: Switch - off
-    alias: Switch - Off
+    id: sw-off
   - platform: event
     event_type: timer.finished
     event_data:
@@ -2707,7 +2705,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_hallway
       - condition: state
-        entity_id: binary_sensor.mm_wave_hallway_has_target
+        entity_id: binary_sensor.presence_hallway_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2738,7 +2736,7 @@
         entity_id: input_boolean.overide_hallway_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.mm_wave_hallway_has_target
+        entity_id: binary_sensor.presence_hallway_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -2748,7 +2746,8 @@
           entity_id: timer.light_hallway
     - conditions:
       - condition: trigger
-        id: Switch - on
+        id:
+        - sw-on
       sequence:
       - service: timer.cancel
         data: {}
@@ -2764,7 +2763,8 @@
           entity_id: scene.hallway_lights_to_on_100_250
     - conditions:
       - condition: trigger
-        id: Switch - off
+        id:
+        - sw-off
       sequence:
       - choose:
         - conditions:
@@ -2838,7 +2838,7 @@
   - alias: Motion
     platform: state
     entity_id:
-    - binary_sensor.mm_wave_entrance_has_target
+    - binary_sensor.presence_entrance_has_target
     id: Motion
   - platform: device
     domain: mqtt
@@ -2884,7 +2884,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_entrance
       - condition: state
-        entity_id: binary_sensor.mm_wave_entrance_has_target
+        entity_id: binary_sensor.presence_entrance_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -2915,7 +2915,7 @@
         entity_id: input_boolean.overide_entrance_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.mm_wave_entrance_has_target
+        entity_id: binary_sensor.presence_entrance_has_target
         state: 'off'
       sequence:
       - service: timer.start
@@ -3970,7 +3970,7 @@
   - alias: Motion
     platform: state
     entity_id:
-    - binary_sensor.mm_wave_kitchen_has_target
+    - binary_sensor.presence_kitchen_has_target
     id: Motion
   - platform: device
     domain: mqtt
@@ -4016,7 +4016,7 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_kitchen
       - condition: state
-        entity_id: binary_sensor.mm_wave_kitchen_has_target
+        entity_id: binary_sensor.presence_kitchen_has_target
         state: 'on'
       sequence:
       - service: timer.cancel
@@ -4047,7 +4047,7 @@
         entity_id: input_boolean.overide_kitchen_lights
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.mm_wave_kitchen_has_target
+        entity_id: binary_sensor.presence_kitchen_has_target
         state: 'off'
       sequence:
       - service: timer.start
