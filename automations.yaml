@@ -841,6 +841,11 @@
         entity_id: input_number.setpoint_varmepumpe
         value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
       alias: Set varmepumpe setpoint to Norm temp
+  - service: cover.open_cover
+    metadata: {}
+    data: {}
+    target:
+      entity_id: cover.window_2
   mode: single
 - id: '1663689046568'
   alias: 'Alarm Clock: Change start time detected'
