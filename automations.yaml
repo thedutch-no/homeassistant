@@ -4987,3 +4987,14 @@
       message: The following Zigbee devices are offline {{ states('sensor.z2m_offline_devices')
         }}
   mode: single
+- id: '1715530784656'
+  alias: Sun in Office Window
+  description: Keep the sun from the office desk
+  use_blueprint:
+    path: mougeat/close_cover_with_sun.yaml
+    input:
+      cover_entity: cover.window_2
+      sun_position_start: 180
+      sun_position_end: 225
+      weather: weather.home
+      outdoor_temp: 0

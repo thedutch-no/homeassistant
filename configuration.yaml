@@ -63,3 +63,8 @@ battery_notes:
   round_battery: false
 
 
+var:
+  cover_window_2:
+    friendly_name: "window 2"
+    initial_value: 0
+    icon: mdi:bug
