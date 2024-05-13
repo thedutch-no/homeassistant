@@ -59,3 +59,14 @@ sensor:
   #
   #########################
 
+  - name: sun.azimuth
+    unique_id: 72d4a978-23df-4e2c-8a13-6aa9e7a44cba
+    icon: mdi:sun-angle
+    state: >
+      {{ state_attr("sun.sun", "azimuth") }}
+
+  - name: sun.elevation
+    unique_id: 2d2bb2e6-93ea-4ad8-b576-f79da921419f
+    icon: mdi:sun-angle
+    state: >
+      {{ state_attr("sun.sun", "elevation") }}

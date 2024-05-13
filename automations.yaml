@@ -340,6 +340,7 @@
     above: 80
     id: above_80
     alias: Battery level above 80%
+    enabled: false
   condition: []
   action:
   - choose:
@@ -4995,6 +4996,6 @@
     input:
       cover_entity: cover.window_2
       sun_position_start: 180
-      sun_position_end: 225
+      sun_position_end: 240
       weather: weather.home
       outdoor_temp: 0
