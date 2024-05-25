@@ -1000,6 +1000,9 @@
     target:
       entity_id:
       - media_player.livingroom_sonos_speaker
+  - service: script.new_script
+    metadata: {}
+    data: {}
   mode: single
 - id: '1663948844908'
   alias: Stove - Status and Warnings
@@ -2001,6 +2004,16 @@
             target:
               entity_id: media_player.bedroom_google_speaker
         default:
+        - service: input_boolean.turn_on
+          data: {}
+          target:
+            entity_id: input_boolean.night_mode
+        - service: script.check_alarm_clock
+          data: {}
+          enabled: true
+        - service: script.new_script
+          metadata: {}
+          data: {}
         - type: turn_off
           device_id: 6945be442bab645c9f650254bcbf4351
           entity_id: switch.ventilation
@@ -2028,13 +2041,6 @@
           device_id: 29caca001c22698e1034c56d60b3a3ce
           entity_id: 2cc302e48aecc17aff8df03d7a9893f6
           domain: switch
-        - service: input_boolean.turn_on
-          data: {}
-          target:
-            entity_id: input_boolean.night_mode
-        - service: script.check_alarm_clock
-          data: {}
-          enabled: true
         - service: script.turn_off_all_lights_and_mediaplayers
           data: {}
         - service: script.check_doors_closed
@@ -5032,7 +5038,7 @@
         }}
   mode: single
 - id: '1715530784656'
-  alias: Sun in Office Window
+  alias: 'Blinds: Sun in Office Window'
   description: Keep the sun from the office desk
   use_blueprint:
     path: mougeat/close_cover_with_sun.yaml
