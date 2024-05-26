@@ -810,6 +810,10 @@
       media_content_id: http://192.168.28.110:8123/local/sounds/EarlyRiser.mp3
     target:
       entity_id: media_player.bedroom_google_speaker
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.blinds_toggle
+    data: {}
   - service: input_number.set_value
     data_template:
       entity_id: input_number.setpoint_entrance
@@ -820,9 +824,6 @@
       entity_id: input_number.setpoint_bathroom
       value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
     alias: Set bathroom setpoint to Min temp
-  - service: script.turn_on_all_lights
-    data: {}
-    enabled: false
   - service: input_boolean.turn_on
     data: {}
     target:
@@ -842,9 +843,6 @@
         entity_id: input_number.setpoint_varmepumpe
         value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
       alias: Set varmepumpe setpoint to Norm temp
-  - service: script.blinds_open_all
-    metadata: {}
-    data: {}
   mode: single
 - id: '1663689046568'
   alias: 'Alarm Clock: Change start time detected'
@@ -1000,8 +998,9 @@
     target:
       entity_id:
       - media_player.livingroom_sonos_speaker
-  - service: script.new_script
-    metadata: {}
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.blinds_toggle
     data: {}
   mode: single
 - id: '1663948844908'
@@ -2011,9 +2010,11 @@
         - service: script.check_alarm_clock
           data: {}
           enabled: true
-        - service: script.new_script
+        - service: input_boolean.turn_on
           metadata: {}
           data: {}
+          target:
+            entity_id: input_boolean.blinds_toggle
         - type: turn_off
           device_id: 6945be442bab645c9f650254bcbf4351
           entity_id: switch.ventilation
@@ -5048,3 +5049,183 @@
       sun_position_end: 240
       weather: weather.home
       outdoor_temp: 0
+      close_time: 60
+- id: '1716675143606'
+  alias: 'Blinds: Open/Close window 1 during night'
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    id: close
+  - platform: sun
+    event: sunset
+    offset: 02:00:00
+    id: open
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - open
+      sequence:
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
+    - conditions:
+      - condition: trigger
+        id:
+        - close
+      sequence:
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
+  mode: single
+- id: '1716718558234'
+  alias: 'Blinds: Open/Close All'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.blinds_toggle
+    from: 'on'
+    to: 'off'
+    id: open
+    alias: Open Blinds (from On to Off)
+  - platform: state
+    entity_id:
+    - input_boolean.blinds_toggle
+    from: 'off'
+    to: 'on'
+    id: close
+    alias: Close Blinds (from Off to On)
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - open
+      sequence:
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
+      - wait_for_trigger:
+        - platform: device
+          device_id: f79ccf2b02a307256a865a11373dbec9
+          domain: cover
+          entity_id: fbe5d973d33476324c28b7f326be1064
+          type: opened
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - efd02bc9099fbd454353750553104529
+      - wait_for_trigger:
+        - platform: device
+          device_id: efd02bc9099fbd454353750553104529
+          domain: cover
+          entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+          type: opened
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 9d1c0e84d348d5a05bacdb7c87bd326b
+      - wait_for_trigger:
+        - platform: device
+          device_id: 9d1c0e84d348d5a05bacdb7c87bd326b
+          domain: cover
+          entity_id: ac91eb9f2a20a75e990131cc98a63d88
+          type: opened
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 0c0fa846221280ac1b0ccc3f5b0b765d
+    - conditions:
+      - condition: trigger
+        id:
+        - close
+      sequence:
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
+      - wait_for_trigger:
+        - platform: device
+          device_id: f79ccf2b02a307256a865a11373dbec9
+          domain: cover
+          entity_id: fbe5d973d33476324c28b7f326be1064
+          type: closed
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - efd02bc9099fbd454353750553104529
+      - wait_for_trigger:
+        - platform: device
+          device_id: efd02bc9099fbd454353750553104529
+          domain: cover
+          entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+          type: closed
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 9d1c0e84d348d5a05bacdb7c87bd326b
+      - wait_for_trigger:
+        - platform: device
+          device_id: 9d1c0e84d348d5a05bacdb7c87bd326b
+          domain: cover
+          entity_id: ac91eb9f2a20a75e990131cc98a63d88
+          type: closed
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 0c0fa846221280ac1b0ccc3f5b0b765d
+  mode: single
