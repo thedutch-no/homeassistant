@@ -109,13 +109,14 @@
             domain: sensor
             below: 4
             alias: Washing machine power < 4
+            enabled: true
+          - condition: numeric_state
+            entity_id: sensor.washing_machine_avg_power
+            below: 4
             enabled: false
           - condition: state
             entity_id: timer.washing_machine_cool_down
             state: idle
-          - condition: numeric_state
-            entity_id: sensor.washing_machine_avg_power
-            below: 4
           sequence:
           - service: timer.start
             data: {}
@@ -133,14 +134,15 @@
             entity_id: sensor.washing_machine_power_module_power
             domain: sensor
             above: 4
-            alias: Washing machine power > 5
+            alias: Washing machine power > 4
+            enabled: true
+          - condition: numeric_state
+            entity_id: sensor.washing_machine_avg_power
+            above: 4
             enabled: false
           - condition: state
             entity_id: timer.washing_machine_cool_down
             state: active
-          - condition: numeric_state
-            entity_id: sensor.washing_machine_avg_power
-            above: 4
           sequence:
           - service: timer.cancel
             data: {}
@@ -234,13 +236,14 @@
             entity_id: sensor.tumble_dryer_power_module_power
             domain: sensor
             below: 4
+            enabled: true
+          - condition: numeric_state
+            entity_id: sensor.tumble_dryer_avg_power
+            below: 4
             enabled: false
           - condition: state
             entity_id: timer.tumble_dryer_cool_down
             state: idle
-          - condition: numeric_state
-            entity_id: sensor.tumble_dryer_avg_power
-            below: 4
           sequence:
           - service: timer.start
             data: {}
@@ -258,13 +261,14 @@
             entity_id: sensor.tumble_dryer_power_module_power
             domain: sensor
             above: 3
+            enabled: true
+          - condition: numeric_state
+            entity_id: sensor.tumble_dryer_avg_power
+            above: 3
             enabled: false
           - condition: state
             entity_id: timer.tumble_dryer_cool_down
             state: active
-          - condition: numeric_state
-            entity_id: sensor.tumble_dryer_avg_power
-            above: 3
           sequence:
           - service: timer.cancel
             data: {}
