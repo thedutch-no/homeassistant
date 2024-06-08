@@ -2,16 +2,6 @@
 # System Monitor
 # - https://www.home-assistant.io/integrations/systemmonitor/
 #
-- platform: systemmonitor
-  resources:
-    - type: processor_use      
-    - type: disk_use_percent
-      arg: /config
-    - type: memory_free
-    - type: load_1m
-    - type: load_5m
-    - type: load_15m
-
 - platform: time_date
   display_options:
     - 'time'
