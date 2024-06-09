@@ -16,13 +16,13 @@ trigger:
 action:
   - service: weather.get_forecasts
     target:
-      entity_id: weather.openweathermap
+      entity_id: weather.accuweather
     data:
       type: hourly
     response_variable: my_forecast
 sensor:
-  - name: OpenWeather Forecast Hourly
+  - name: Weather Forecast Hourly
     unique_id: 56be435a-d75c-47eb-a566-67ae041e529e
     state: "{{ now().isoformat() }}"
     attributes:
-      forecast: "{{ my_forecast['weather.openweathermap'].forecast }}" 
+      forecast: "{{ my_forecast['weather.accuweather'].forecast }}" 

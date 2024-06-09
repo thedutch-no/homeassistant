@@ -1383,11 +1383,9 @@
   action:
   - choose:
     - conditions:
-      - type: is_temperature
-        condition: device
-        device_id: ae52f9cc6167e7050a6e865cf51140ee
-        entity_id: sensor.openweathermap_forecast_temperature
-        domain: sensor
+      - condition: numeric_state
+        entity_id: weather.forecast_home
+        attribute: temperature
         above: 5
       sequence:
       - service: climate.turn_off
@@ -1397,12 +1395,10 @@
         enabled: false
       alias: When Outside temp > 5 then Varmepumpe to Off
     - conditions:
-      - type: is_temperature
-        condition: device
-        device_id: ae52f9cc6167e7050a6e865cf51140ee
-        entity_id: sensor.openweathermap_forecast_temperature
-        domain: sensor
-        below: -8
+      - condition: numeric_state
+        entity_id: weather.forecast_home
+        attribute: temperature
+        below: -7
       sequence:
       - service: input_number.set_value
         data_template:
@@ -1416,13 +1412,11 @@
           entity_id: climate.livingroom
       alias: When Outside temp < -8 Varmepumpe temp=norm / fan=auto
     - conditions:
-      - type: is_temperature
-        condition: device
-        device_id: ae52f9cc6167e7050a6e865cf51140ee
-        entity_id: sensor.openweathermap_forecast_temperature
-        domain: sensor
-        above: -9
-        below: 6
+      - condition: numeric_state
+        entity_id: weather.forecast_home
+        attribute: temperature
+        above: 4
+        below: -7
       sequence:
       - service: input_number.set_value
         data_template:
@@ -3285,155 +3279,6 @@
       seconds: 0
   condition: []
   action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_prepare_for_bed
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{ as_timestamp(states(''sensor.ac_prepare_for_bed'')) | int | timestamp_custom(''%H:%M'',
-            true)}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Prepare for bed
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_for_bed
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_for_bed''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(''sensor.hhmm_time_for_bed'')}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Bed time
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_wake_up_time
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_wake_up''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(''sensor.hhmm_time_wake_up'')}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Wake-up time
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_prepare_to_leave
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_prepare_leave_home''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(''sensor.hhmm_prepare_leave_home'')}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Prepare to leave
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_leave_home
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_home''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(''sensor.hhmm_time_leave_home'')}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Leave Home
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: state
-        entity_id: timer.ac_time_leave_work
-        state: active
-      sequence:
-      - service: timer.start
-        data:
-          duration: '{{ as_timestamp(as_datetime(as_timestamp(states(''sensor.ac_time_leave_work''))
-            - as_timestamp(now()))) | int | timestamp_custom(''%H:%M:00'', false)}}'
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_text.set_value
-        data:
-          value: '{{states(''sensor.hhmm_time_leave_work'')}}'
-        target:
-          entity_id: input_text.hhmm_ac_next_timer
-      - service: input_text.set_value
-        data:
-          value: Leave Work
-        target:
-          entity_id: input_text.ac_next_event_name
-    - conditions:
-      - condition: trigger
-        id: cancelled
-      sequence:
-      - service: input_text.set_value
-        data:
-          value: '-'
-        target:
-          entity_id:
-          - input_text.hhmm_ac_next_timer
-          - input_text.ac_next_event_name
-      - service: timer.cancel
-        data: {}
-        target:
-          entity_id: timer.ac_next_event
-      - service: input_boolean.turn_off
-        metadata: {}
-        data: {}
-        target:
-          entity_id: input_boolean.alarm_clock_on
-    enabled: false
   - service: script.timer_update_next_event_timers
     data: {}
   mode: single
