@@ -4974,6 +4974,10 @@
           domain: cover
           entity_id: fbe5d973d33476324c28b7f326be1064
           type: opened
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 10
         timeout:
           hours: 0
           minutes: 0
