@@ -5043,6 +5043,10 @@
           domain: cover
           entity_id: fbe5d973d33476324c28b7f326be1064
           type: closed
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 10
         timeout:
           hours: 0
           minutes: 0
@@ -5060,6 +5064,10 @@
           domain: cover
           entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
           type: closed
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 10
         timeout:
           hours: 0
           minutes: 0
@@ -5077,6 +5085,10 @@
           domain: cover
           entity_id: ac91eb9f2a20a75e990131cc98a63d88
           type: closed
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 10
         timeout:
           hours: 0
           minutes: 0
