@@ -4959,7 +4959,15 @@
     to: 'on'
     id: close
     alias: Close Blinds (from Off to On)
-  condition: []
+  - platform: state
+    entity_id:
+    - input_boolean.night_mode
+    to: 'on'
+    id: open
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.window_1_tilt_angle_y
+    below: 85
   action:
   - choose:
     - conditions:

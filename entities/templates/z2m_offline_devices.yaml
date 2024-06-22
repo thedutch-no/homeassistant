@@ -4,7 +4,7 @@
 
 sensor:
   - name: "z2m_offline_devices"
-    unique_id: 7b5fe323-6b38-4b0d-bd6a-1a45fd827a9f
+    unique_id: ebd9c70b-280d-48d1-8727-a388ed4b9c54
     icon: mdi:zigbee
     state: >-
       {% set result = namespace(sensors=[]) %}
