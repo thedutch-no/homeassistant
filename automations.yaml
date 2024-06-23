@@ -4905,7 +4905,8 @@
       close_time: 60
 - id: '1716675143606'
   alias: 'Blinds: Open/Close window 1 during night'
-  description: ''
+  description: "Open only when the window is Not Closed  and Night mode is On. \nTilt
+    X axis values : \nOpen    = -260\nCrack   = 92\nClosed = 183"
   trigger:
   - platform: sun
     event: sunrise
@@ -4918,6 +4919,9 @@
   - condition: state
     entity_id: input_boolean.night_mode
     state: 'on'
+  - condition: numeric_state
+    entity_id: sensor.window_1_tilt_z_axis
+    below: 120
   action:
   - choose:
     - conditions:
@@ -4963,7 +4967,7 @@
     entity_id:
     - input_boolean.night_mode
     to: 'on'
-    id: open
+    id: close
   condition:
   - condition: numeric_state
     entity_id: sensor.window_1_tilt_angle_y
