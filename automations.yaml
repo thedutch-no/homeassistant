@@ -4913,7 +4913,6 @@
     id: close
   - platform: sun
     event: sunset
-    offset: 01:00:00
     id: open
   condition:
   - condition: state
@@ -4922,6 +4921,7 @@
   - condition: numeric_state
     entity_id: sensor.window_1_tilt_z_axis
     below: 120
+    enabled: false
   action:
   - choose:
     - conditions:
