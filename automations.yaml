@@ -4918,11 +4918,11 @@
   - condition: state
     entity_id: input_boolean.night_mode
     state: 'on'
-    enabled: false
+    enabled: true
   - condition: numeric_state
-    entity_id: sensor.window_1_tilt_z_axis
+    entity_id: sensor.window_1_tilt_x_axis
     below: 120
-    enabled: false
+    enabled: true
   action:
   - choose:
     - conditions:
