@@ -453,11 +453,6 @@
     entity_id: switch.washing_machine_power_module_relay
     domain: switch
   action:
-  - service: timer.start
-    data:
-      duration: 0:05:00
-    target:
-      entity_id: timer.washing_machine_cool_down
   - service: media_player.play_media
     data:
       media_content_id: http://192.168.28.110:8123/local/sounds/de_wasmachine_is_klaar_nl-nl_cloud.mp3
@@ -468,6 +463,11 @@
     target:
       entity_id:
       - media_player.livingroom_sonos_speaker
+  - service: timer.start
+    data:
+      duration: 0:05:00
+    target:
+      entity_id: timer.washing_machine_cool_down
   mode: single
 - id: '1659974516452'
   alias: Tumble Dryer - Done
@@ -485,29 +485,22 @@
     entity_id: switch.tumble_dryer_power_module_relay
     domain: switch
   action:
-  - repeat:
-      until:
-      - condition: device
-        type: is_off
-        device_id: bbdadee4f3fc92ca9f26fd16fb68a009
-        entity_id: switch.tumble_dryer_power_module_relay
-        domain: switch
-      sequence:
-      - service: media_player.play_media
-        data:
-          media_content_id: http://192.168.28.110:8123/local/sounds/de_wasdroger_is_klaar_nl-nl_cloud.mp3
-          media_content_type: music
-          announce: true
-          extra:
-            volume: 40
-        target:
-          entity_id:
-          - media_player.livingroom_sonos_speaker
-      - delay:
-          hours: 0
-          minutes: 5
-          seconds: 0
-          milliseconds: 0
+  - service: media_player.play_media
+    data:
+      media_content_id: http://192.168.28.110:8123/local/sounds/de_wasdroger_is_klaar_nl-nl_cloud.mp3
+      media_content_type: music
+      announce: true
+      extra:
+        volume: 40
+    target:
+      entity_id:
+      - media_player.livingroom_sonos_speaker
+  - service: timer.start
+    metadata: {}
+    data:
+      duration: 00:05:00
+    target:
+      entity_id: timer.tumble_dryer_cool_down
   mode: single
 - id: '1661913713702'
   alias: Location - Leaving Sørumsand
