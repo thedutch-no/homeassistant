@@ -336,6 +336,7 @@
     domain: sensor
     below: 30
     id: below_20
+    enabled: false
   - type: battery_level
     platform: device
     device_id: 69e9d50cc713fc17401a344690a7c00a
