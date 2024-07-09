@@ -17,7 +17,7 @@ sensor:
       {% set cs2 = as_timestamp(today_at(states('input_datetime.congestion_start_time_2'))) | int %}
 
 
-      {% if ((tws - ttc + tto) > cs1) and (as_datetime(states('sensor.ac_work_start')).weekday() < 4) %}
+      {% if ((tws - ttc + tto) > cs1) and (as_datetime(states('sensor.ac_work_start')).weekday() < 4 and states('input_boolean.include_congestion_time') == 'on') %}
         {% if (tws - ttc + tto) > cs2 %}
           {% set ret = '00:20:00' %}
         {% else %}

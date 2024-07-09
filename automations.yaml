@@ -854,6 +854,9 @@
     entity_id:
     - input_datetime.time_work_start
     id: time
+  - platform: state
+    entity_id:
+    - input_boolean.include_congestion_time
   condition: []
   action:
   - choose:
@@ -1514,6 +1517,7 @@
     - input_datetime.travel_time_customer
     - input_datetime.time_work_start
     - input_boolean.workday
+    - input_boolean.include_congestion_time
     id: changes
   condition: []
   action:
@@ -4649,45 +4653,57 @@
     above: 35
   condition: []
   action:
+  - service: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.blinds_toggle
   - service: cover.close_cover
     metadata: {}
     data: {}
     target:
       device_id:
       - f79ccf2b02a307256a865a11373dbec9
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
+    enabled: false
   - service: cover.close_cover
     metadata: {}
     data: {}
     target:
       device_id:
       - efd02bc9099fbd454353750553104529
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
+    enabled: false
   - service: cover.close_cover
     metadata: {}
     data: {}
     target:
       device_id:
       - 9d1c0e84d348d5a05bacdb7c87bd326b
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
+    enabled: false
   - service: cover.close_cover
     metadata: {}
     data: {}
     target:
       device_id:
       - 0c0fa846221280ac1b0ccc3f5b0b765d
+    enabled: false
   - service: input_boolean.turn_off
     metadata: {}
     data: {}
@@ -4980,6 +4996,11 @@
         data: {}
         target:
           device_id: f79ccf2b02a307256a865a11373dbec9
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
       - wait_for_trigger:
         - platform: device
           device_id: f79ccf2b02a307256a865a11373dbec9
@@ -4995,6 +5016,12 @@
           minutes: 0
           seconds: 10
           milliseconds: 0
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - efd02bc9099fbd454353750553104529
       - service: cover.open_cover
         metadata: {}
         data: {}
@@ -5018,6 +5045,12 @@
         target:
           device_id:
           - 9d1c0e84d348d5a05bacdb7c87bd326b
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 9d1c0e84d348d5a05bacdb7c87bd326b
       - wait_for_trigger:
         - platform: device
           device_id: 9d1c0e84d348d5a05bacdb7c87bd326b
@@ -5035,11 +5068,22 @@
         target:
           device_id:
           - 0c0fa846221280ac1b0ccc3f5b0b765d
+      - service: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 0c0fa846221280ac1b0ccc3f5b0b765d
     - conditions:
       - condition: trigger
         id:
         - close
       sequence:
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id: f79ccf2b02a307256a865a11373dbec9
       - service: cover.close_cover
         metadata: {}
         data: {}
@@ -5066,6 +5110,12 @@
         target:
           device_id:
           - efd02bc9099fbd454353750553104529
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - efd02bc9099fbd454353750553104529
       - wait_for_trigger:
         - platform: device
           device_id: efd02bc9099fbd454353750553104529
@@ -5081,6 +5131,12 @@
           minutes: 0
           seconds: 10
           milliseconds: 0
+      - service: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - 9d1c0e84d348d5a05bacdb7c87bd326b
       - service: cover.close_cover
         metadata: {}
         data: {}
