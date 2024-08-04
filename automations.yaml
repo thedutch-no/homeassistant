@@ -2028,12 +2028,9 @@
         - alias: 'Media player: Stop - Kitchen and Livingroom speakers'
           service: media_player.media_stop
           data: {}
+          enabled: true
           target:
-            entity_id:
-            - media_player.kitchen_sonos_speaker
-            - media_player.livingroom_sonos_speaker
-            - media_player.apple_tv_livingroom
-          enabled: false
+            entity_id: media_player.sonos_speakers
         - type: turn_off
           device_id: 29caca001c22698e1034c56d60b3a3ce
           entity_id: 2cc302e48aecc17aff8df03d7a9893f6
