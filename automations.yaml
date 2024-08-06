@@ -3107,7 +3107,6 @@
       sequence:
       - service: climate.set_temperature
         data:
-          hvac_mode: heat
           temperature: '{{ states(''input_number.setpoint_varmepumpe'') | float(0)
             }} '
         target:
