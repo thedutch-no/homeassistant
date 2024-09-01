@@ -797,50 +797,54 @@
     state: 'on'
     enabled: false
   action:
-  - service: media_player.volume_set
-    data:
+  - data:
       volume_level: 0.3
     target:
       entity_id: media_player.bedroom_google_speaker
-  - service: media_player.play_media
-    data:
+    action: media_player.volume_set
+  - data:
       media_content_type: music
       media_content_id: http://192.168.28.110:8123/local/sounds/EarlyRiser.mp3
     target:
       entity_id: media_player.bedroom_google_speaker
-  - service: input_boolean.turn_off
-    target:
+    action: media_player.play_media
+  - target:
       entity_id: input_boolean.blinds_toggle
     data: {}
-  - service: input_number.set_value
-    data_template:
+    action: input_boolean.turn_off
+  - data_template:
       entity_id: input_number.setpoint_entrance
       value: '{{ states(''input_number.setpoint_entrance_norm'') }}'
     alias: Set entrance setpoint to Norm temp
-  - service: input_number.set_value
-    data_template:
+    action: input_number.set_value
+  - data_template:
       entity_id: input_number.setpoint_bathroom
       value: '{{ states(''input_number.setpoint_bathroom_min'') }}'
     alias: Set bathroom setpoint to Min temp
-  - service: input_boolean.turn_on
-    data: {}
+    action: input_number.set_value
+  - data: {}
     target:
       entity_id:
       - input_boolean.overide_kitchen_lights
       - input_boolean.overide_hallway_lights
     enabled: true
-  - service: script.trigger_shoe_dryer_control
-    data: {}
+    action: input_boolean.turn_on
+  - data: {}
+    action: script.trigger_shoe_dryer_control
   - if:
     - condition: state
       entity_id: binary_sensor.workday
       state: 'off'
     then:
-    - service: input_number.set_value
-      data_template:
+    - data_template:
         entity_id: input_number.setpoint_varmepumpe
         value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
       alias: Set varmepumpe setpoint to Norm temp
+      action: input_number.set_value
+    - type: turn_on
+      device_id: 845afd6b75ee0ba29a48e1eefa4b3e02
+      entity_id: 42e9235fb2515b7a3e4783b112c134db
+      domain: switch
   mode: single
 - id: '1663689046568'
   alias: 'Alarm Clock: Change start time detected'
