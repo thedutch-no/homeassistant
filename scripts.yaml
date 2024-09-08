@@ -1342,3 +1342,29 @@ timer_update_timer_next_event2:
         target:
           entity_id: input_boolean.alarm_clock_on
   mode: single
+blinds_window_1:
+  alias: 'Blinds: Window 1'
+  sequence:
+  - choose:
+    - conditions:
+      - alias: Blinds UP
+        condition: template
+        value_template: '{{ direction }} == up'
+      sequence:
+      - action: cover.open_cover
+        metadata: {}
+        data: {}
+        target:
+          entity_id: cover.window_1
+    - conditions:
+      - condition: template
+        value_template: '{{ direction }} == down'
+      sequence:
+      - action: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          entity_id: cover.window_1
+      alias: Blinds DOWN
+  description: Blinds Up or Down
+  icon: mdi:blinds

@@ -4931,7 +4931,7 @@
     enabled: true
   - condition: numeric_state
     entity_id: sensor.window_1_tilt_z_axis
-    below: 190
+    below: input_number.window_1_tilt_threshold
   action:
   - choose:
     - conditions:
@@ -5162,4 +5162,33 @@
         target:
           device_id:
           - 0c0fa846221280ac1b0ccc3f5b0b765d
+  mode: single
+- id: '1725801394865'
+  alias: 'Blinds: Window 1 test'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.blind_1_toggle
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.blind_1_toggle
+        state: 'on'
+      sequence:
+      - action: script.blinds_window_1
+        metadata: {}
+        data:
+          direction: down
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.blind_1_toggle
+        state: 'off'
+      sequence:
+      - action: script.blinds_window_1
+        metadata: {}
+        data:
+          direction: up
   mode: single
