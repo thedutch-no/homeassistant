@@ -4,7 +4,7 @@
 
 sensor:
   - name: "esphome_offline_devices"
-    unique_id: 31b9462f-c9ff-444d-9acd-0147e64a9414
+    unique_id: bdd55f79-96a3-49df-bff7-2cf396d704cb
     icon: mdi:cpu-32-bit
     state: >-
       {% set result = namespace(sensors=[]) %}

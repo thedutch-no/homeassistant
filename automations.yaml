@@ -4885,21 +4885,20 @@
         data:
           message: 'These Zigbee devices might be offline: {{sensors}}'
 - id: '1714902240775'
-  alias: 'ZIgbee: Send Notification for offline devices'
+  alias: 'Zigbee: Send Notification for offline devices'
   description: ''
   trigger:
-  - platform: state
+  - platform: numeric_state
     entity_id:
     - sensor.z2m_offline_devices
-    from:
-    to:
+    above: 0
   condition: []
   action:
-  - service: notify.mobile_app_robs_iphone_11
-    metadata: {}
+  - metadata: {}
     data:
       message: The following Zigbee devices are offline {{ states('sensor.z2m_offline_devices')
         }}
+    action: notify.mobile_app_robs_iphone_11
   mode: single
 - id: '1715530784656'
   alias: 'Blinds: Sun in Office Window'
