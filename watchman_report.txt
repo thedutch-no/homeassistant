@@ -1,16 +1,34 @@
 -== Watchman Report ==- 
 
--== Congratulations, all 70 services from your config are available!
+-== Missing 1 service(s) from 78 found in your config:
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
+| Service ID                                              | State   | Location                                                                         |
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
+| script.update_next_timer_entity                         | missing | automations.yaml:1675                                                            |
++---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Missing 11 entity(ies) from 307 found in your config:
+-== Missing 24 entity(ies) from 322 found in your config:
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | Entity ID                                               | State   | Location                                                                         |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 | sensor.washing_machine_power_button_action              | unavail | automations.yaml:9                                                               |
-| switch.shoe_dryer                                       | missing | automations.yaml:1334,3819,3825,3839,3863,3874,4317,4322                         |
-| button.varmepumpe_reboot                                | unknown | automations.yaml:4160                                                            |
-| sensor.octoprint_current_state                          | unavail | automations.yaml:4195,4205                                                       |
-| switch.3d_printer_light_switch                          | unavail | automations.yaml:4236,4264                                                       |
+| switch.kupevarme                                        | missing | automations.yaml:542,4458                                                        |
+| switch.shoe_dryer                                       | missing | automations.yaml:1341,3699,3705,3719,3743,3754,4197,4202                         |
+| switch.panel_oven_fd                                    | unavail | automations.yaml:2347,2402,2412,2440,2450,2458                                   |
+| button.varmepumpe_reboot                                | unknown | automations.yaml:4040                                                            |
+| sensor.octoprint_current_state                          | unavail | automations.yaml:4075,4085                                                       |
+| switch.3d_printer_light_switch                          | unavail | automations.yaml:4116,4144                                                       |
+| sensor.ice_warning                                      | unavail | automations.yaml:4369,4376,4386,4403                                             |
+| media_player.plex_plex_for_apple_tv_apple_tv            | unavail | automations.yaml:4640                                                            |
+| sensor.panel_oven_fd_power                              | unavail | sensors.yaml:41                                                                  |
+| sensor.kupevarme_power                                  | missing | scripts.yaml:219                                                                 |
+| weather.openweathermap                                  | missing | entities/templates/weather_expected_precipitation.yaml:15,28,29                  |
+| sun.azimuth                                             | missing | entities/templates/templates.yaml:62                                             |
+| sun.elevation                                           | missing | entities/templates/templates.yaml:68                                             |
+| input_boolean.foo                                       | missing | custom_components/var/services.yaml:16                                           |
+| input_boolean.bar                                       | missing | custom_components/var/services.yaml:26                                           |
+| camera.generic_stream                                   | missing | custom_components/webrtc/services.yaml:13,46                                     |
+| media_player.mibox4                                     | missing | custom_components/webrtc/services.yaml:35                                        |
 | vacuum.toggle                                           | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/card_templates/c |
 |                                                         |         | ards/card_vertical_button.yaml:80                                                |
 | vacuum.stop                                             | missing | custom_components/ui_lovelace_minimalist/lovelace/ulm_templates/card_templates/c |
@@ -25,6 +43,6 @@
 |                                                         |         | popup_buttons/popup_button_airconditionner.yaml:22                               |
 +---------------------------------------------------------+---------+----------------------------------------------------------------------------------+
 
--== Report created on 27 Apr 2024 21:44:41
--== Parsed 433 files in 1.38s., ignored 0 files 
--== Generated in: 0.01s. Validated in: 0.00s.
+-== Report created on 13 Sep 2024 15:22:27
+-== Parsed 436 files in 18.31s., ignored 0 files 
+-== Generated in: 0.08s. Validated in: 0.00s.
