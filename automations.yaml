@@ -2854,22 +2854,22 @@
     entity_id:
     - binary_sensor.presence_entrance_has_target
     id: Motion
-  - platform: device
+  - alias: Switch - On
+    platform: device
     domain: mqtt
     device_id: 6c548e3322378ac6dc46c70504abb3f5
     type: action
     subtype: 'on'
     discovery_id: 0x8cf681fffe50526d action_on
     id: Switch - on
-    alias: Switch - On
-  - platform: device
+  - alias: Switch - Off
+    platform: device
     domain: mqtt
     device_id: 6c548e3322378ac6dc46c70504abb3f5
     type: action
     subtype: 'off'
     discovery_id: 0x8cf681fffe50526d action_off
     id: Switch - off
-    alias: Switch - Off
   - platform: event
     event_type: timer.finished
     event_data:
@@ -2901,10 +2901,10 @@
         entity_id: binary_sensor.presence_entrance_has_target
         state: 'on'
       sequence:
-      - service: timer.cancel
-        data: {}
+      - data: {}
         target:
           entity_id: timer.light_entrance
+        action: timer.cancel
       - condition: state
         entity_id: light.entrance_ceiling
         state: 'off'
@@ -2913,15 +2913,15 @@
           entity_id: input_boolean.night_mode
           state: 'on'
         then:
-        - service: scene.turn_on
-          data: {}
+        - data: {}
           target:
             entity_id: scene.entrance_lights_to_on_night
+          action: scene.turn_on
         else:
-        - service: scene.turn_on
-          data: {}
+        - data: {}
           target:
             entity_id: scene.frontdoor_lights_to_on_100_352
+          action: scene.turn_on
     - conditions:
       - condition: trigger
         id: Motion
@@ -2932,27 +2932,27 @@
         entity_id: binary_sensor.presence_entrance_has_target
         state: 'off'
       sequence:
-      - service: timer.start
-        data:
+      - data:
           duration: 0
         target:
           entity_id: timer.light_entrance
+        action: timer.start
     - conditions:
       - condition: trigger
         id: Switch - on
       sequence:
-      - service: timer.cancel
-        data: {}
+      - data: {}
         target:
           entity_id: timer.light_entrance
-      - service: input_boolean.turn_on
-        data: {}
+        action: timer.cancel
+      - data: {}
         target:
           entity_id: input_boolean.overide_entrance_lights
-      - service: scene.turn_on
-        data: {}
+        action: input_boolean.turn_on
+      - data: {}
         target:
           entity_id: scene.frontdoor_lights_to_on_100_250_duplicate
+        action: scene.turn_on
     - conditions:
       - condition: trigger
         id: Switch - off
@@ -2965,31 +2965,31 @@
             entity_id: 57bccd1162395ef0cbddcbe1fed9dc6a
             domain: binary_sensor
           sequence:
-          - service: input_boolean.turn_off
-            data: {}
+          - data: {}
             target:
               entity_id: input_boolean.overide_entrance_lights
+            action: input_boolean.turn_off
         default:
-        - service: input_boolean.turn_off
-          data: {}
+        - data: {}
           target:
             entity_id: input_boolean.overide_entrance_lights
-        - service: timer.cancel
-          data: {}
+          action: input_boolean.turn_off
+        - data: {}
           target:
             entity_id: timer.light_entrance
-        - service: scene.turn_on
-          data: {}
+          action: timer.cancel
+        - data: {}
           target:
             entity_id: scene.livingroom_lights_to_off_2
+          action: scene.turn_on
     - conditions:
       - condition: trigger
         id: Timer
       sequence:
-      - service: scene.turn_on
-        data: {}
+      - data: {}
         target:
           entity_id: scene.livingroom_lights_to_off_2
+        action: scene.turn_on
     - conditions:
       - condition: trigger
         id: Overide
@@ -2997,11 +2997,11 @@
         entity_id: light.entrance_ceiling
         state: 'on'
       sequence:
-      - service: timer.start
-        data:
+      - data:
           duration: 0
         target:
           entity_id: timer.light_entrance
+        action: timer.start
     - conditions:
       - condition: trigger
         id: Boolean
@@ -3009,18 +3009,18 @@
         entity_id: sensor.estimated_illuminance
         below: input_number.min_lux_entrance
       sequence:
-      - service: timer.cancel
-        data: {}
+      - data: {}
         target:
           entity_id: timer.light_entrance
-      - service: input_boolean.turn_on
-        data: {}
+        action: timer.cancel
+      - data: {}
         target:
           entity_id: input_boolean.overide_entrance_lights
-      - service: scene.turn_on
-        data: {}
+        action: input_boolean.turn_on
+      - data: {}
         target:
           entity_id: scene.frontdoor_lights_to_on_100_352
+        action: scene.turn_on
   mode: single
 - id: '1668357692650'
   alias: 'Alarm: Sonos speakers'
@@ -3443,11 +3443,11 @@
     entity_id: binary_sensor.entrance_door_contact
     domain: binary_sensor
   action:
-  - service: automation.trigger
-    data:
+  - data:
       skip_condition: true
     target:
       entity_id: automation.leaving_home
+    action: automation.trigger
   mode: single
 - id: '1670779106645'
   alias: Mushroom - Datetime Auto
