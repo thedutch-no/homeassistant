@@ -1194,7 +1194,30 @@ timer_update_next_event_timers:
   mode: single
 '1714299915944':
   alias: New Script
-  sequence: []
+  sequence:
+  - choose:
+    - conditions:
+      - condition: device
+        device_id: efd02bc9099fbd454353750553104529
+        domain: cover
+        entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+        type: is_open
+      sequence:
+      - device_id: efd02bc9099fbd454353750553104529
+        domain: cover
+        entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+        type: close
+    - conditions:
+      - condition: device
+        device_id: efd02bc9099fbd454353750553104529
+        domain: cover
+        entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+        type: is_closed
+      sequence:
+      - device_id: efd02bc9099fbd454353750553104529
+        domain: cover
+        entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
+        type: open
 timer_update_timer_next_event2:
   alias: Timer - Update Timer Next Event2
   sequence:
