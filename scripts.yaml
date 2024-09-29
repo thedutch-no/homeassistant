@@ -1193,7 +1193,7 @@ timer_update_next_event_timers:
           entity_id: input_boolean.alarm_clock_on
   mode: single
 '1714299915944':
-  alias: New Script
+  alias: 'Blinds: Window 2'
   sequence:
   - choose:
     - conditions:
@@ -1218,6 +1218,8 @@ timer_update_next_event_timers:
         domain: cover
         entity_id: 17cead83bc773d77dc7e7cf44bf60dd8
         type: open
+  description: Office Blinds
+  icon: mdi:blinds
 timer_update_timer_next_event2:
   alias: Timer - Update Timer Next Event2
   sequence:
