@@ -638,29 +638,36 @@
       - condition: trigger
         id: Enter
       sequence:
-      - service: script.worktime_start
-        data: {}
+      - data: {}
+        action: script.worktime_start
     - conditions:
       - condition: trigger
         id: Leave
       sequence:
-      - service: script.worktime_stop
-        data: {}
+      - data: {}
+        action: script.worktime_stop
       - if:
         - condition: time
           after: '12:00:00'
           alias: 'Time condition: after 12:00'
         then:
-        - service: input_number.set_value
-          data_template:
+        - action: climate.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: climate.livingroom
+        - data_template:
             entity_id: input_number.setpoint_varmepumpe
             value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
           alias: Set Setpoint Heatpumt to Pre Heat temp
-        - service: climate.set_fan_mode
-          data:
+          action: input_number.set_value
+          enabled: true
+        - data:
             fan_mode: powerfull
           target:
             entity_id: climate.livingroom
+          action: climate.set_fan_mode
+          enabled: true
   mode: single
 - id: '1663248731397'
   alias: 'Alarm Clock: Change start location detected'
@@ -3124,9 +3131,14 @@
   - platform: state
     entity_id:
     - input_boolean.night_mode
-    id: night_mode
+    id: night_mode_on
     enabled: true
     to: 'on'
+  - platform: state
+    entity_id:
+    - input_boolean.night_mode
+    to: 'off'
+    id: night_mode_off
   - platform: zone
     entity_id: person.rob
     zone: zone.home
@@ -3142,21 +3154,25 @@
     zone: zone.sorumsand
     event: leave
     id: sørumsand
+    enabled: false
   - platform: zone
     entity_id: person.rob
     zone: zone.work
     event: leave
     id: work
+    enabled: false
   - platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.ac_varmepumpe_night_mode
     id: night_mode_on
+    enabled: false
   - platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.ac_varmepumpe_wake_up_mode
     id: night_mode_off
+    enabled: false
   - alias: When Varmepumpe Temperature changes
     platform: template
     value_template: '{{ state_attr(''climate.livingroom'',''temperature'') != states(''input_number.setpoint_varmepumpe'')
@@ -3171,21 +3187,21 @@
         - magnor
         - home
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
         alias: Set entrance setpoint to Norm temp
+        action: input_number.set_value
     - conditions:
       - condition: trigger
         id:
         - sørumsand
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
         alias: Set entrance setpoint to Min temp
+        action: input_number.set_value
     - conditions:
       - condition: trigger
         id:
@@ -3193,41 +3209,41 @@
       - condition: time
         after: '14:00:00'
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_pre_heat'') }}'
         alias: Set entrance setpoint to Pre-heat temp
+        action: input_number.set_value
     - conditions:
       - condition: trigger
         id:
         - night_mode_on
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_min'') }}'
         alias: Set varmepumpe setpoint to Min temp
+        action: input_number.set_value
     - conditions:
       - condition: trigger
         id:
         - night_mode_off
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ states(''input_number.setpoint_varmepumpe_norm'') }}'
         alias: Set varmepumpe setpoint to Norm temp
+        action: input_number.set_value
     - conditions:
       - condition: trigger
         id:
         - varmepumpe
       sequence:
-      - service: input_number.set_value
-        data_template:
+      - data_template:
           entity_id: input_number.setpoint_varmepumpe
           value: '{{ state_attr(''climate.livingroom'',''temperature'') }}'
         alias: Set varmepumpe setpoint to varmepumpe actual temp
+        action: input_number.set_value
     default: []
   mode: single
 - id: '1668542656762'
