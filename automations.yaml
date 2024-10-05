@@ -876,41 +876,41 @@
         entity_id: input_select.start_time
         state: 05:30
       sequence:
-      - service: input_datetime.set_datetime
-        data:
+      - data:
           time: 05:30:00
         target:
           entity_id: input_datetime.time_work_start
+        action: input_datetime.set_datetime
     - conditions:
       - condition: state
         entity_id: input_select.start_time
         state: 06:00
       sequence:
-      - service: input_datetime.set_datetime
-        data:
+      - data:
           time: 06:00:00
         target:
           entity_id: input_datetime.time_work_start
+        action: input_datetime.set_datetime
     - conditions:
       - condition: state
         entity_id: input_select.start_time
         state: 06:30
       sequence:
-      - service: input_datetime.set_datetime
-        data:
+      - data:
           time: 06:30:00
         target:
           entity_id: input_datetime.time_work_start
+        action: input_datetime.set_datetime
     - conditions:
       - condition: state
         entity_id: input_select.start_time
         state: 07:00
       sequence:
-      - service: input_datetime.set_datetime
-        data:
+      - data:
           time: 07:00:00
         target:
           entity_id: input_datetime.time_work_start
+        action: input_datetime.set_datetime
     - conditions:
       - condition: state
         entity_id: input_select.start_time
@@ -918,13 +918,13 @@
       - condition: trigger
         id: select
       sequence:
-      - service: input_datetime.set_datetime
-        data:
-          time: 00:00:00
+      - data:
+          time: 09:00:00
         target:
           entity_id: input_datetime.time_work_start
-  - service: script.calculate_work_start_datetime
-    data: {}
+        action: input_datetime.set_datetime
+  - data: {}
+    action: script.calculate_work_start_datetime
   mode: single
 - id: '1663689461832'
   alias: Timer - Time for bed
@@ -4669,76 +4669,31 @@
     above: 35
   condition: []
   action:
-  - service: input_boolean.turn_on
-    metadata: {}
+  - metadata: {}
     data: {}
     target:
       entity_id: input_boolean.blinds_toggle
-  - service: cover.close_cover
-    metadata: {}
-    data: {}
-    target:
-      device_id:
-      - f79ccf2b02a307256a865a11373dbec9
-    enabled: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-    enabled: false
-  - service: cover.close_cover
-    metadata: {}
-    data: {}
-    target:
-      device_id:
-      - efd02bc9099fbd454353750553104529
-    enabled: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-    enabled: false
-  - service: cover.close_cover
-    metadata: {}
-    data: {}
-    target:
-      device_id:
-      - 9d1c0e84d348d5a05bacdb7c87bd326b
-    enabled: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-    enabled: false
-  - service: cover.close_cover
-    metadata: {}
-    data: {}
-    target:
-      device_id:
-      - 0c0fa846221280ac1b0ccc3f5b0b765d
-    enabled: false
-  - service: input_boolean.turn_off
-    metadata: {}
+    action: input_boolean.turn_on
+  - metadata: {}
     data: {}
     target:
       entity_id: input_boolean.overide_hallway_lights
-  - service: light.turn_off
-    metadata: {}
+    action: input_boolean.turn_off
+  - metadata: {}
     data: {}
     target:
       entity_id: light.hallway_ceiling
-  - service: scene.turn_on
-    metadata: {}
+    action: light.turn_off
+  - metadata: {}
     target:
       entity_id: scene.livingroom_lights_to_on_50_352
-  - service: media_player.media_stop
+    action: scene.turn_on
+  - action: input_number.set_value
     metadata: {}
-    data: {}
+    data:
+      value: 0
     target:
-      entity_id: media_player.sonos_speakers
+      entity_id: input_number.media_selected_radio_station
   mode: single
 - id: '1711640685733'
   alias: 'Mediaplayer: Apple TV On/Off'
