@@ -36,11 +36,11 @@ cameras:
 ################### GLOBAL CAMERA SETTINGS ###################
 
 objects:
-  track:
+  track: 
     - person
   filters:
     person:
-      threshold: 0.7
+      treshold: 0.7
 
 detect:
   enabled: false # <---- disable detection until you have a working camera feed
@@ -60,4 +60,3 @@ record:
   events:
     retain:
       default: 7
-version: 0.14
